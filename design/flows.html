@@ -1,0 +1,1145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Koumara Flows</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column per flow, each followed by a horizontal storyboard of phone frames. */
+:root {
+  --paper: #F4F6F2; --surface: #FFFFFF; --sunk: #E9EDE7; --ink: #16201A; --muted: #56635B; --rule: #D5DCD4;
+  --vip: #A8231B; --action: #9A5800; --news: #2C6648; --buy: #844628; --screen: #4F5672;
+  --vip-wash: #F7E3E0; --action-wash: #F6EAD6; --news-wash: #DFEDE4; --buy-wash: #F1E4DC; --screen-wash: #E3E5EE;
+  --glass: rgba(236, 240, 235, .9); --scrim: rgba(22, 32, 26, .35);
+  --display: "Literata", "Iowan Old Style", Georgia, serif;
+  --body: "Public Sans", "Helvetica Neue", Helvetica, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --ui: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0D1310; --surface: #141C17; --sunk: #1B241E; --ink: #E5EBE6; --muted: #9AA8A0; --rule: #27322B;
+    --vip: #FF7B6E; --action: #F0AC45; --news: #74C99C; --buy: #D9946D; --screen: #A9B0D4;
+    --vip-wash: #3A1A17; --action-wash: #36280F; --news-wash: #15301F; --buy-wash: #33211A; --screen-wash: #20243A;
+    --glass: rgba(24, 32, 27, .92); --scrim: rgba(0, 0, 0, .5);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0D1310; --surface: #141C17; --sunk: #1B241E; --ink: #E5EBE6; --muted: #9AA8A0; --rule: #27322B;
+  --vip: #FF7B6E; --action: #F0AC45; --news: #74C99C; --buy: #D9946D; --screen: #A9B0D4;
+  --vip-wash: #3A1A17; --action-wash: #36280F; --news-wash: #15301F; --buy-wash: #33211A; --screen-wash: #20243A;
+  --glass: rgba(24, 32, 27, .92); --scrim: rgba(0, 0, 0, .5);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--paper); color: var(--ink); font: 16px/1.6 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 72px;
+}
+.col { max-width: 44rem; margin-inline: auto; display: grid; gap: 16px; }
+.wide { max-width: 76rem; margin-inline: auto; }
+h1, h2, h3 { font-family: var(--display); font-weight: 600; text-wrap: balance; line-height: 1.15; margin: 0; }
+h2 { font-size: clamp(1.6rem, 3.4vw, 2.1rem); }
+h3 { font-size: 1.1rem; }
+p { margin: 0; }
+a { color: var(--news); }
+code { font: .85em var(--mono); background: var(--sunk); padding: 1px 5px; border-radius: 4px; }
+.eyebrow { font: 500 .72rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+:focus-visible { outline: 2px solid var(--vip); outline-offset: 2px; }
+header.mast { padding-block: 56px 0; }
+.mast h1 { font-size: clamp(2.4rem, 7vw, 3.8rem); }
+.mast h1 span { color: var(--vip); }
+.lede { font-size: 1.15rem; }
+.assume { border: 1px solid var(--rule); background: var(--surface); padding: 16px 18px; display: grid; gap: 8px; font-size: .92rem; }
+.assume ul { margin: 0; padding-left: 1.1em; display: grid; gap: 4px; }
+section { padding-top: 64px; display: grid; gap: 22px; }
+
+/* Storyboard */
+.board { overflow-x: auto; padding-bottom: 10px; }
+.steps { display: flex; gap: 22px; width: max-content; padding: 4px 2px; }
+.step { width: 232px; display: grid; gap: 12px; align-content: start; }
+.step .num { font: 500 .7rem/1 var(--mono); letter-spacing: .1em; color: var(--muted); }
+.step h3 { font-size: 1rem; }
+.step p { font-size: .86rem; color: var(--muted); line-height: 1.5; }
+.step .a11y { font-size: .8rem; border-top: 1px solid var(--rule); padding-top: 8px; color: var(--muted); }
+.step .a11y b { color: var(--ink); font-weight: 600; }
+
+.ph { width: 232px; height: 470px; border-radius: 34px; border: 8px solid #1C211E; background: var(--surface); overflow: hidden; position: relative; font: 11.5px/1.4 var(--ui); color: var(--ink); display: grid; grid-template-rows: 24px 1fr; }
+.ph .sb { display: flex; justify-content: space-between; padding: 6px 18px 0; font-size: 10px; font-weight: 600; }
+.ph .in { padding: 8px 12px; display: grid; gap: 9px; align-content: start; overflow: hidden; }
+.ph .big { font: 700 21px/1.1 var(--ui); }
+.ph .mid { font: 700 15px/1.2 var(--ui); }
+.ph .dim { color: var(--muted); font-size: 10.5px; }
+.ph .ctr { text-align: center; justify-items: center; }
+.lock { background: linear-gradient(180deg, var(--screen-wash), var(--paper)); }
+.lock .clock { font: 300 46px/1 var(--ui); text-align: center; margin-top: 18px; }
+.lock .day { text-align: center; font-size: 11px; color: var(--muted); }
+.notif { background: var(--glass); border-radius: 14px; padding: 9px 10px; display: grid; gap: 3px; box-shadow: 0 6px 18px -10px rgba(0,0,0,.4); }
+.notif .ap { display: flex; gap: 6px; align-items: center; font-size: 9.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.notif .ap .dot { width: 14px; height: 14px; border-radius: 4px; background: var(--vip); color: #fff; display: grid; place-items: center; font-size: 8px; }
+.notif b { font-size: 11.5px; }
+.notif .dr { border-left: 2px solid var(--vip); padding-left: 7px; color: var(--ink); }
+.nbtn { background: var(--glass); border-radius: 10px; padding: 9px; text-align: center; font-weight: 600; }
+.nbtn.pri { color: var(--vip); }
+.live { background: #1C211E; color: #F0F3F1; border-radius: 18px; padding: 10px 12px; display: grid; gap: 6px; }
+.live .row2 { display: flex; justify-content: space-between; align-items: center; }
+.live .t { font: 600 18px/1 var(--ui); font-variant-numeric: tabular-nums; color: #FF9A8F; }
+.live .bar { height: 4px; border-radius: 2px; background: #3A423D; overflow: hidden; }
+.live .bar i { display: block; height: 100%; width: 72%; background: #FF9A8F; }
+.live .lb { display: flex; gap: 6px; }
+.live .lb span { flex: 1; text-align: center; padding: 6px; border-radius: 8px; background: #2E3531; font-weight: 600; font-size: 10.5px; }
+
+.glyph { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 5px; font: 600 10px/1 var(--ui); flex: none; }
+.g-vip { color: var(--vip); background: var(--vip-wash); } .g-action { color: var(--action); background: var(--action-wash); }
+.g-news { color: var(--news); background: var(--news-wash); } .g-buy { color: var(--buy); background: var(--buy-wash); }
+.g-screen { color: var(--screen); background: var(--screen-wash); }
+.chip { display: inline-flex; font-size: 9.5px; font-weight: 600; padding: 2px 6px; border-radius: 999px; justify-self: start; }
+.c-vip { background: var(--vip-wash); color: var(--vip); } .c-action { background: var(--action-wash); color: var(--action); }
+.c-news { background: var(--news-wash); color: var(--news); } .c-buy { background: var(--buy-wash); color: var(--buy); }
+.c-screen { background: var(--screen-wash); color: var(--screen); } .c-plain { background: var(--sunk); color: var(--muted); }
+.box { background: var(--paper); border-radius: 11px; padding: 9px 10px; display: grid; gap: 4px; }
+.box.line { background: transparent; border: 1px solid var(--rule); }
+.box .hd { display: flex; align-items: center; gap: 6px; font-weight: 600; }
+.box .hd .r { margin-left: auto; font-weight: 500; color: var(--muted); font-size: 10px; }
+.btn { display: block; text-align: center; padding: 9px; border-radius: 10px; font-weight: 600; background: var(--sunk); }
+.btn.pri { background: var(--ink); color: var(--paper); }
+.btn.sm { padding: 6px 8px; font-size: 10.5px; display: inline-block; }
+.btns { display: flex; flex-wrap: wrap; gap: 5px; }
+.meter { display: grid; gap: 5px; }
+.meter .m { display: grid; grid-template-columns: 18px 1fr 34px; gap: 6px; align-items: center; font-size: 10.5px; }
+.meter .trk { height: 6px; border-radius: 3px; background: var(--sunk); overflow: hidden; }
+.meter .trk i { display: block; height: 100%; }
+.meter .n { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
+.person { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--rule); }
+.av { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-size: 9.5px; font-weight: 700; background: var(--sunk); color: var(--muted); flex: none; }
+.person .nm { flex: 1; min-width: 0; }
+.person .nm span { display: block; font-size: 9.5px; color: var(--muted); }
+.tog { width: 28px; height: 17px; border-radius: 9px; background: var(--rule); position: relative; flex: none; }
+.tog::after { content: ""; position: absolute; top: 2px; left: 2px; width: 13px; height: 13px; border-radius: 50%; background: var(--surface); }
+.tog.on { background: var(--vip); }
+.tog.on::after { left: 13px; }
+.sheet { position: absolute; inset: auto 0 0 0; background: var(--surface); border-radius: 16px 16px 0 0; padding: 12px 12px 18px; display: grid; gap: 8px; box-shadow: 0 -10px 30px -10px rgba(0,0,0,.35); }
+.sheet::before { content: ""; width: 30px; height: 4px; border-radius: 2px; background: var(--rule); justify-self: center; }
+.scrim { position: absolute; inset: 0; background: var(--scrim); }
+.dimmed { opacity: .55; }
+.msg { display: grid; gap: 4px; }
+.msg .s { font-weight: 600; }
+.quote { border-left: 2px solid var(--action); padding-left: 7px; }
+.toast { background: #1C211E; color: #F0F3F1; border-radius: 12px; padding: 9px 11px; display: flex; justify-content: space-between; align-items: center; font-weight: 500; }
+.toast b { color: #FF9A8F; }
+.why { border: 1px dashed var(--rule); border-radius: 10px; padding: 8px 10px; display: grid; gap: 4px; font-size: 10.5px; }
+.why b { font-size: 11px; }
+.stages { display: grid; gap: 3px; font: 10px/1.35 var(--mono); }
+.stages .hit { color: var(--ink); font-weight: 500; }
+.stages .miss { color: var(--muted); text-decoration: line-through; }
+
+/* States table */
+.tblwrap { overflow-x: auto; border: 1px solid var(--rule); background: var(--surface); }
+table.states { border-collapse: collapse; width: 100%; min-width: 760px; font-size: .9rem; }
+.states th, .states td { text-align: left; vertical-align: top; padding: 12px 14px; border-bottom: 1px solid var(--rule); }
+.states thead th { font: 500 .7rem/1.2 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.states tbody th { font-weight: 600; white-space: nowrap; }
+.states td { color: var(--muted); }
+.states tr:last-child th, .states tr:last-child td { border-bottom: 0; }
+.rd { font: 12px/1.6 "New York", "Iowan Old Style", Georgia, serif; }
+.rd-h { font: 600 17px/1.2 "New York", "Iowan Old Style", Georgia, serif; }
+.pub-k { font-size: 9px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--news); }
+.seg { display: grid; grid-template-columns: 1fr 1fr; background: var(--sunk); border-radius: 8px; padding: 2px; font-size: 10.5px; font-weight: 600; text-align: center; }
+.seg span { padding: 5px; border-radius: 6px; color: var(--muted); }
+.seg .on { background: var(--surface); color: var(--ink); }
+.shelfrow { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-bottom: 1px solid var(--rule); }
+.mast-sq { width: 30px; height: 30px; border-radius: 7px; display: grid; place-items: center; font: 700 11px/1 "New York", Georgia, serif; flex: none; background: var(--news-wash); color: var(--news); }
+.shelfrow .nm { flex: 1; min-width: 0; }
+.shelfrow .nm span { display: block; font-size: 9.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.badge { font-size: 9.5px; font-weight: 700; color: var(--news); font-variant-numeric: tabular-nums; }
+.prog { height: 3px; background: var(--sunk); border-radius: 2px; overflow: hidden; }
+.prog i { display: block; height: 100%; background: var(--news); }
+.toolbar { position: absolute; inset: auto 0 0 0; border-top: 1px solid var(--rule); background: var(--glass); display: flex; justify-content: space-around; padding: 8px 0 14px; font-size: 9.5px; color: var(--muted); }
+.toolbar span { display: grid; justify-items: center; gap: 2px; }
+.toolbar b { font-size: 13px; color: var(--ink); font-weight: 500; }
+.blocked { border: 1px dashed var(--rule); border-radius: 8px; padding: 14px 8px; text-align: center; font-size: 10px; color: var(--muted); }
+/* Mac frames */
+.macwrap { display: grid; gap: 12px; }
+.macwrap .lbl { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.macwrap .lbl h3 { font-size: 1.05rem; }
+.macwrap .lbl span { font-size: .88rem; color: var(--muted); }
+.mx { min-width: 940px; max-width: 1080px; border-radius: 12px; border: 1px solid var(--rule); background: var(--surface); overflow: hidden; box-shadow: 0 24px 60px -30px rgba(10, 30, 20, .45); font: 12.5px/1.4 var(--ui); color: var(--ink); position: relative; }
+.mx-menubar { height: 26px; display: flex; align-items: center; gap: 16px; padding-inline: 14px; background: var(--glass); border-bottom: 1px solid var(--rule); font-size: 12px; }
+.mx-menubar .app { font-weight: 700; }
+.mx-menubar .right { margin-left: auto; display: flex; gap: 14px; align-items: center; color: var(--muted); }
+.mx-menubar .mbi { color: var(--vip); font-weight: 700; background: var(--vip-wash); padding: 2px 8px; border-radius: 5px; font-variant-numeric: tabular-nums; }
+.mx-drop { position: absolute; top: 30px; right: 96px; width: 280px; background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; box-shadow: 0 18px 40px -16px rgba(0,0,0,.45); padding: 12px; display: grid; gap: 8px; z-index: 3; }
+.mx-bar { height: 38px; display: flex; align-items: center; gap: 10px; padding-inline: 14px; background: var(--glass); border-bottom: 1px solid var(--rule); }
+.mx-bar .lights { display: flex; gap: 7px; }
+.mx-bar .lights i { width: 12px; height: 12px; border-radius: 50%; }
+.mx-bar .lights i:nth-child(1) { background: #EC6A5E; } .mx-bar .lights i:nth-child(2) { background: #F4BF4F; } .mx-bar .lights i:nth-child(3) { background: #61C554; }
+.mx-bar .ttl { margin-inline: auto; font-weight: 600; color: var(--muted); }
+.mx-bar .tools { display: flex; gap: 12px; color: var(--muted); font-size: 13px; }
+.mx-body { display: grid; grid-template-columns: 196px 290px 1fr; height: 460px; position: relative; }
+.mx-body.two { grid-template-columns: 240px 1fr; }
+.mx-side { background: var(--glass); border-right: 1px solid var(--rule); padding: 12px 8px; display: grid; align-content: start; gap: 2px; }
+.mx-side .grp { font-size: 10.5px; font-weight: 600; color: var(--muted); padding: 8px 10px 4px; }
+.mx-side .it { display: flex; align-items: center; gap: 9px; padding: 6px 10px; border-radius: 7px; }
+.mx-side .it .n { margin-left: auto; font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.mx-side .it.on { background: var(--sunk); font-weight: 600; }
+.mx-side .it.drop { outline: 2px solid var(--buy); background: var(--buy-wash); }
+.mx-list { border-right: 1px solid var(--rule); overflow: hidden; min-width: 0; }
+.mx-lh { padding: 12px 14px 8px; display: grid; gap: 2px; border-bottom: 1px solid var(--rule); }
+.mx-lh strong { font-size: 17px; font-weight: 700; }
+.mx-lh span { font-size: 11.5px; color: var(--muted); }
+.mx-sub { font-size: 10.5px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); padding: 10px 14px 4px; }
+.mx-row { padding: 9px 14px; border-bottom: 1px solid var(--rule); display: grid; gap: 3px; }
+.mx-row.sel { background: var(--sunk); }
+.mx-row.ghosted { opacity: .4; }
+.mx-row .top { display: flex; gap: 8px; align-items: baseline; }
+.mx-row .who { font-weight: 600; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mx-row .when { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.mx-row .p { color: var(--muted); font-size: 11.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mx-read { padding: 20px 26px; display: grid; gap: 14px; align-content: start; min-width: 0; overflow: hidden; }
+.mx-read h4 { margin: 0; font: 700 19px/1.25 var(--ui); }
+.mx-read p { font-size: 13px; line-height: 1.55; max-width: 62ch; }
+.mx .card, .ipd .card { border: 1px solid var(--rule); border-radius: 10px; padding: 12px 14px; display: grid; gap: 8px; background: var(--paper); }
+.mx .k, .ipd .k { font-size: 10.5px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; }
+.mx .k.vip, .ipd .k.vip { color: var(--vip); } .mx .k.news { color: var(--news); } .mx .k.buy { color: var(--buy); } .mx .k.screen { color: var(--screen); }
+.mx .b, .ipd .b { display: inline-flex; align-items: center; gap: 6px; font: 600 12px/1 var(--ui); padding: 6px 11px; border-radius: 7px; border: 1px solid var(--rule); background: var(--surface); }
+.mx .b.pri, .ipd .b.pri { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.mx kbd { font: 500 10.5px/1 var(--ui); padding: 2px 5px; border-radius: 4px; border: 1px solid var(--rule); background: var(--sunk); color: var(--muted); }
+.mx .b.pri kbd { background: transparent; border-color: currentColor; color: inherit; opacity: .75; }
+.mx .fine { font-size: 11px; color: var(--muted); }
+.mx .infobar { display: flex; gap: 8px; align-items: center; font-size: 11.5px; color: var(--muted); border-bottom: 1px solid var(--rule); padding-bottom: 10px; }
+.mx .infobar u { color: var(--news); text-decoration: none; font-weight: 600; }
+.ghost { position: absolute; left: 70px; top: 196px; width: 250px; background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 8px 10px; box-shadow: 0 14px 30px -12px rgba(0,0,0,.45); transform: rotate(-2deg); display: grid; gap: 2px; z-index: 2; }
+.ghost .p { font-size: 11px; color: var(--muted); }
+.pop { position: absolute; left: 204px; top: 150px; width: 300px; background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; box-shadow: 0 18px 40px -16px rgba(0,0,0,.45); padding: 12px 14px; display: grid; gap: 8px; z-index: 3; }
+.pop::before { content: ""; position: absolute; left: -7px; top: 22px; width: 12px; height: 12px; background: var(--surface); border-left: 1px solid var(--rule); border-bottom: 1px solid var(--rule); transform: rotate(45deg); }
+.pop .bs { display: grid; gap: 6px; }
+.pop .b { justify-content: space-between; }
+.keys { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 11px; color: var(--muted); border-top: 1px solid var(--rule); padding: 8px 14px; background: var(--glass); }
+.mx-article { padding: 26px 0; display: grid; gap: 12px; align-content: start; justify-items: center; overflow: hidden; }
+.mx-article > * { width: min(62ch, 100% - 48px); }
+.mx-article .rd-h { font-size: 26px; }
+.mx-article .rd { font-size: 14.5px; line-height: 1.65; }
+.mx-pub { padding: 8px 12px; display: flex; gap: 9px; align-items: center; border-radius: 8px; }
+.mx-pub.sel { background: var(--news-wash); }
+.mx-pub .nm { flex: 1; min-width: 0; }
+.mx-pub .nm span { display: block; font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.devices-ipad { display: flex; gap: 28px; align-items: flex-start; width: max-content; padding: 4px 2px; }
+.ipd { border: 10px solid #1C211E; border-radius: 24px; background: var(--surface); overflow: hidden; color: var(--ink); font: 12px/1.4 var(--ui); position: relative; }
+.ipd-port { width: 420px; height: 470px; }
+.ipd-land { width: 760px; height: 520px; }
+.hud { position: absolute; right: 16px; bottom: 16px; width: 230px; background: var(--glass); border: 1px solid var(--rule); border-radius: 12px; padding: 12px; display: grid; gap: 6px; font-size: 11.5px; box-shadow: 0 16px 36px -14px rgba(0,0,0,.45); }
+.hud span { display: flex; justify-content: space-between; }
+.hud kbd { font: 500 10.5px/1 var(--ui); color: var(--muted); }
+.rules { margin: 0; padding-left: 1.2em; display: grid; gap: 10px; }
+.rules b { display: block; }
+.rules span { color: var(--muted); font-size: .94rem; }
+</style>
+
+<header class="mast">
+  <div class="col">
+    <p class="eyebrow">Design pass 2 · Flows · revised 19 Oct 2026</p>
+    <h1>Koumara flows<span>.</span></h1>
+    <p class="lede">Five flows that decide whether Koumara is worth switching to: setting it up, answering a VIP, fixing a message that landed in the wrong lane, reading newsletters like a magazine, and finding anything I've bought. Each step lists what I see, what Koumara does, and what changes for VoiceOver users.</p>
+    <p>Builds on the <a href="brief.html">design brief</a>. Each flow is drawn on iPhone first because it's the tightest screen, followed by the Mac version. iPad gets its own section near the end.</p>
+    <div class="assume">
+      <b>Decided</b>
+      <ul>
+        <li>Gmail and iCloud to start. Other providers can come later.</li>
+        <li>Koumara replaces Apple Mail: full client, can be the default mail app.</li>
+        <li>VIP replies are always drafted and never sent automatically.</li>
+        <li>Apple's on-device model sorts everywhere. oMLX on my Mac writes drafts, long summaries and search embeddings.</li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<!-- Flow 1 -->
+<section aria-labelledby="f1">
+  <div class="col">
+    <p class="eyebrow">Flow 1 · First run</p>
+    <h2 id="f1">From sign-in to a sorted inbox in under five minutes</h2>
+    <p>The first run has one job: show me my own mail already sorted before asking me to configure anything. VIPs and the Screener come first because they're the two decisions only I can make. Everything else Koumara can infer from headers while I'm answering.</p>
+  </div>
+  <div class="wide board" tabindex="0" role="region" aria-label="First run storyboard, scrolls sideways">
+    <ol class="steps" style="list-style:none;margin:0">
+      <li class="step">
+        <div class="ph" role="img" aria-label="Welcome screen with sign-in buttons for Gmail and iCloud Mail, and a note that sorting happens on the device.">
+          <div class="sb"><span>9:41</span><span>▮</span></div>
+          <div class="in ctr" style="padding-top:40px">
+            <div style="display:flex;gap:4px"><span class="glyph g-vip">◆</span><span class="glyph g-action">▲</span><span class="glyph g-news">❡</span><span class="glyph g-buy">¤</span><span class="glyph g-screen">◐</span></div>
+            <div class="big">Koumara</div>
+            <div class="dim" style="max-width:170px">Your mail, sorted into lanes on this iPhone. Nothing is sent to a server for sorting.</div>
+            <div style="height:60px"></div>
+            <span class="btn pri" style="width:100%">Continue with Gmail</span>
+            <span class="btn" style="width:100%">Add iCloud Mail</span>
+            <span class="dim">You can add both. More providers later.</span>
+          </div>
+        </div>
+        <span class="num">STEP 1</span>
+        <h3>Connect an account</h3>
+        <p>Privacy promise up front, in one sentence. Gmail signs in with Google through the system sheet. iCloud needs an app-specific password, so Koumara walks me through making one at account.apple.com instead of just asking for it.</p>
+        <p class="a11y"><b>VoiceOver:</b> the lane glyphs are hidden; the heading reads "Koumara" and the promise is the first thing announced.</p>
+      </li>
+      <li class="step">
+        <div class="ph" role="img" aria-label="Choose VIPs screen listing suggested people with toggles; Dana Okafor and Mom are on.">
+          <div class="sb"><span>9:42</span><span>▮</span></div>
+          <div class="in">
+            <div class="mid">Who can't wait?</div>
+            <div class="dim">Suggested from who you reply to fastest and your Contacts favorites.</div>
+            <div class="person"><span class="av">DO</span><span class="nm">Dana Okafor<span>You reply in about 20 min</span></span><span class="tog on"></span></div>
+            <div class="person"><span class="av">M</span><span class="nm">Mom<span>Favorite</span></span><span class="tog on"></span></div>
+            <div class="person"><span class="av">RM</span><span class="nm">Ravi Menon<span>You reply in about 2 h</span></span><span class="tog"></span></div>
+            <div class="person"><span class="av">JL</span><span class="nm">Jess Liu<span>Favorite</span></span><span class="tog"></span></div>
+            <div class="dim">Add anyone else later from a message or Contacts.</div>
+            <span class="btn pri">Continue with 2 VIPs</span>
+          </div>
+        </div>
+        <span class="num">STEP 2</span>
+        <h3>Pick VIPs</h3>
+        <p>Suggestions come from reply speed in Sent mail, computed locally. Nothing is pre-selected except Contacts favorites, so I'm choosing, not un-choosing.</p>
+        <p class="a11y"><b>VoiceOver:</b> each row is one element: "Dana Okafor, you reply in about 20 minutes, VIP, on, switch."</p>
+      </li>
+      <li class="step">
+        <div class="ph" role="img" aria-label="Sorting progress screen with a bar for each lane filling as messages are sorted.">
+          <div class="sb"><span>9:43</span><span>▮</span></div>
+          <div class="in">
+            <div class="mid">Sorting your last 90 days</div>
+            <div class="dim">2,914 of 4,212 · on this iPhone</div>
+            <div class="meter">
+              <div class="m"><span class="glyph g-vip">◆</span><span class="trk"><i style="width:8%;background:var(--vip)"></i></span><span class="n">61</span></div>
+              <div class="m"><span class="glyph g-action">▲</span><span class="trk"><i style="width:14%;background:var(--action)"></i></span><span class="n">118</span></div>
+              <div class="m"><span class="glyph g-news">❡</span><span class="trk"><i style="width:78%;background:var(--news)"></i></span><span class="n">1,630</span></div>
+              <div class="m"><span class="glyph g-buy">¤</span><span class="trk"><i style="width:22%;background:var(--buy)"></i></span><span class="n">244</span></div>
+              <div class="m"><span class="glyph g-screen">◐</span><span class="trk"><i style="width:30%;background:var(--screen)"></i></span><span class="n">86</span></div>
+            </div>
+            <div class="box"><b>While you wait</b><span class="dim">86 senders have never been let in. Want to go through them?</span></div>
+            <span class="btn pri">Open Screener</span>
+            <span class="btn">I'll do it later</span>
+          </div>
+        </div>
+        <span class="num">STEP 3</span>
+        <h3>Backfill sort</h3>
+        <p>Header rules run first, so the bars move fast. The model only picks up what's left. I don't sit and watch: the Screener is offered right away.</p>
+        <p class="a11y"><b>VoiceOver:</b> progress is announced at 25% steps, not every tick. The bars are a single summary: "Sorted 2,914 of 4,212."</p>
+      </li>
+      <li class="step">
+        <div class="ph" role="img" aria-label="Screener grouped by guessed type, with a bulk action to let all newsletters into Reading.">
+          <div class="sb"><span>9:44</span><span>▮</span></div>
+          <div class="in">
+            <div class="mid">Screener</div>
+            <div class="dim">Grouped by what they look like. Decide a group at once, or one at a time.</div>
+            <div class="box"><div class="hd"><span class="glyph g-news">❡</span>Newsletters<span class="r">52</span></div><div class="btns"><span class="btn sm">Let all into Reading</span><span class="btn sm">Review</span></div></div>
+            <div class="box"><div class="hd"><span class="glyph g-buy">¤</span>Stores<span class="r">19</span></div><div class="btns"><span class="btn sm">Let all into Purchases</span><span class="btn sm">Review</span></div></div>
+            <div class="box"><div class="hd"><span class="glyph g-screen">◐</span>People<span class="r">15</span></div><div class="btns"><span class="btn sm">Review one by one</span></div></div>
+            <div class="dim">"No" hides a sender for good. You can change it in Settings.</div>
+          </div>
+        </div>
+        <span class="num">STEP 4</span>
+        <h3>Screen in batches</h3>
+        <p>86 one-by-one decisions would kill the first run. Grouping by header type turns it into three decisions. People always get reviewed individually.</p>
+        <p class="a11y"><b>VoiceOver:</b> each group is a heading; bulk buttons say the count: "Let all 52 into Reading."</p>
+      </li>
+      <li class="step">
+        <div class="ph" role="img" aria-label="Today screen after setup, with a one-time tip explaining that moving a message teaches Koumara.">
+          <div class="sb"><span>9:46</span><span>▮</span></div>
+          <div class="in">
+            <div class="big">Today</div>
+            <div class="box"><div class="hd"><span class="glyph g-vip">◆</span>VIP<span class="r">1 waiting</span></div><span>Dana Okafor · Contract redlines</span><span class="chip c-vip">Draft ready</span></div>
+            <div class="box"><div class="hd"><span class="glyph g-action">▲</span>Action<span class="r">3 due today</span></div><span>Sign lease renewal · 5:00 PM</span></div>
+            <div class="box"><div class="hd"><span class="glyph g-buy">¤</span>Purchases<span class="r">1 arriving</span></div><span>Rain shell · Out for delivery</span></div>
+            <div class="box line"><b>One tip</b><span class="dim">If something's in the wrong lane, move it. Koumara asks once whether to remember that sender.</span><span class="btn sm" style="justify-self:start">Got it</span></div>
+          </div>
+        </div>
+        <span class="num">STEP 5</span>
+        <h3>Land on Today</h3>
+        <p>One tip, dismissible, and it teaches the correction loop, the most important habit. No tour.</p>
+        <p class="a11y"><b>VoiceOver:</b> focus lands on the "Today" heading, then the VIP block. The tip is announced once and never again.</p>
+      </li>
+    </ol>
+  </div>
+  <div class="wide macwrap">
+    <div class="lbl"><h3>On Mac</h3><span>Sign-in and VIPs are a sheet on the main window. The Screener gets the full three columns, and the keyboard does the work.</span></div>
+    <div class="board" tabindex="0" role="region" aria-label="Mac first-run Screener mockup, scrolls sideways">
+      <div class="mx" role="img" aria-label="Mac window showing the Screener with sender groups in the middle column and a single person being reviewed on the right, with keyboard shortcuts for each choice.">
+        <div class="mx-bar"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><span class="ttl">Screener</span><span class="tools">⌕</span></div>
+        <div class="mx-body">
+          <div class="mx-side">
+            <div class="grp">Lanes</div>
+            <div class="it"><span class="glyph g-vip">◆</span>VIP<span class="n">1</span></div>
+            <div class="it"><span class="glyph g-action">▲</span>Action<span class="n">118</span></div>
+            <div class="it"><span class="glyph g-news">❡</span>Reading<span class="n">1,630</span></div>
+            <div class="it"><span class="glyph g-buy">¤</span>Purchases<span class="n">244</span></div>
+            <div class="it on"><span class="glyph g-screen">◐</span>Screener<span class="n">86</span></div>
+            <div class="grp">Sorting</div>
+            <div class="it" style="color:var(--muted)">2,914 of 4,212 sorted</div>
+          </div>
+          <div class="mx-list">
+            <div class="mx-lh"><strong>Screener</strong><span>86 senders · grouped by what they look like</span></div>
+            <div class="mx-sub">Newsletters · 52</div>
+            <div class="mx-row"><div class="btns"><span class="b">Let all into Reading</span><span class="b">Review</span></div></div>
+            <div class="mx-sub">Stores · 19</div>
+            <div class="mx-row"><div class="btns"><span class="b">Let all into Purchases</span><span class="b">Review</span></div></div>
+            <div class="mx-sub">People · 15</div>
+            <div class="mx-row sel"><div class="top"><span class="who">Jordan Ellis</span><span class="when">8:40</span></div><span class="p">Intro from Ravi</span></div>
+            <div class="mx-row"><div class="top"><span class="who">Sam Whitaker</span><span class="when">Oct 14</span></div><span class="p">Question about your talk</span></div>
+            <div class="mx-row"><div class="top"><span class="who">Priya Natarajan</span><span class="when">Oct 9</span></div><span class="p">Workshop follow-up</span></div>
+          </div>
+          <div class="mx-read">
+            <h4>Jordan Ellis wants to reach you</h4>
+            <span class="fine">jordan.ellis@example.com · first message · 1 of 15 people</span>
+            <p>Hi, Ravi Menon suggested we talk about accessibility audits for our checkout flow. Would you have 20 minutes next week?</p>
+            <div class="card"><span class="k screen">Let them in?</span><span class="fine">Mentions Ravi Menon, who is in your contacts.</span>
+              <div class="btns"><span class="b pri">Yes <kbd>Y</kbd></span><span class="b">Yes, as VIP <kbd>V</kbd></span><span class="b">Yes, to Action <kbd>A</kbd></span><span class="b">Never <kbd>N</kbd></span></div>
+            </div>
+            <span class="fine">Each choice moves straight to the next person. <kbd>⌘Z</kbd> undoes the last one.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Flow 2 -->
+<section aria-labelledby="f2">
+  <div class="col">
+    <p class="eyebrow">Flow 2 · VIP reply</p>
+    <h2 id="f2">Every reply drafted, nothing sent without me</h2>
+    <p>Every VIP message arrives with a full reply already drafted, so the fast path is two taps from the lock screen. If I don't get to it, Koumara nudges me with the draft attached. It never sends on its own. When my reply promises something, that promise becomes a task in Action.</p>
+  </div>
+  <div class="wide board" tabindex="0" role="region" aria-label="VIP reply storyboard, scrolls sideways">
+    <ol class="steps" style="list-style:none;margin:0">
+      <li class="step">
+        <div class="ph lock" role="img" aria-label="Lock screen notification from Dana Okafor with the drafted reply shown under the message.">
+          <div class="sb"><span></span><span>▮</span></div>
+          <div class="in">
+            <div class="clock">9:29</div>
+            <div class="day">Monday, October 19</div>
+            <div style="height:30px"></div>
+            <div class="notif">
+              <div class="ap"><span class="dot">◆</span>Koumara · VIP · now</div>
+              <b>Dana Okafor</b>
+              <span>Contract redlines for Thursday</span>
+              <span class="dr">Draft: "Hi Dana, got these. I'll send notes on section 4 by Wednesday noon…"</span>
+            </div>
+          </div>
+        </div>
+        <span class="num">STEP 1</span>
+        <h3>Notification with the draft</h3>
+        <p>VIP mail is a Time Sensitive notification. The draft is written before the notification fires, so I know what "Send" would say before I press it.</p>
+        <p class="a11y"><b>VoiceOver:</b> reads sender, subject, then "Draft reply:" and the draft. Generated text is always introduced as a draft.</p>
+      </li>
+      <li class="step">
+        <div class="ph lock" role="img" aria-label="Expanded notification with the full draft and buttons: Send draft, Edit, Remind me in 1 hour.">
+          <div class="sb"><span></span><span>▮</span></div>
+          <div class="in">
+            <div class="notif">
+              <div class="ap"><span class="dot">◆</span>Koumara · VIP</div>
+              <b>Dana Okafor</b>
+              <span>Hi, attached are legal's comments on section 4. Can you look before Thursday's call?</span>
+              <span class="dr">Hi Dana, got these. I'll go through section 4 tonight and send my notes on the accessibility warranty by Wednesday noon, so we have a day of buffer before the call.</span>
+            </div>
+            <span class="nbtn pri">Send draft</span>
+            <span class="nbtn">Edit</span>
+            <span class="nbtn">Remind me in 1 hour</span>
+          </div>
+        </div>
+        <span class="num">STEP 2</span>
+        <h3>Long-press to send</h3>
+        <p>"Send draft" needs Face ID if the phone is locked, so a pocket tap can't send it. "Edit" opens the reply with the draft in place.</p>
+        <p class="a11y"><b>VoiceOver:</b> these appear in the Actions rotor on the notification, in this order.</p>
+      </li>
+      <li class="step">
+        <div class="ph lock" role="img" aria-label="A nudge notification: Dana has been waiting 30 minutes, draft ready, with Review draft and Later buttons.">
+          <div class="sb"><span></span><span>▮</span></div>
+          <div class="in">
+            <div class="clock">9:59</div>
+            <div class="day">Monday, October 19</div>
+            <div style="height:30px"></div>
+            <div class="notif">
+              <div class="ap"><span class="dot">◆</span>Koumara · VIP · now</div>
+              <b>Dana has been waiting 30 min</b>
+              <span class="dr">Your draft is ready: "Hi Dana, got these. I'll go through section 4 tonight…"</span>
+            </div>
+            <span class="nbtn pri">Review draft</span>
+            <span class="nbtn">Later today</span>
+          </div>
+        </div>
+        <span class="num">STEP 3 · if I didn't answer</span>
+        <h3>A nudge, not a send</h3>
+        <p>Each VIP has a nudge window (Dana's is 30 minutes, Mom's is 15). One nudge per message, so a busy morning doesn't turn into a stream of reminders.</p>
+        <p class="a11y"><b>VoiceOver:</b> "Dana has been waiting 30 minutes. Draft ready." No timers or countdowns to track.</p>
+      </li>
+      <li class="step">
+        <div class="ph" role="img" aria-label="Thread with Dana's message and the draft reply in an editable card with tone buttons: Shorter, Warmer, More formal, Rewrite, and a Send button.">
+          <div class="sb"><span>10:00</span><span>▮</span></div>
+          <div class="in">
+            <div class="mid">Contract redlines for Thursday</div>
+            <div class="msg"><span class="s">Dana Okafor · 9:29</span><span class="dim">Hi, attached are legal's comments on section 4 and the new indemnity language. Can you look before Thursday's call?</span></div>
+            <div class="box line" style="border-color:var(--vip)">
+              <span class="chip c-vip">Draft · oMLX on your Mac</span>
+              <span>Hi Dana, got these. I'll go through section 4 tonight and send my notes on the accessibility warranty by Wednesday noon, so we have a day of buffer before the call.</span>
+              <div class="btns"><span class="btn sm">Shorter</span><span class="btn sm">Warmer</span><span class="btn sm">More formal</span><span class="btn sm">Rewrite</span></div>
+            </div>
+            <span class="btn pri">Send</span>
+            <span class="dim">Tap the draft to edit it. The label disappears once you change a word.</span>
+          </div>
+        </div>
+        <span class="num">STEP 4</span>
+        <h3>Review and adjust</h3>
+        <p>Tone buttons rewrite the draft without me typing a prompt. The label says which model wrote it: oMLX on my Mac at home, Apple's on-device model when the Mac is out of reach.</p>
+        <p class="a11y"><b>VoiceOver:</b> the draft is a text field labeled "Generated draft". Tone buttons announce "Draft rewritten, shorter" when done.</p>
+      </li>
+      <li class="step">
+        <div class="ph" role="img" aria-label="Sent confirmation with Undo, and a prompt asking to track the promise of sending notes by Wednesday noon.">
+          <div class="sb"><span>10:01</span><span>▮</span></div>
+          <div class="in">
+            <div class="mid">Contract redlines for Thursday</div>
+            <div class="msg"><span class="s">Dana Okafor · 9:29</span><span class="dim">Hi, attached are legal's comments on section 4…</span></div>
+            <div class="msg box"><span class="s">You · 10:01</span><span>Hi Dana, got these. I'll go through section 4 tonight and send my notes…</span></div>
+            <div class="box line"><b>Track this promise?</b><span class="dim">"send my notes on the accessibility warranty by Wednesday noon"</span><div class="btns"><span class="btn sm" style="background:var(--action);color:var(--surface)">Add to Action</span><span class="btn sm">No</span></div></div>
+            <div class="toast"><span>Sent to Dana</span><b>Undo · 10s</b></div>
+          </div>
+        </div>
+        <span class="num">STEP 5</span>
+        <h3>Sent, then the promise</h3>
+        <p>Every send waits 10 seconds before it really goes out. If my reply commits to something with a date, Koumara offers to track it. It asks; it doesn't add tasks silently.</p>
+        <p class="a11y"><b>VoiceOver:</b> "Sent to Dana. Undo available for 10 seconds." Focus moves to Undo first, then the promise card.</p>
+      </li>
+      <li class="step">
+        <div class="ph" role="img" aria-label="Action lane with a new task: send Dana the section 4 notes by Wednesday noon, linked to the thread.">
+          <div class="sb"><span>10:01</span><span>▮</span></div>
+          <div class="in">
+            <div class="big">Action</div>
+            <div class="dim">This week</div>
+            <div class="box"><div class="hd"><span class="glyph g-vip">◆</span>Send Dana section 4 notes<span class="r">Wed 12 PM</span></div><span class="dim">From your reply at 10:01</span><span class="chip c-vip">VIP</span></div>
+            <div class="dim">Due today</div>
+            <div class="box"><div class="hd"><span class="glyph g-action">▲</span>Sign lease renewal<span class="r">5:00 PM</span></div><span class="dim">Harbor Property Management</span></div>
+            <div class="box"><div class="hd"><span class="glyph g-action">▲</span>Approve Q4 invoice<span class="r">EOD</span></div><span class="dim">Ledgerline Billing</span></div>
+          </div>
+        </div>
+        <span class="num">STEP 6</span>
+        <h3>The promise becomes a task</h3>
+        <p>The task links back to the thread and clears itself when I send Dana a message with an attachment or the word "notes" in that thread, or when I mark it done.</p>
+        <p class="a11y"><b>VoiceOver:</b> task reads its source: "Send Dana section 4 notes, due Wednesday noon, from your reply at 10:01 AM."</p>
+      </li>
+    </ol>
+  </div>
+  <div class="wide macwrap">
+    <div class="lbl"><h3>On Mac</h3><span>Notifications work the same way. Waiting VIPs show up as a quiet menu bar item, and the draft sits in the reader ready for <kbd style="font:500 .8em var(--ui)">⌘↩</kbd>. This is also where oMLX runs, so drafts are written right here.</span></div>
+    <div class="board" tabindex="0" role="region" aria-label="Mac VIP reply mockup, scrolls sideways">
+      <div class="mx" role="img" aria-label="Mac menu bar with a Koumara item open showing Dana has waited 30 minutes with a draft ready, above a window with Dana's message and the drafted reply with tone buttons.">
+        <div class="mx-menubar"><span class="app">Koumara</span><span>File</span><span>Edit</span><span>Message</span><span>Lanes</span><span class="right"><span class="mbi">◆ 1</span><span>Mon 9:59</span></span></div>
+        <div class="mx-drop">
+          <span class="k vip">VIPs waiting</span>
+          <span><b>Dana Okafor</b> · 30 min · draft ready</span>
+          <div class="btns"><span class="b pri">Review draft</span><span class="b">Later today</span></div>
+          <span class="fine">Koumara never sends on its own.</span>
+        </div>
+        <div class="mx-bar"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><span class="ttl">VIP</span><span class="tools">↩ ⤻ ⌫</span></div>
+        <div class="mx-body">
+          <div class="mx-side">
+            <div class="grp">Lanes</div>
+            <div class="it on"><span class="glyph g-vip">◆</span>VIP<span class="n">2</span></div>
+            <div class="it"><span class="glyph g-action">▲</span>Action<span class="n">5</span></div>
+            <div class="it"><span class="glyph g-news">❡</span>Reading<span class="n">11</span></div>
+            <div class="it"><span class="glyph g-buy">¤</span>Purchases<span class="n">4</span></div>
+            <div class="it"><span class="glyph g-screen">◐</span>Screener<span class="n">3</span></div>
+            <div class="grp">Accounts</div>
+            <div class="it" style="color:var(--muted)">Gmail</div>
+            <div class="it" style="color:var(--muted)">iCloud</div>
+          </div>
+          <div class="mx-list">
+            <div class="mx-lh"><strong>VIP</strong><span>2 waiting · median reply 9 min this week</span></div>
+            <div class="mx-row sel"><div class="top"><span class="who">Dana Okafor</span><span class="when">30m</span></div><span>Contract redlines for Thursday</span><span class="chip c-vip">Waiting · draft ready</span></div>
+            <div class="mx-row"><div class="top"><span class="who">Mom</span><span class="when">8m</span></div><span>Flight lands at 6:40</span><span class="chip c-vip">Draft ready</span></div>
+            <div class="mx-row"><div class="top"><span class="who">Ravi Menon</span><span class="when">2h</span></div><span>Can you review the a11y audit?</span><span class="chip c-plain">Replied</span></div>
+          </div>
+          <div class="mx-read">
+            <h4>Contract redlines for Thursday</h4>
+            <span class="fine">Dana Okafor · Gmail · 9:29 AM · waiting 30 min</span>
+            <p>Hi, attached are legal's comments on section 4 and the new indemnity language. Can you look before Thursday's call?</p>
+            <div class="card"><span class="k vip">Draft reply · oMLX on this Mac</span><p>Hi Dana, got these. I'll go through section 4 tonight and send my notes on the accessibility warranty by Wednesday noon, so we have a day of buffer before the call.</p>
+              <div class="btns"><span class="b">Shorter</span><span class="b">Warmer</span><span class="b">More formal</span><span class="b">Rewrite</span></div>
+              <div class="btns"><span class="b pri">Send <kbd>⌘↩</kbd></span><span class="b">Edit <kbd>⌘E</kbd></span><span class="b">Send later</span></div>
+            </div>
+            <span class="fine">Nothing sends until you press Send. Sends wait 10 seconds so you can undo.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Flow 3 -->
+<section aria-labelledby="f3">
+  <div class="col">
+    <p class="eyebrow">Flow 3 · Fixing a mistake</p>
+    <h2 id="f3">A receipt ended up in Reading</h2>
+    <p>Sorting will be wrong sometimes. What matters is that I can see why, fix it in one move, and never fix the same sender twice. This is also how the model gets called less over time: every "Always" turns into a header-level rule.</p>
+  </div>
+  <div class="wide board" tabindex="0" role="region" aria-label="Correction storyboard, scrolls sideways">
+    <ol class="steps" style="list-style:none;margin:0">
+      <li class="step">
+        <div class="ph" role="img" aria-label="Reading lane with an order confirmation from Arbor Books mixed in among newsletters.">
+          <div class="sb"><span>12:10</span><span>▮</span></div>
+          <div class="in">
+            <div class="big">Reading</div>
+            <div class="box"><div class="hd"><span class="glyph g-news">❡</span>Small Batch Engineering</div><span class="dim">Why tiny models win on the edge</span></div>
+            <div class="box" style="outline:2px solid var(--buy)"><div class="hd"><span class="glyph g-news">❡</span>Arbor Books</div><span class="dim">Your order has shipped · 3 items</span></div>
+            <div class="box"><div class="hd"><span class="glyph g-news">❡</span>The Sunday Margin</div><span class="dim">The case for slower software</span></div>
+            <div class="box"><div class="hd"><span class="glyph g-news">❡</span>Field Notes on Type</div><span class="dim">Optical sizes, explained</span></div>
+          </div>
+        </div>
+        <span class="num">STEP 1</span>
+        <h3>Spot it</h3>
+        <p>Arbor Books sends receipts and a newsletter from the same address, with <code>List-Unsubscribe</code> on both. Stage 1 matched the newsletter header and stopped.</p>
+        <p class="a11y"><b>VoiceOver:</b> nothing special here. The fix is reachable from the row's Actions rotor.</p>
+      </li>
+      <li class="step">
+        <div class="ph" role="img" aria-label="Context menu on the message with Move to Purchases and Why is this here?">
+          <div class="sb"><span>12:10</span><span>▮</span></div>
+          <div class="in">
+            <div class="scrim"></div>
+            <div class="box" style="position:relative;background:var(--surface);margin-top:60px"><div class="hd"><span class="glyph g-news">❡</span>Arbor Books</div><span class="dim">Your order has shipped · 3 items</span></div>
+            <div class="box" style="position:relative;background:var(--surface);gap:0;padding:0">
+              <span style="padding:9px 10px;border-bottom:1px solid var(--rule);display:flex;gap:6px"><span class="glyph g-buy">¤</span>Move to Purchases</span>
+              <span style="padding:9px 10px;border-bottom:1px solid var(--rule);display:flex;gap:6px"><span class="glyph g-action">▲</span>Move to Action</span>
+              <span style="padding:9px 10px;border-bottom:1px solid var(--rule);display:flex;gap:6px"><span class="glyph g-vip">◆</span>Move to VIP</span>
+              <span style="padding:9px 10px">Why is this here?</span>
+            </div>
+          </div>
+        </div>
+        <span class="num">STEP 2</span>
+        <h3>Move it</h3>
+        <p>Long-press, or swipe left for "Move". On Mac, drag it onto a lane in the sidebar or press <code>⌘⇧4</code> for Purchases. "Why is this here?" sits next to the move, so I can check before correcting.</p>
+        <p class="a11y"><b>VoiceOver:</b> "Move to Purchases" is the first custom action on every misfiled-looking row.</p>
+      </li>
+      <li class="step">
+        <div class="ph" role="img" aria-label="Explanation panel showing which sorting stage decided the lane and why.">
+          <div class="sb"><span>12:10</span><span>▮</span></div>
+          <div class="in">
+            <div class="mid">Why it's in Reading</div>
+            <div class="why">
+              <b>Decided by a header rule</b>
+              <div class="stages">
+                <span class="hit">✓ List-Unsubscribe present → Reading</span>
+                <span class="miss">Order markup: none found</span>
+                <span class="miss">On-device model: not asked</span>
+              </div>
+            </div>
+            <div class="why">
+              <b>What the model would have said</b>
+              <span>Purchases · 91% sure · order of 3 items, $57.40</span>
+            </div>
+            <span class="dim">Stores often send receipts and newsletters from one address. Koumara can check the content for this sender instead of trusting the header.</span>
+            <span class="btn pri">Check content for Arbor Books</span>
+          </div>
+        </div>
+        <span class="num">STEP 2b · optional</span>
+        <h3>See why</h3>
+        <p>Shows the stage that decided, in plain words. When the header and the model would disagree, it offers the smarter rule instead of a blunt sender rule.</p>
+        <p class="a11y"><b>VoiceOver:</b> strike-through stages read as "not used:" since strikethrough isn't announced.</p>
+      </li>
+      <li class="step">
+        <div class="ph" role="img" aria-label="Bottom sheet asking whether to always put mail from Arbor Books in Purchases, with three options.">
+          <div class="sb"><span>12:11</span><span>▮</span></div>
+          <div class="in dimmed">
+            <div class="big">Reading</div>
+            <div class="box"><div class="hd"><span class="glyph g-news">❡</span>Small Batch Engineering</div></div>
+            <div class="box"><div class="hd"><span class="glyph g-news">❡</span>The Sunday Margin</div></div>
+          </div>
+          <div class="sheet">
+            <div class="mid">Moved to Purchases</div>
+            <span class="dim">What about future mail from orders@arborbooks.com?</span>
+            <span class="btn pri">Sort by content for this sender</span>
+            <span class="btn">Always Purchases</span>
+            <span class="btn">Just this one</span>
+          </div>
+        </div>
+        <span class="num">STEP 3</span>
+        <h3>Asked once</h3>
+        <p>Three choices, best one first because this sender mixes types. "Always" is a plain sender rule. "Just this one" teaches nothing and won't ask again for 30 days.</p>
+        <p class="a11y"><b>VoiceOver:</b> the sheet is modal; focus starts on "Moved to Purchases" so I hear what already happened before the question.</p>
+      </li>
+      <li class="step">
+        <div class="ph" role="img" aria-label="Settings rules list showing the new rule for Arbor Books with its source and date.">
+          <div class="sb"><span>12:11</span><span>▮</span></div>
+          <div class="in">
+            <div class="mid">Sorting rules</div>
+            <div class="dim">Rules you made. They run before the model.</div>
+            <div class="box"><div class="hd"><span class="glyph g-buy">¤</span>orders@arborbooks.com<span class="r">Today</span></div><span class="dim">Sort by content · from a move in Reading</span></div>
+            <div class="box"><div class="hd"><span class="glyph g-news">❡</span>Trailmap<span class="r">Oct 19</span></div><span class="dim">Always Reading · from Screener</span></div>
+            <div class="box"><div class="hd"><span class="glyph g-vip">◆</span>Dana Okafor<span class="r">Oct 19</span></div><span class="dim">VIP · nudge after 30 min</span></div>
+            <div class="box"><div class="hd"><span class="glyph g-screen">◐</span>promo@deals.example<span class="r">Oct 19</span></div><span class="dim">Never · from Screener</span></div>
+          </div>
+        </div>
+        <span class="num">STEP 4</span>
+        <h3>Rules are visible</h3>
+        <p>Every rule says where it came from and when, so I can find and undo the one that's misbehaving. Swipe to delete; tap to change the lane.</p>
+        <p class="a11y"><b>VoiceOver:</b> rules are grouped by lane with headings, and searchable by sender.</p>
+      </li>
+    </ol>
+  </div>
+  <div class="wide macwrap">
+    <div class="lbl"><h3>On Mac</h3><span>Drag a message onto a lane in the sidebar. The "remember this sender" question is a popover on the lane you dropped it on, and the reader always says why a message is where it is.</span></div>
+    <div class="board" tabindex="0" role="region" aria-label="Mac correction mockup, scrolls sideways">
+      <div class="mx" role="img" aria-label="Mac window: an Arbor Books receipt is dragged from Reading onto the Purchases lane, which is highlighted, and a popover asks whether to sort this sender by content, always use Purchases, or just move this one.">
+        <div class="mx-bar"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><span class="ttl">Reading</span><span class="tools">⌕</span></div>
+        <div class="mx-body">
+          <div class="mx-side">
+            <div class="grp">Lanes</div>
+            <div class="it"><span class="glyph g-vip">◆</span>VIP<span class="n">2</span></div>
+            <div class="it"><span class="glyph g-action">▲</span>Action<span class="n">5</span></div>
+            <div class="it on"><span class="glyph g-news">❡</span>Reading<span class="n">11</span></div>
+            <div class="it drop"><span class="glyph g-buy">¤</span>Purchases<span class="n">4</span></div>
+            <div class="it"><span class="glyph g-screen">◐</span>Screener<span class="n">3</span></div>
+          </div>
+          <div class="mx-list">
+            <div class="mx-lh"><strong>Reading</strong><span>11 new issues</span></div>
+            <div class="mx-row"><div class="top"><span class="who">Small Batch Engineering</span><span class="when">7:02</span></div><span class="p">Why tiny models win on the edge</span></div>
+            <div class="mx-row sel ghosted"><div class="top"><span class="who">Arbor Books</span><span class="when">Oct 12</span></div><span class="p">Your order has shipped · 3 items</span></div>
+            <div class="mx-row"><div class="top"><span class="who">The Sunday Margin</span><span class="when">Sun</span></div><span class="p">The case for slower software</span></div>
+            <div class="mx-row"><div class="top"><span class="who">Field Notes on Type</span><span class="when">Sat</span></div><span class="p">Optical sizes, explained</span></div>
+          </div>
+          <div class="mx-read">
+            <div class="infobar"><span class="glyph g-news">❡</span>In Reading because of a newsletter header. <u>Why?</u></div>
+            <h4>Your order has shipped</h4>
+            <span class="fine">orders@arborbooks.com · Oct 12</span>
+            <p>Good news: your 3 items are on the way. Order AB-55102, total $57.40. Returns are accepted until Oct 26.</p>
+          </div>
+          <div class="ghost" aria-hidden="true"><b>Arbor Books</b><span class="p">Your order has shipped</span></div>
+          <div class="pop">
+            <b>Moved to Purchases</b>
+            <span class="fine">What about future mail from orders@arborbooks.com?</span>
+            <div class="bs">
+              <span class="b pri">Sort by content for this sender <kbd>↩</kbd></span>
+              <span class="b">Always Purchases</span>
+              <span class="b">Just this one <kbd>esc</kbd></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Flow 4 -->
+<section aria-labelledby="f6">
+  <div class="col">
+    <p class="eyebrow">Flow 4 · Newsletter reading</p>
+    <h2 id="f6">Browsing newsletters like a magazine rack</h2>
+    <p>Reading is the lane I'll spend the most unhurried time in, so it shouldn't look like mail at all. Newsletters get a shelf organized by publication, a reader view that throws away the email layout, and a queue that moves me from one issue to the next without going back to a list. Unread issues don't pile up forever: anything I haven't opened in two weeks is quietly cleared to All Mail.</p>
+  </div>
+  <div class="wide board" tabindex="0" role="region" aria-label="Newsletter reading storyboard, scrolls sideways">
+    <ol class="steps" style="list-style:none;margin:0">
+      <li class="step">
+        <div class="ph" role="img" aria-label="Reading lane shelf: a summary of 11 new issues and about 48 minutes of reading, then publications with unread counts.">
+          <div class="sb"><span>7:30</span><span>▮</span></div>
+          <div class="in">
+            <div class="big">Reading</div>
+            <div class="seg"><span class="on">Shelf</span><span>Latest</span></div>
+            <div class="box"><b>11 new issues · about 48 min</b><span class="dim">From 5 publications since Friday</span><div class="btns"><span class="btn sm" style="background:var(--news);color:var(--surface)">Start reading</span><span class="btn sm">Skim gists</span></div></div>
+            <div class="shelfrow"><span class="mast-sq">SB</span><span class="nm">Small Batch Engineering<span>Why tiny models win on the edge</span></span><span class="badge">1</span></div>
+            <div class="shelfrow"><span class="mast-sq">SM</span><span class="nm">The Sunday Margin<span>The case for slower software</span></span><span class="badge">3</span></div>
+            <div class="shelfrow"><span class="mast-sq">FN</span><span class="nm">Field Notes on Type<span>Optical sizes, explained</span></span><span class="badge">1</span></div>
+            <div class="shelfrow"><span class="mast-sq">CB</span><span class="nm">City Bike Weekly<span>Bridge lane opens Saturday</span></span><span class="badge">5</span></div>
+            <div class="shelfrow"><span class="mast-sq">PL</span><span class="nm">Plain Language Digest<span>Caught up</span></span><span class="badge" style="color:var(--muted)">✓</span></div>
+          </div>
+        </div>
+        <span class="num">STEP 1</span>
+        <h3>The shelf</h3>
+        <p>One row per publication, not per email, so five issues of City Bike Weekly are one row with a 5. Reading time is summed from word counts. "Latest" switches to a single newest-first list across every publication.</p>
+        <p class="a11y"><b>VoiceOver:</b> "City Bike Weekly, 5 unread, latest: Bridge lane opens Saturday." Publication marks are decorative and hidden.</p>
+      </li>
+      <li class="step">
+        <div class="ph" role="img" aria-label="Publication page for The Sunday Margin with three unread issues, each showing a one-line gist and reading time, plus mute and unsubscribe controls.">
+          <div class="sb"><span>7:31</span><span>▮</span></div>
+          <div class="in">
+            <span class="dim">‹ Reading</span>
+            <div class="mid">The Sunday Margin</div>
+            <div class="dim">Weekly · you open 9 of the last 10</div>
+            <div class="box"><span class="pub-k">Oct 18 · 9 min</span><b>The case for slower software</b><span class="dim">Gist: release less often, write down why, and let users catch up.</span></div>
+            <div class="box"><span class="pub-k">Oct 11 · 6 min</span><b>Notes from a quiet launch</b><span class="dim">Gist: a launch with no announcement still found its audience.</span></div>
+            <div class="box"><span class="pub-k">Oct 4 · 7 min</span><b>Maintenance is the product</b><span class="dim">Gist: budgeting for upkeep the same way as features.</span></div>
+            <div class="btns"><span class="btn sm">Mute 2 weeks</span><span class="btn sm">Unsubscribe</span></div>
+          </div>
+        </div>
+        <span class="num">STEP 2</span>
+        <h3>A publication's page</h3>
+        <p>Each issue shows a one-line gist so I can pick what's worth 9 minutes. The open rate is computed on device and tells me whether this subscription is still pulling its weight.</p>
+        <p class="a11y"><b>VoiceOver:</b> each issue is a heading with the gist as its hint, so the Headings rotor works as a table of contents.</p>
+      </li>
+      <li class="step">
+        <div class="ph" role="img" aria-label="Reader view of an issue: publication name, headline, collapsible gist, article text in a serif face, a blocked image placeholder, and a bottom toolbar.">
+          <div class="sb"><span>7:31</span><span>▮</span></div>
+          <div class="in" style="gap:8px">
+            <div class="prog"><i style="width:18%"></i></div>
+            <span class="pub-k">The Sunday Margin · Oct 18</span>
+            <div class="rd-h">The case for slower software</div>
+            <div class="box"><span class="pub-k">Gist · on device ▾</span><span style="font-size:10.5px">Ship less often. Write down why. Let people catch up before the next change.</span></div>
+            <p class="rd">There's a version of every product that changes faster than anyone can learn it. The fix isn't to stop shipping; it's to ship on a rhythm people can hear.</p>
+            <div class="blocked">Images from this sender are blocked<br>Load for The Sunday Margin</div>
+            <p class="rd">Release notes help, but only if someone reads them…</p>
+          </div>
+          <div class="toolbar" aria-hidden="true"><span><b>Aa</b>Text</span><span><b>▷</b>Listen</span><span><b>☆</b>Save</span><span><b>↓</b>Next</span></div>
+        </div>
+        <span class="num">STEP 3</span>
+        <h3>The reader</h3>
+        <p>The newsletter's HTML is rebuilt into a clean reading view in New York, Apple's system serif, at a comfortable measure. Remote images and tracking pixels are blocked until I allow them per publication. The gist sits collapsed above the first paragraph, and "Original layout" is one tap away in the menu.</p>
+        <p class="a11y"><b>VoiceOver:</b> the sender's headings and lists are kept as real headings and lists. Images without alt text say "Image, no description from sender". "Listen" reads the issue aloud and continues to the next one.</p>
+      </li>
+      <li class="step">
+        <div class="ph" role="img" aria-label="End of issue: the issue is marked read and the next issue in the queue is previewed with a button to continue.">
+          <div class="sb"><span>7:40</span><span>▮</span></div>
+          <div class="in">
+            <div class="prog"><i style="width:100%"></i></div>
+            <p class="rd" style="color:var(--muted)">…and that's the whole argument: slower, on purpose.</p>
+            <div class="box line"><span class="chip c-news">Marked read</span><span class="dim">2 more from The Sunday Margin, 7 others in your queue</span></div>
+            <div class="box"><span class="pub-k">Up next · Small Batch Engineering · 7 min</span><b>Why tiny models win on the edge</b><span class="dim">Gist: small models are fast, private and good enough for sorting.</span></div>
+            <span class="btn pri">Continue</span>
+            <div class="btns"><span class="btn sm">Save for later</span><span class="btn sm">Stop here</span></div>
+          </div>
+        </div>
+        <span class="num">STEP 4</span>
+        <h3>Finish, then continue</h3>
+        <p>Reaching the end marks the issue read. The next issue comes from the queue, which is ordered by the publications I open most. Swiping up past the end does the same as Continue.</p>
+        <p class="a11y"><b>VoiceOver:</b> "Marked read" is announced. A three-finger swipe up past the last paragraph goes to the next issue, and the Magic Tap gesture starts Continue.</p>
+      </li>
+      <li class="step">
+        <div class="ph" role="img" aria-label="Skim view: a scrolling list of gists for every unread issue, each with Read and Done buttons, and a Mark all read button.">
+          <div class="sb"><span>12:15</span><span>▮</span></div>
+          <div class="in">
+            <div class="mid">Skim gists</div>
+            <div class="dim">6 unread · decide each in a few seconds</div>
+            <div class="box"><span class="pub-k">City Bike Weekly · 2 min</span><b>Bridge lane opens Saturday</b><span class="dim">The protected lane on the north bridge opens at 8 AM.</span><div class="btns"><span class="btn sm">Read</span><span class="btn sm">Done</span></div></div>
+            <div class="box"><span class="pub-k">City Bike Weekly · 3 min</span><b>Winter tire swap guide</b><span class="dim">Studded tires are allowed from Nov 1.</span><div class="btns"><span class="btn sm">Read</span><span class="btn sm">Done</span></div></div>
+            <div class="box"><span class="pub-k">Field Notes on Type · 4 min</span><b>Optical sizes, explained</b><span class="dim">Why caption text needs a different cut than headlines.</span><div class="btns"><span class="btn sm">Read</span><span class="btn sm">Done</span></div></div>
+            <span class="btn">Mark all 6 read</span>
+          </div>
+        </div>
+        <span class="num">STEP 5</span>
+        <h3>Skim when time is short</h3>
+        <p>For a two-minute gap, every unread issue becomes one gist with Read or Done. Most weekly digests are fully covered by their gist, and Done gets them off the shelf.</p>
+        <p class="a11y"><b>VoiceOver:</b> Read and Done are custom actions on each card, so one swipe per issue is enough. "Mark all" states the count.</p>
+      </li>
+      <li class="step">
+        <div class="ph" role="img" aria-label="Subscriptions screen sorted by how rarely each is opened, with one-tap unsubscribe and a note that 23 old issues were cleared.">
+          <div class="sb"><span>Sun</span><span>▮</span></div>
+          <div class="in">
+            <div class="mid">Subscriptions</div>
+            <div class="dim">Least read first</div>
+            <div class="shelfrow"><span class="mast-sq">DW</span><span class="nm">Deals Weekly<span>Opened 0 of last 12</span></span><span class="btn sm">Unsubscribe</span></div>
+            <div class="shelfrow"><span class="mast-sq">TM</span><span class="nm">Trailmap News<span>Opened 1 of last 8</span></span><span class="btn sm">Unsubscribe</span></div>
+            <div class="shelfrow"><span class="mast-sq">CB</span><span class="nm">City Bike Weekly<span>Opened 6 of last 10</span></span><span class="btn sm">Keep</span></div>
+            <div class="box line"><b>Cleared 23 old issues</b><span class="dim">Unopened for 14 days. They're still in All Mail and in search.</span></div>
+          </div>
+        </div>
+        <span class="num">STEP 6</span>
+        <h3>Prune the subscriptions</h3>
+        <p>Sorted by least read. Unsubscribe uses the sender's one-click unsubscribe header when it exists (RFC 8058), so no web page opens. Old unread issues leave the shelf on their own and stay searchable.</p>
+        <p class="a11y"><b>VoiceOver:</b> "Deals Weekly, opened 0 of the last 12, Unsubscribe, button." Unsubscribing says whether it worked or needs the sender's web page.</p>
+      </li>
+    </ol>
+  </div>
+  <div class="wide macwrap">
+    <div class="lbl"><h3>On Mac</h3><span>Reading opens in its own window (<kbd style="font:500 .8em var(--ui)">⌘⇧R</kbd>) so a reading session doesn't sit next to work mail. The shelf is the sidebar, and the article gets the rest at a fixed reading width. iPad uses the layout from the brief: a lane rail, the shelf and the reader.</span></div>
+    <div class="board" tabindex="0" role="region" aria-label="Mac reading window mockup, scrolls sideways">
+      <div class="mx" role="img" aria-label="Mac reading window: a sidebar shelf of newsletters with unread counts, and a wide reader showing an issue with its gist, article text, and a strip of keyboard shortcuts at the bottom.">
+        <div class="mx-bar"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><span class="ttl">Reading · The Sunday Margin</span><span class="tools">Aa &nbsp;▷ Listen &nbsp;☆</span></div>
+        <div class="mx-body two">
+          <div class="mx-side">
+            <div class="it" style="font-weight:600">Up next · 11 issues · 48 min</div>
+            <div class="grp">Shelf</div>
+            <div class="mx-pub sel"><span class="mast-sq">SM</span><span class="nm">The Sunday Margin<span>The case for slower software</span></span><span class="badge">3</span></div>
+            <div class="mx-pub"><span class="mast-sq">SB</span><span class="nm">Small Batch Engineering<span>Why tiny models win on the edge</span></span><span class="badge">1</span></div>
+            <div class="mx-pub"><span class="mast-sq">FN</span><span class="nm">Field Notes on Type<span>Optical sizes, explained</span></span><span class="badge">1</span></div>
+            <div class="mx-pub"><span class="mast-sq">CB</span><span class="nm">City Bike Weekly<span>Bridge lane opens Saturday</span></span><span class="badge">5</span></div>
+            <div class="mx-pub"><span class="mast-sq">PL</span><span class="nm">Plain Language Digest<span>Caught up</span></span><span class="badge" style="color:var(--muted)">✓</span></div>
+            <div class="grp">Saved</div>
+            <div class="it" style="color:var(--muted)">4 issues</div>
+          </div>
+          <div style="display:grid;grid-template-rows:1fr auto;min-width:0">
+            <div class="mx-article">
+              <div class="prog"><i style="width:18%"></i></div>
+              <span class="pub-k">The Sunday Margin · Oct 18 · 9 min</span>
+              <div class="rd-h">The case for slower software</div>
+              <div class="card"><span class="k news">Gist · on device</span><span>Ship less often. Write down why. Let people catch up before the next change.</span></div>
+              <p class="rd">There's a version of every product that changes faster than anyone can learn it. The fix isn't to stop shipping; it's to ship on a rhythm people can hear.</p>
+              <p class="rd">Release notes help, but only if someone reads them. The teams I admire most write the note first, then decide whether the change is worth the note.</p>
+            </div>
+            <div class="keys"><span><kbd>Space</kbd> page down</span><span><kbd>⌘]</kbd> next issue</span><span><kbd>⌘⇧G</kbd> gist</span><span><kbd>S</kbd> save</span><span><kbd>⌘⌥U</kbd> unsubscribe</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Flow 5 -->
+<section aria-labelledby="f7">
+  <div class="col">
+    <p class="eyebrow">Flow 5 · Purchases</p>
+    <h2 id="f7">Finding anything I've bought</h2>
+    <p>A single order usually sends three to five emails: confirmation, shipped, out for delivery, delivered, maybe a return label. Koumara folds them into one order, so Purchases is a list of things I bought rather than a list of emails. Search understands plain questions, return windows get a reminder before they close, and the whole history exports for taxes or expenses.</p>
+  </div>
+  <div class="wide board" tabindex="0" role="region" aria-label="Purchases storyboard, scrolls sideways">
+    <ol class="steps" style="list-style:none;margin:0">
+      <li class="step">
+        <div class="ph" role="img" aria-label="Purchases lane: October total, then groups for arriving today, return windows closing, and recent orders.">
+          <div class="sb"><span>8:15</span><span>▮</span></div>
+          <div class="in">
+            <div class="big">Purchases</div>
+            <div class="dim">$379.40 in October · 6 orders</div>
+            <div class="seg" style="grid-template-columns:1fr 1fr 1fr"><span class="on">Orders</span><span>Deliveries</span><span>Returns</span></div>
+            <div class="dim">Arriving today</div>
+            <div class="box"><div class="hd"><span class="glyph g-buy">¤</span>Rain shell<span class="r">$164.00</span></div><span class="dim">Fieldhouse Supply</span><span class="chip c-buy">Out for delivery</span></div>
+            <div class="dim">Return window closing</div>
+            <div class="box"><div class="hd"><span class="glyph g-buy">¤</span>3 books<span class="r">$57.40</span></div><span class="dim">Arbor Books</span><span class="chip c-action">7 days left</span></div>
+            <div class="dim">Recent</div>
+            <div class="box"><div class="hd"><span class="glyph g-buy">¤</span>Whole bean, 2 lb<span class="r">$38.00</span></div><span class="dim">Northbound Coffee · Delivered Oct 18</span></div>
+          </div>
+        </div>
+        <span class="num">STEP 1</span>
+        <h3>Orders, not emails</h3>
+        <p>Rows are named for what I bought, with the merchant underneath. Groups only appear when they have something in them: arriving today and closing return windows come first.</p>
+        <p class="a11y"><b>VoiceOver:</b> "Rain shell, Fieldhouse Supply, $164, out for delivery." Totals read as currency, not digits.</p>
+      </li>
+      <li class="step">
+        <div class="ph" role="img" aria-label="Search for 'what did I buy from Arbor this year', turned into filter chips for merchant and year, with 5 matching orders and their total.">
+          <div class="sb"><span>8:16</span><span>▮</span></div>
+          <div class="in">
+            <div class="box line" style="padding:7px 10px"><span>⌕ what did I buy from Arbor this year</span></div>
+            <div class="btns"><span class="chip c-buy">Merchant: Arbor Books ✕</span><span class="chip c-buy">2026 ✕</span></div>
+            <div class="box"><b>5 orders · $212.80</b><span class="dim">Understood on this iPhone</span></div>
+            <div class="person"><span class="nm">3 books<span>Oct 12 · Return by Oct 26</span></span><span class="dim">$57.40</span></div>
+            <div class="person"><span class="nm">Field guide to ferns<span>Aug 3</span></span><span class="dim">$32.00</span></div>
+            <div class="person"><span class="nm">Gift card<span>Jun 14</span></span><span class="dim">$50.00</span></div>
+            <div class="person"><span class="nm">2 books<span>Mar 2</span></span><span class="dim">$41.90</span></div>
+            <div class="person"><span class="nm">Type specimen print<span>Jan 20</span></span><span class="dim">$31.50</span></div>
+          </div>
+        </div>
+        <span class="num">STEP 2</span>
+        <h3>Ask in plain words</h3>
+        <p>The on-device model turns the question into filters I can see and remove, so the search is never a black box. Totals add up only what's shown.</p>
+        <p class="a11y"><b>VoiceOver:</b> "5 orders, $212.80 total" is announced when results land. Each filter chip has a "Remove" action.</p>
+      </li>
+      <li class="step">
+        <div class="ph" role="img" aria-label="Order detail for the rain shell: a timeline from ordered to out for delivery, the item list and total, and the three source emails.">
+          <div class="sb"><span>8:17</span><span>▮</span></div>
+          <div class="in">
+            <span class="dim">‹ Purchases</span>
+            <div class="mid">Rain shell</div>
+            <div class="dim">Fieldhouse Supply · Order FS-20418</div>
+            <div class="box">
+              <span>✓ Ordered · Oct 17</span>
+              <span>✓ Shipped · Oct 18</span>
+              <span><b>● Out for delivery · today</b></span>
+              <span class="dim">○ Delivered</span>
+            </div>
+            <div class="box"><div class="hd">Ridgeline shell, M<span class="r">$149.00</span></div><div class="hd" style="font-weight:400">Tax<span class="r">$15.00</span></div><div class="hd">Total<span class="r">$164.00</span></div></div>
+            <div class="btns"><span class="btn sm" style="background:var(--buy);color:var(--surface)">Track on Lock Screen</span><span class="btn sm">Carrier page</span></div>
+            <span class="dim">From 3 emails · Return by Nov 16</span>
+          </div>
+        </div>
+        <span class="num">STEP 3</span>
+        <h3>One order, every email</h3>
+        <p>The timeline is built from every email about this order. "From 3 emails" opens them, so the originals are always one tap away. Tracking can go to the Lock Screen as a Live Activity.</p>
+        <p class="a11y"><b>VoiceOver:</b> the timeline is a list: "Step 3 of 4, out for delivery, today, current."</p>
+      </li>
+      <li class="step">
+        <div class="ph lock" role="img" aria-label="Lock screen with a delivery Live Activity for the rain shell and a notification that the Arbor Books return window closes in 3 days.">
+          <div class="sb"><span></span><span>▮</span></div>
+          <div class="in">
+            <div class="clock">11:20</div>
+            <div class="day">Friday, October 23</div>
+            <div style="height:14px"></div>
+            <div class="live">
+              <div class="row2"><span>¤ Rain shell</span><span style="font-weight:600">3 stops away</span></div>
+              <div class="bar"><i style="background:#E7B08F"></i></div>
+              <span style="font-size:10.5px;opacity:.8">Fieldhouse Supply · Out for delivery</span>
+            </div>
+            <div class="notif">
+              <div class="ap"><span class="dot" style="background:var(--buy)">¤</span>Koumara · Purchases</div>
+              <b>Arbor Books return closes in 3 days</b>
+              <span>3 books, $57.40 · ordered Oct 12</span>
+            </div>
+            <span class="nbtn">Start return</span>
+            <span class="nbtn">Keep them</span>
+          </div>
+        </div>
+        <span class="num">STEP 4</span>
+        <h3>Reminders before it's too late</h3>
+        <p>One reminder three days before a return window closes. "Start return" opens the merchant's return page from the email; "Keep them" stops the reminder. The delivery Live Activity ends itself on the "Delivered" email.</p>
+        <p class="a11y"><b>VoiceOver:</b> Live Activity reads "Rain shell, 3 stops away." Under Reduce Motion the bar is static.</p>
+      </li>
+      <li class="step">
+        <div class="ph" role="img" aria-label="Year view: 2026 total and order count, totals by merchant, and an Export CSV button.">
+          <div class="sb"><span>Sun</span><span>▮</span></div>
+          <div class="in">
+            <div class="mid">2026 so far</div>
+            <div class="box"><b>$4,812.30 · 64 orders</b><span class="dim">Gmail and iCloud combined</span></div>
+            <div class="person"><span class="nm">Fieldhouse Supply<span>9 orders</span></span><span>$1,204.00</span></div>
+            <div class="person"><span class="nm">Pixel &amp; Pine<span>4 orders · digital</span></span><span>$480.00</span></div>
+            <div class="person"><span class="nm">Northbound Coffee<span>11 orders</span></span><span>$418.00</span></div>
+            <div class="person"><span class="nm">Arbor Books<span>5 orders</span></span><span>$212.80</span></div>
+            <div class="btns"><span class="btn sm">Export CSV</span><span class="btn sm">Mark as business…</span></div>
+          </div>
+        </div>
+        <span class="num">STEP 5</span>
+        <h3>The year, for taxes</h3>
+        <p>Totals by merchant across both accounts. "Mark as business" tags orders so the export can be just the deductible ones. The CSV has date, merchant, items, total and a link back to the email.</p>
+        <p class="a11y"><b>VoiceOver:</b> merchant rows read name, count, then total. The list is sortable from the Actions rotor.</p>
+      </li>
+    </ol>
+  </div>
+  <div class="wide macwrap">
+    <div class="lbl"><h3>On Mac</h3><span>Purchases becomes a real table: sortable columns, a search field that shows how it read the question, and an inspector with the order timeline.</span></div>
+    <div class="board" tabindex="0" role="region" aria-label="Mac purchases mockup, scrolls sideways">
+      <div class="mx" role="img" aria-label="Mac window with the Purchases lane as a sortable table of orders, a search field with filter chips, and an inspector showing the selected order's delivery timeline.">
+        <div class="mx-bar"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><span class="ttl">Purchases</span><span class="tools">⇪ Export</span></div>
+        <div class="mx-body" style="grid-template-columns:196px 1fr 260px">
+          <div class="mx-side">
+            <div class="grp">Lanes</div>
+            <div class="it"><span class="glyph g-vip">◆</span>VIP<span class="n">2</span></div>
+            <div class="it"><span class="glyph g-action">▲</span>Action<span class="n">5</span></div>
+            <div class="it"><span class="glyph g-news">❡</span>Reading<span class="n">11</span></div>
+            <div class="it on"><span class="glyph g-buy">¤</span>Purchases<span class="n">4</span></div>
+            <div class="it"><span class="glyph g-screen">◐</span>Screener<span class="n">3</span></div>
+            <div class="grp">Purchases</div>
+            <div class="it">Arriving<span class="n">1</span></div>
+            <div class="it">Returns open<span class="n">2</span></div>
+            <div class="it">Business<span class="n">14</span></div>
+          </div>
+          <div style="border-right:1px solid var(--rule);min-width:0;overflow:hidden">
+            <div class="mx-lh" style="gap:8px">
+              <div style="display:flex;gap:8px;align-items:center"><strong>Purchases</strong><span style="margin-left:auto" class="fine">$379.40 in October</span></div>
+              <div style="display:flex;gap:6px;align-items:center;border:1px solid var(--rule);border-radius:7px;padding:4px 8px;font-size:12px"><span>⌕</span><span class="chip c-buy">October</span><span style="color:var(--muted)">Search orders, or ask a question</span></div>
+            </div>
+            <table class="ledger" style="width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums">
+              <thead><tr style="color:var(--muted);font-size:10.5px;text-align:left"><th style="padding:8px 14px;font-weight:600">Date ▾</th><th style="font-weight:600">Merchant</th><th style="font-weight:600">Items</th><th style="font-weight:600">Status</th><th style="font-weight:600;text-align:right;padding-right:14px">Total</th></tr></thead>
+              <tbody>
+                <tr style="background:var(--sunk)"><td style="padding:8px 14px">Oct 17</td><td><b>Fieldhouse Supply</b></td><td>Rain shell</td><td><span class="chip c-buy">Out for delivery</span></td><td style="text-align:right;padding-right:14px">$164.00</td></tr>
+                <tr style="border-top:1px solid var(--rule)"><td style="padding:8px 14px">Oct 18</td><td>Northbound Coffee</td><td>Whole bean, 2 lb</td><td><span class="chip c-plain">Delivered</span></td><td style="text-align:right;padding-right:14px">$38.00</td></tr>
+                <tr style="border-top:1px solid var(--rule)"><td style="padding:8px 14px">Oct 12</td><td>Arbor Books</td><td>3 books</td><td><span class="chip c-action">Return by Oct 26</span></td><td style="text-align:right;padding-right:14px">$57.40</td></tr>
+                <tr style="border-top:1px solid var(--rule)"><td style="padding:8px 14px">Oct 9</td><td>Lantern Hardware</td><td>LED bulbs ×6</td><td><span class="chip c-plain">Refunded</span></td><td style="text-align:right;padding-right:14px">$24.00</td></tr>
+                <tr style="border-top:1px solid var(--rule)"><td style="padding:8px 14px">Oct 3</td><td>Pixel &amp; Pine</td><td>Font license</td><td><span class="chip c-plain">Digital</span></td><td style="text-align:right;padding-right:14px">$120.00</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="mx-read" style="padding:18px">
+            <span class="k buy">Order FS-20418</span>
+            <h4 style="font-size:16px">Rain shell</h4>
+            <span class="fine">Fieldhouse Supply · Gmail</span>
+            <div class="card" style="gap:5px;font-size:12px"><span>✓ Ordered · Oct 17</span><span>✓ Shipped · Oct 18</span><span><b>● Out for delivery · today</b></span><span class="fine">○ Delivered</span></div>
+            <div class="btns"><span class="b">Track</span><span class="b">Show 3 emails</span></div>
+            <span class="fine">Return by Nov 16 · <kbd>⌘B</kbd> mark as business</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- iPad -->
+<section aria-labelledby="f8">
+  <div class="col">
+    <p class="eyebrow">iPad</p>
+    <h2 id="f8">Where iPad differs</h2>
+    <p>Most of iPad is the Mac layout at touch size. Three things are its own: portrait Today has room for a two-column dashboard, a hardware keyboard turns on the Mac's shortcuts (hold ⌘ to see them), and Stage Manager lets Reading open as its own window just like on the Mac.</p>
+  </div>
+  <div class="wide board" tabindex="0" role="region" aria-label="iPad mockups, scroll sideways">
+    <div class="devices-ipad">
+      <div class="ipd ipd-port" role="img" aria-label="iPad in portrait showing Today as a two-column dashboard: VIP and Action on the left, Reading and Purchases on the right.">
+        <div class="sb" style="display:flex;justify-content:space-between;padding:6px 18px 0;font-size:10px;font-weight:600"><span>9:41</span><span>▮</span></div>
+        <div style="padding:10px 18px;display:grid;gap:12px;font:11.5px/1.4 var(--ui)">
+          <div><div class="big" style="font:700 24px/1.1 var(--ui)">Today</div><div class="dim" style="color:var(--muted)">Monday, October 19</div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start">
+            <div style="display:grid;gap:8px">
+              <div class="box"><div class="hd"><span class="glyph g-vip">◆</span>VIP<span class="r">2 waiting</span></div><span>Dana Okafor · Contract redlines</span><span class="chip c-vip">Draft ready</span><span>Mom · Flight lands at 6:40</span><span class="chip c-vip">Draft ready</span></div>
+              <div class="box"><div class="hd"><span class="glyph g-action">▲</span>Action<span class="r">3 today</span></div><span>Sign lease renewal · 5 PM</span><span>Approve Q4 invoice · EOD</span><span>Send Dana notes · Wed</span></div>
+            </div>
+            <div style="display:grid;gap:8px">
+              <div class="box"><div class="hd"><span class="glyph g-news">❡</span>Reading<span class="r">11 new</span></div><span class="dim" style="color:var(--muted)">About 48 min</span><div class="btns"><span class="chip c-news">Small Batch</span><span class="chip c-news">Sunday Margin</span><span class="chip c-news">Field Notes</span></div></div>
+              <div class="box"><div class="hd"><span class="glyph g-buy">¤</span>Purchases<span class="r">1 arriving</span></div><span>Rain shell · out for delivery</span><span class="chip c-action">Arbor return · 7 days</span></div>
+              <div class="box"><div class="hd"><span class="glyph g-screen">◐</span>Screener<span class="r">3</span></div><span>Jordan Ellis · Intro from Ravi</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ipd ipd-land" role="img" aria-label="iPad in landscape with a hardware keyboard: the VIP lane in three columns, with the draft reply in the reader and a keyboard shortcut overlay shown because the Command key is held.">
+        <div class="mx-body" style="height:100%;grid-template-columns:150px 220px 1fr">
+          <div class="mx-side">
+            <div class="grp">Lanes</div>
+            <div class="it on"><span class="glyph g-vip">◆</span>VIP<span class="n">2</span></div>
+            <div class="it"><span class="glyph g-action">▲</span>Action<span class="n">5</span></div>
+            <div class="it"><span class="glyph g-news">❡</span>Reading<span class="n">11</span></div>
+            <div class="it"><span class="glyph g-buy">¤</span>Purchases<span class="n">4</span></div>
+            <div class="it"><span class="glyph g-screen">◐</span>Screener<span class="n">3</span></div>
+          </div>
+          <div class="mx-list">
+            <div class="mx-lh"><strong>VIP</strong><span>2 waiting</span></div>
+            <div class="mx-row sel"><div class="top"><span class="who">Dana Okafor</span><span class="when">12m</span></div><span class="p">Contract redlines</span></div>
+            <div class="mx-row"><div class="top"><span class="who">Mom</span><span class="when">8m</span></div><span class="p">Flight lands at 6:40</span></div>
+          </div>
+          <div class="mx-read" style="position:relative">
+            <h4 style="font-size:17px">Contract redlines for Thursday</h4>
+            <div class="card"><span class="k vip">Draft reply · oMLX on your Mac</span><p style="font-size:12px">Hi Dana, got these. I'll go through section 4 tonight and send my notes by Wednesday noon.</p><div class="btns"><span class="b pri">Send</span><span class="b">Edit</span></div></div>
+            <div class="hud">
+              <b>Koumara</b>
+              <span>Send draft<kbd>⌘↩</kbd></span><span>Edit draft<kbd>⌘E</kbd></span><span>Shorter<kbd>⌘⌥1</kbd></span><span>Next lane<kbd>⌘]</kbd></span><span>Go to lane<kbd>⌘1–5</kbd></span><span>Done<kbd>E</kbd></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <p class="caption" style="color:var(--muted);font-size:.9rem">On iPad, plain number keys can't switch lanes the way they do on Mac, because typing would trigger them, so iPad uses ⌘1 through ⌘5. Mac accepts both.</p>
+  </div>
+</section>
+
+<!-- States -->
+<section aria-labelledby="f4">
+  <div class="col">
+    <p class="eyebrow">Edge states</p>
+    <h2 id="f4">When things aren't available</h2>
+    <p>Local AI means the model isn't always there: an older device, a phone away from home, a battery saver. Koumara should degrade by doing less, never by doing something wrong. This is how each case looks.</p>
+  </div>
+  <div class="wide tblwrap">
+    <table class="states">
+      <thead><tr><th scope="col">Situation</th><th scope="col">Sorting</th><th scope="col">VIP drafts</th><th scope="col">What I see</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Everything available</th><td>Rules, then on-device model</td><td>oMLX on my Mac, in my voice; on-device as fallback</td><td>Nothing extra</td></tr>
+        <tr><th scope="row">Mac with oMLX out of reach</th><td>Unchanged</td><td>On-device drafts, shorter</td><td>"Drafted on this iPhone" on the draft card</td></tr>
+        <tr><th scope="row">No Apple Intelligence on device</th><td>Rules only; unsure mail goes to an "Unsorted" list</td><td>None; a quick-reply picker of my saved replies instead</td><td>One-time note in Settings explaining what's off and why</td></tr>
+        <tr><th scope="row">Low Power Mode</th><td>Rules now, model catches up on charge</td><td>Drafted when I open the message</td><td>"Sorting paused to save battery" under Today's title</td></tr>
+        <tr><th scope="row">Offline</th><td>Works on downloaded mail</td><td>Drafts still made; sends queue</td><td>Outbox count in the toolbar; anything I sent goes out on reconnect</td></tr>
+        <tr><th scope="row">Empty lane</th><td>—</td><td>—</td><td>A sentence about what will land here, never a celebration</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section aria-labelledby="f5">
+  <div class="col">
+    <p class="eyebrow">What these flows decided</p>
+    <h2 id="f5">Rules I'll hold the build to</h2>
+    <ol class="rules">
+      <li><b>Generated text is always introduced as generated.</b><span>"Draft:", "Gist", "Generated draft". In the UI and in what VoiceOver says.</span></li>
+      <li><b>Koumara never sends on its own.</b><span>Replies are drafted automatically and sent only by me, with a 10-second undo on every send.</span></li>
+      <li><b>Every lane decision can explain itself.</b><span>"Why is this here?" names the stage and the evidence, every time.</span></li>
+      <li><b>Corrections ask once, then stay out of the way.</b><span>One sheet per sender, and every rule is listed with where it came from.</span></li>
+      <li><b>Promises become tasks, when I say so.</b><span>A sent reply that commits to a date offers to create the matching Action item.</span></li>
+      <li><b>Newsletters are read, not processed.</b><span>Grouped by publication, shown in a reader view with trackers blocked, and cleared automatically when they go stale.</span></li>
+    </ol>
+    <p>Next pass: high-fidelity screens for every lane on Mac, iPad and iPhone in both themes, then the SwiftUI prototype with sample mail. If any of the assumptions at the top are wrong, tell me now, because the account and sending choices change the first-run flow most.</p>
+  </div>
+</section>
+
+</html>

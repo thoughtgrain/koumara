@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Koumara Design Brief</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column for the argument, breaking out to wide device frames for the screens. */
+:root {
+  --paper: #F4F6F2;
+  --surface: #FFFFFF;
+  --sunk: #E9EDE7;
+  --ink: #16201A;
+  --muted: #56635B;
+  --rule: #D5DCD4;
+  /* Lane colors follow the strawberry tree's fruit: leaf, ripening, ripe, bark */
+  --vip: #A8231B;
+  --action: #9A5800;
+  --news: #2C6648;
+  --buy: #844628;
+  --screen: #4F5672;
+  --vip-wash: #F7E3E0;
+  --action-wash: #F6EAD6;
+  --news-wash: #DFEDE4;
+  --buy-wash: #F1E4DC;
+  --screen-wash: #E3E5EE;
+  --glass: rgba(236, 240, 235, .86);
+  --display: "Literata", "Iowan Old Style", Georgia, serif;
+  --body: "Public Sans", "Helvetica Neue", Helvetica, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --ui: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0D1310; --surface: #141C17; --sunk: #1B241E; --ink: #E5EBE6; --muted: #9AA8A0; --rule: #27322B;
+    --vip: #FF7B6E; --action: #F0AC45; --news: #74C99C; --buy: #D9946D; --screen: #A9B0D4;
+    --vip-wash: #3A1A17; --action-wash: #36280F; --news-wash: #15301F; --buy-wash: #33211A; --screen-wash: #20243A;
+    --glass: rgba(24, 32, 27, .9);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0D1310; --surface: #141C17; --sunk: #1B241E; --ink: #E5EBE6; --muted: #9AA8A0; --rule: #27322B;
+  --vip: #FF7B6E; --action: #F0AC45; --news: #74C99C; --buy: #D9946D; --screen: #A9B0D4;
+  --vip-wash: #3A1A17; --action-wash: #36280F; --news-wash: #15301F; --buy-wash: #33211A; --screen-wash: #20243A;
+  --glass: rgba(24, 32, 27, .9);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--paper); color: var(--ink);
+  font: 16px/1.6 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 72px;
+}
+.col { max-width: 44rem; margin-inline: auto; }
+.wide { max-width: 76rem; margin-inline: auto; }
+h1, h2, h3 { font-family: var(--display); font-weight: 600; text-wrap: balance; line-height: 1.15; margin: 0; }
+h2 { font-size: clamp(1.6rem, 3.4vw, 2.1rem); }
+h3 { font-size: 1.15rem; }
+p { margin: 0; }
+.eyebrow { font: 500 .72rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+section { padding-block: 56px 0; display: grid; gap: 20px; }
+section > .col, section > .wide { display: grid; gap: 18px; }
+a { color: var(--news); }
+:focus-visible { outline: 2px solid var(--vip); outline-offset: 2px; }
+
+/* Masthead */
+header.mast { padding-block: 56px 8px; }
+.mast .col { display: grid; gap: 18px; }
+.mast h1 { font-size: clamp(2.8rem, 8vw, 4.6rem); letter-spacing: -.01em; }
+.mast h1 span { color: var(--vip); }
+.mast .lede { font-size: 1.2rem; line-height: 1.55; max-width: 38rem; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 22px; font: .8rem/1.4 var(--mono); color: var(--muted); }
+.meta b { color: var(--ink); font-weight: 500; }
+.etym { border-left: 2px solid var(--rule); padding-left: 14px; color: var(--muted); font-size: .92rem; max-width: 36rem; }
+.etym i { font-family: var(--display); color: var(--ink); }
+
+/* Lanes */
+.lanes { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+.lane { background: var(--surface); padding: 20px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.lane .tag { display: inline-flex; align-items: center; gap: 8px; font: 600 .95rem/1 var(--body); }
+.glyph { display: inline-grid; place-items: center; width: 1.6em; height: 1.6em; border-radius: 6px; font: 600 .85em/1 var(--ui); }
+.g-vip { color: var(--vip); background: var(--vip-wash); }
+.g-action { color: var(--action); background: var(--action-wash); }
+.g-news { color: var(--news); background: var(--news-wash); }
+.g-buy { color: var(--buy); background: var(--buy-wash); }
+.g-screen { color: var(--screen); background: var(--screen-wash); }
+.lane dl { margin: 0; display: grid; gap: 8px; font-size: .9rem; }
+.lane dt { font: 500 .68rem/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.lane dd { margin: 0; }
+.lane code, p code, li code { font: .85em var(--mono); background: var(--sunk); padding: 1px 5px; border-radius: 4px; }
+
+/* Between Mail and HEY */
+.spectrum { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.spectrum h3 { display: flex; align-items: baseline; gap: 10px; }
+.spectrum ul { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; font-size: .95rem; }
+.ripen { display: grid; grid-template-columns: repeat(5, 1fr); border: 1px solid var(--rule); }
+.ripen div { padding: 14px 12px; display: grid; gap: 4px; font-size: .8rem; color: var(--muted); }
+.ripen strong { font: 600 .9rem/1.2 var(--body); color: var(--ink); }
+.ripen .sw { height: 36px; border-radius: 4px; }
+@media (max-width: 640px) {
+  .spectrum { grid-template-columns: 1fr; }
+  .ripen { grid-template-columns: 1fr 1fr; }
+}
+
+/* Device frames */
+.scroller { overflow-x: auto; padding-bottom: 8px; }
+.caption { font-size: .88rem; color: var(--muted); max-width: 44rem; }
+.mac { min-width: 900px; border-radius: 12px; border: 1px solid var(--rule); background: var(--surface); overflow: hidden; box-shadow: 0 24px 60px -30px rgba(10, 30, 20, .45); font: 13px/1.4 var(--ui); color: var(--ink); }
+.mac-bar { height: 38px; display: flex; align-items: center; gap: 8px; padding-inline: 14px; background: var(--glass); border-bottom: 1px solid var(--rule); }
+.lights { display: flex; gap: 7px; }
+.lights i { width: 12px; height: 12px; border-radius: 50%; background: var(--rule); }
+.lights i:nth-child(1) { background: #EC6A5E; } .lights i:nth-child(2) { background: #F4BF4F; } .lights i:nth-child(3) { background: #61C554; }
+.mac-bar .ttl { margin-inline: auto; font-weight: 600; font-size: 13px; color: var(--muted); }
+.mac-body { display: grid; grid-template-columns: 200px 300px 1fr; height: 560px; }
+.m-side { background: var(--glass); border-right: 1px solid var(--rule); padding: 12px 8px; display: grid; align-content: start; gap: 2px; }
+.m-side .grp { font-size: 11px; font-weight: 600; color: var(--muted); padding: 10px 10px 4px; }
+.m-side button { all: unset; box-sizing: border-box; display: flex; align-items: center; gap: 9px; padding: 6px 10px; border-radius: 7px; cursor: pointer; font: 13px/1.3 var(--ui); color: var(--ink); }
+.m-side button .n { margin-left: auto; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.m-side button:hover { background: var(--sunk); }
+.m-side button[aria-pressed="true"] { background: var(--sunk); font-weight: 600; }
+.m-side button:focus-visible { outline: 2px solid var(--vip); }
+.m-side .glyph { width: 20px; height: 20px; font-size: 11px; border-radius: 5px; }
+.m-list { border-right: 1px solid var(--rule); overflow-y: auto; min-width: 0; }
+.m-list .lh { padding: 14px 16px 8px; display: grid; gap: 2px; position: sticky; top: 0; background: var(--surface); border-bottom: 1px solid var(--rule); }
+.m-list .lh strong { font-size: 18px; font-weight: 700; }
+.m-list .lh span { font-size: 12px; color: var(--muted); }
+.m-list .sub { font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); padding: 12px 16px 4px; }
+.row { padding: 10px 16px; border-bottom: 1px solid var(--rule); display: grid; gap: 3px; }
+.row.sel { background: var(--sunk); }
+.row .top { display: flex; gap: 8px; align-items: baseline; }
+.row .who { font-weight: 600; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.row .when { font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.row .subj { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.row .prev { color: var(--muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chip { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 999px; justify-self: start; }
+.c-vip { background: var(--vip-wash); color: var(--vip); }
+.c-action { background: var(--action-wash); color: var(--action); }
+.c-news { background: var(--news-wash); color: var(--news); }
+.c-buy { background: var(--buy-wash); color: var(--buy); }
+.c-screen { background: var(--screen-wash); color: var(--screen); }
+.c-plain { background: var(--sunk); color: var(--muted); }
+.m-read { overflow-y: auto; padding: 22px 28px; display: grid; gap: 16px; align-content: start; min-width: 0; }
+.m-read h4 { margin: 0; font: 700 20px/1.25 var(--ui); }
+.m-read .from { font-size: 12.5px; color: var(--muted); }
+.m-read p { font-size: 13.5px; line-height: 1.55; max-width: 60ch; }
+.card { border: 1px solid var(--rule); border-radius: 10px; padding: 14px 16px; display: grid; gap: 10px; background: var(--paper); }
+.card .k { font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; }
+.card .k.vip { color: var(--vip); } .card .k.action { color: var(--action); } .card .k.news { color: var(--news); } .card .k.buy { color: var(--buy); } .card .k.screen { color: var(--screen); }
+.btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { font: 600 12.5px/1 var(--ui); padding: 7px 12px; border-radius: 7px; border: 1px solid var(--rule); background: var(--surface); color: var(--ink); }
+.btn.pri { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.fine { font-size: 11.5px; color: var(--muted); }
+.ledger { width: 100%; border-collapse: collapse; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.ledger td, .ledger th { padding: 6px 0; border-bottom: 1px solid var(--rule); text-align: left; }
+.ledger th { font-size: 11px; color: var(--muted); font-weight: 600; }
+.ledger td:last-child, .ledger th:last-child { text-align: right; }
+.gist { margin: 0; padding-left: 1.1em; display: grid; gap: 4px; font-size: 13px; }
+.quote { border-left: 3px solid var(--action); padding: 2px 0 2px 10px; font-size: 13px; color: var(--ink); }
+.count { font-variant-numeric: tabular-nums; font-weight: 700; }
+
+/* iPad + iPhone */
+.devices { display: flex; gap: 32px; align-items: flex-start; }
+.ipad { width: 680px; flex: none; border-radius: 26px; border: 10px solid #1C211E; background: var(--surface); overflow: hidden; font: 13px/1.45 var(--ui); color: var(--ink); }
+.ipad-body { display: grid; grid-template-columns: 54px 210px 1fr; height: 470px; }
+.rail { background: var(--glass); border-right: 1px solid var(--rule); display: grid; align-content: start; justify-items: center; gap: 10px; padding-top: 18px; }
+.rail .glyph { width: 30px; height: 30px; font-size: 13px; border-radius: 8px; }
+.rail .on { outline: 2px solid var(--news); outline-offset: 2px; }
+.shelf { border-right: 1px solid var(--rule); overflow: hidden; }
+.shelf .lh { padding: 16px 14px 8px; font: 700 20px/1.2 var(--ui); }
+.pub { padding: 10px 14px; border-bottom: 1px solid var(--rule); display: grid; gap: 2px; }
+.pub.sel { background: var(--news-wash); }
+.pub b { font-size: 13px; } .pub span { font-size: 12px; color: var(--muted); }
+.article { padding: 26px 34px; overflow: hidden; display: grid; gap: 12px; align-content: start; }
+.article .pubname { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--news); }
+.article h4 { margin: 0; font: 600 26px/1.15 var(--display); }
+.article p { font: 15px/1.6 var(--display); max-width: 58ch; }
+.iphone { width: 300px; flex: none; border-radius: 44px; border: 10px solid #1C211E; background: var(--surface); overflow: hidden; font: 13px/1.4 var(--ui); color: var(--ink); display: grid; grid-template-rows: 30px 1fr 64px; height: 610px; }
+.iphone .status { display: flex; justify-content: space-between; padding: 8px 22px 0; font-size: 12px; font-weight: 600; }
+.iphone .scroll { overflow: hidden; padding: 6px 16px; display: grid; gap: 14px; align-content: start; }
+.iphone .big { font: 700 30px/1.1 var(--ui); }
+.iphone .date { color: var(--muted); font-size: 12.5px; margin-top: -10px; }
+.blk { display: grid; gap: 6px; }
+.blk .hd { display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 700; }
+.blk .hd .glyph { width: 18px; height: 18px; font-size: 10px; border-radius: 5px; }
+.blk .hd .more { margin-left: auto; color: var(--muted); font-weight: 500; }
+.prow { background: var(--paper); border-radius: 12px; padding: 10px 12px; display: grid; gap: 3px; }
+.prow .top { display: flex; gap: 6px; align-items: baseline; }
+.prow .top b { flex: 1; }
+.prow .top span { font-size: 11px; color: var(--muted); }
+.prow .s { font-size: 12.5px; color: var(--muted); }
+.pills { display: flex; gap: 6px; overflow: hidden; }
+.pills span { flex: none; background: var(--news-wash); color: var(--news); border-radius: 10px; padding: 8px 10px; font-size: 11.5px; font-weight: 600; }
+.tabbar { border-top: 1px solid var(--rule); background: var(--glass); display: grid; grid-template-columns: repeat(5, 1fr); padding-top: 8px; }
+.tabbar div { display: grid; justify-items: center; gap: 3px; font-size: 10px; color: var(--muted); }
+.tabbar .glyph { width: 22px; height: 22px; font-size: 11px; }
+.tabbar .on { color: var(--ink); font-weight: 600; }
+
+/* Pipeline */
+.pipe { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border: 1px solid var(--rule); background: var(--surface); }
+.stage { padding: 18px; display: grid; gap: 8px; align-content: start; border-right: 1px solid var(--rule); position: relative; min-width: 0; }
+.stage:last-child { border-right: 0; }
+.stage .where { font: 500 .7rem/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.stage h3 { font-size: 1.05rem; }
+.stage p { font-size: .88rem; color: var(--muted); }
+.stage p b { color: var(--ink); font-weight: 600; }
+.stage:not(:last-child)::after { content: "→"; position: absolute; right: -9px; top: 18px; width: 18px; height: 18px; display: grid; place-items: center; background: var(--paper); color: var(--muted); font-size: 12px; border-radius: 50%; border: 1px solid var(--rule); z-index: 1; }
+pre.schema { margin: 0; overflow-x: auto; font: .82rem/1.55 var(--mono); background: var(--surface); border: 1px solid var(--rule); padding: 16px 18px; border-radius: 8px; }
+@media (max-width: 760px) {
+  .pipe { grid-template-columns: 1fr; }
+  .stage { border-right: 0; border-bottom: 1px solid var(--rule); }
+  .stage:not(:last-child)::after { content: "↓"; right: auto; left: 18px; top: auto; bottom: -9px; }
+}
+
+/* Commitments and questions */
+.commit { margin: 0; padding: 0; list-style: none; display: grid; gap: 14px; }
+.commit li { display: grid; grid-template-columns: 9rem 1fr; gap: 16px; padding-top: 14px; border-top: 1px solid var(--rule); font-size: .95rem; }
+.commit li b { font: 600 .9rem/1.4 var(--body); }
+@media (max-width: 560px) { .commit li { grid-template-columns: 1fr; gap: 4px; } }
+.qs { margin: 0; padding-left: 1.4em; display: grid; gap: 14px; }
+.qs li { padding-left: 4px; }
+.qs li b { display: block; }
+.qs li span { color: var(--muted); font-size: .93rem; }
+@media (prefers-reduced-motion: no-preference) {
+  .m-read, .m-list { animation: fade .18s ease-out; }
+  @keyframes fade { from { opacity: .4; } to { opacity: 1; } }
+}
+</style>
+
+<header class="mast">
+  <div class="col">
+    <p class="eyebrow">Design brief · Draft 1 · 19 Oct 2026</p>
+    <h1>Koumara<span>.</span></h1>
+    <p class="lede">A mail app for Mac, iPad and iPhone that sorts my inbox into lanes I actually think in, keeps my VIPs answered within minutes, and does all of its thinking on my own hardware.</p>
+    <p class="etym"><i>Koumara</i> is the Greek name for the strawberry tree, <i>Arbutus unedo</i>, which shows up in the myths around Hermes, the messenger. The tree carries flowers, green fruit and ripe red fruit on the same branch at once. That's the whole visual idea: one inbox holding mail at different stages of ripeness.</p>
+    <div class="meta"><span><b>Targets</b> macOS · iPadOS · iOS</span><span><b>Accounts</b> Gmail · iCloud</span><span><b>AI</b> Apple on-device first, oMLX on my Mac second</span><span><b>Role</b> Replaces Apple Mail</span><span><b>Stage</b> Pre-build</span></div>
+  </div>
+</header>
+
+<section aria-labelledby="h-lanes">
+  <div class="col">
+    <p class="eyebrow">The model</p>
+    <h2 id="h-lanes">Five lanes instead of one inbox</h2>
+    <p>Apple Mail gives me one pile and a search box. HEY gives me three opinionated piles. I want the HEY idea, with lanes that match the four jobs I listed, plus a gate that keeps strangers out until I've said yes. Every message lives in exactly one lane. Moving a message teaches Koumara a rule for that sender, so the sorting gets better from my corrections instead of from guesswork.</p>
+  </div>
+  <div class="wide">
+    <div class="lanes">
+      <div class="lane">
+        <span class="tag"><span class="glyph g-vip" aria-hidden="true">◆</span>VIP</span>
+        <dl><dt>What lands here</dt><dd>Anyone on my VIP list, plus threads I'm in with them.</dd>
+        <dt>How it's detected</dt><dd>Sender match against my VIP list. No model needed.</dd>
+        <dt>Built for</dt><dd>Speed. Every message arrives with a reply already drafted and a "waiting" clock.</dd></dl>
+      </div>
+      <div class="lane">
+        <span class="tag"><span class="glyph g-action" aria-hidden="true">▲</span>Action</span>
+        <dl><dt>What lands here</dt><dd>Mail that asks me to do something: sign, pay, approve, RSVP, answer.</dd>
+        <dt>How it's detected</dt><dd>On-device model extracts the task, the deadline and the sentence it came from.</dd>
+        <dt>Built for</dt><dd>Triage. Grouped by due date, cleared with Done, Snooze or Waiting on.</dd></dl>
+      </div>
+      <div class="lane">
+        <span class="tag"><span class="glyph g-news" aria-hidden="true">❡</span>Reading</span>
+        <dl><dt>What lands here</dt><dd>Newsletters and digests.</dd>
+        <dt>How it's detected</dt><dd><code>List-Unsubscribe</code> and <code>List-Id</code> headers catch nearly all of it before any AI runs.</dd>
+        <dt>Built for</dt><dd>Browsing. A shelf of publications and a clean reading view with a three-line gist.</dd></dl>
+      </div>
+      <div class="lane">
+        <span class="tag"><span class="glyph g-buy" aria-hidden="true">¤</span>Purchases</span>
+        <dl><dt>What lands here</dt><dd>Receipts, order confirmations, shipping and return notices.</dd>
+        <dt>How it's detected</dt><dd>schema.org <code>Order</code> markup when senders include it, the model when they don't.</dd>
+        <dt>Built for</dt><dd>Finding things. A ledger with merchant, total, delivery status and return deadline.</dd></dl>
+      </div>
+      <div class="lane">
+        <span class="tag"><span class="glyph g-screen" aria-hidden="true">◐</span>Screener</span>
+        <dl><dt>What lands here</dt><dd>First-time senders.</dd>
+        <dt>How it's detected</dt><dd>Never seen this address before.</dd>
+        <dt>Built for</dt><dd>One decision per sender: let them in (and pick a lane) or never hear from them again.</dd></dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="h-look">
+  <div class="col">
+    <p class="eyebrow">Visual direction</p>
+    <h2 id="h-look">Apple Mail's manners, HEY's opinions</h2>
+    <p>The app should feel like it shipped with the OS: system materials, SF Pro, native sidebars, standard gestures, keyboard shortcuts that behave the way Mac people expect. The personality comes from color and from structure, not from custom chrome.</p>
+  </div>
+  <div class="col spectrum">
+    <div>
+      <h3>From Apple Mail</h3>
+      <ul>
+        <li>Three-column split view on Mac and iPad, collapsing cleanly on iPhone.</li>
+        <li>Translucent sidebar and toolbars using system materials.</li>
+        <li>SF Pro, Dynamic Type and system spacing. No custom fonts in the app.</li>
+        <li>Swipe actions, context menus and menu-bar commands where people already look for them.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>From HEY</h3>
+      <ul>
+        <li>Each lane gets its own color and its own layout, tuned for its job.</li>
+        <li>The Screener: strangers ask permission before they reach me.</li>
+        <li>Reading and Purchases feel like a magazine rack and a ledger, not a mail list.</li>
+        <li>Strong, plain-spoken labels instead of folder jargon.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="col">
+    <h3>Color comes from the tree</h3>
+    <p class="caption">Lane colors run from leaf to bark. Each one is paired with a glyph, so the lane is still readable without color. Both themes keep lane text at 4.5:1 or better against its tint.</p>
+    <div class="ripen" role="list">
+      <div role="listitem"><span class="sw" style="background:var(--vip)"></span><strong>Ripe red</strong>VIP</div>
+      <div role="listitem"><span class="sw" style="background:var(--action)"></span><strong>Ripening</strong>Action</div>
+      <div role="listitem"><span class="sw" style="background:var(--news)"></span><strong>Leaf</strong>Reading</div>
+      <div role="listitem"><span class="sw" style="background:var(--buy)"></span><strong>Bark</strong>Purchases</div>
+      <div role="listitem"><span class="sw" style="background:var(--screen)"></span><strong>Dusk</strong>Screener</div>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="h-mac">
+  <div class="col">
+    <p class="eyebrow">Screens · Mac</p>
+    <h2 id="h-mac">The Mac window</h2>
+    <p class="caption">Sample data, not real mail. Click a lane in the sidebar to see how the middle and right columns change shape for each job. On Mac the number keys 1 to 5 switch lanes.</p>
+  </div>
+  <div class="wide scroller">
+    <div class="mac" role="group" aria-label="Koumara Mac window mockup">
+      <div class="mac-bar"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><span class="ttl" id="macTitle">VIP</span></div>
+      <div class="mac-body">
+        <nav class="m-side" aria-label="Lanes">
+          <div class="grp">Lanes</div>
+          <button type="button" data-lane="vip" aria-pressed="true"><span class="glyph g-vip" aria-hidden="true">◆</span>VIP<span class="n">2</span></button>
+          <button type="button" data-lane="action" aria-pressed="false"><span class="glyph g-action" aria-hidden="true">▲</span>Action<span class="n">5</span></button>
+          <button type="button" data-lane="news" aria-pressed="false"><span class="glyph g-news" aria-hidden="true">❡</span>Reading<span class="n">11</span></button>
+          <button type="button" data-lane="buy" aria-pressed="false"><span class="glyph g-buy" aria-hidden="true">¤</span>Purchases<span class="n">4</span></button>
+          <button type="button" data-lane="screen" aria-pressed="false"><span class="glyph g-screen" aria-hidden="true">◐</span>Screener<span class="n">3</span></button>
+          <div class="grp">Mailboxes</div>
+          <button type="button" disabled><span class="glyph g-screen" aria-hidden="true" style="opacity:.5">≡</span>All Mail</button>
+          <button type="button" disabled><span class="glyph g-screen" aria-hidden="true" style="opacity:.5">↗</span>Sent</button>
+        </nav>
+        <div class="m-list" id="mList" aria-live="polite"></div>
+        <div class="m-read" id="mRead"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="h-touch">
+  <div class="col">
+    <p class="eyebrow">Screens · iPad and iPhone</p>
+    <h2 id="h-touch">Reading on iPad, Today on iPhone</h2>
+    <p class="caption">iPad keeps the Mac's columns but shrinks the sidebar to a rail of lane glyphs, which leaves room for a proper reading measure. iPhone opens on Today: one scroll that shows what's waiting in each lane, with a tab per lane underneath.</p>
+  </div>
+  <div class="wide scroller">
+    <div class="devices">
+      <div class="ipad" role="img" aria-label="iPad mockup showing the Reading lane: a rail of lane icons, a list of newsletters, and an article with a three-line gist.">
+        <div class="ipad-body">
+          <div class="rail" aria-hidden="true">
+            <span class="glyph g-vip">◆</span><span class="glyph g-action">▲</span><span class="glyph g-news on">❡</span><span class="glyph g-buy">¤</span><span class="glyph g-screen">◐</span>
+          </div>
+          <div class="shelf">
+            <div class="lh">Reading</div>
+            <div class="pub sel"><b>Small Batch Engineering</b><span>Why tiny models win on the edge · 7 min</span></div>
+            <div class="pub"><b>The Sunday Margin</b><span>3 unread</span></div>
+            <div class="pub"><b>Field Notes on Type</b><span>1 unread</span></div>
+            <div class="pub"><b>City Bike Weekly</b><span>5 unread</span></div>
+            <div class="pub"><b>Plain Language Digest</b><span>Caught up</span></div>
+          </div>
+          <div class="article">
+            <span class="pubname">Small Batch Engineering · Issue 84</span>
+            <h4>Why tiny models win on the edge</h4>
+            <div class="card"><span class="k news">Gist · on device</span>
+              <ul class="gist"><li>Small models answer faster because nothing leaves the device.</li><li>Structured output beats free text for app features.</li><li>Keep prompts short; the context window is the real limit.</li></ul>
+            </div>
+            <p>Most of the features people ask for are classification with good manners. You don't need a frontier model to tell a receipt from a newsletter, you need a fast one that never makes you wait.</p>
+          </div>
+        </div>
+      </div>
+      <div class="iphone" role="img" aria-label="iPhone mockup of the Today screen: two VIP messages with drafts ready, three actions due today, a shelf of newsletters, and a package arriving today.">
+        <div class="status" aria-hidden="true"><span>9:41</span><span>●●● ▮</span></div>
+        <div class="scroll">
+          <div class="big">Today</div>
+          <div class="date">Monday, October 19</div>
+          <div class="blk">
+            <div class="hd"><span class="glyph g-vip">◆</span>VIP<span class="more">2 waiting</span></div>
+            <div class="prow"><div class="top"><b>Dana Okafor</b><span>12m</span></div><span class="s">Contract redlines for Thursday</span><span class="chip c-vip">Draft ready</span></div>
+            <div class="prow"><div class="top"><b>Mom</b><span>34m</span></div><span class="s">Flight lands at 6:40</span><span class="chip c-vip">Draft ready</span></div>
+          </div>
+          <div class="blk">
+            <div class="hd"><span class="glyph g-action">▲</span>Action<span class="more">3 due today</span></div>
+            <div class="prow"><div class="top"><b>Sign lease renewal</b><span>5:00 PM</span></div><span class="s">Harbor Property Management</span></div>
+          </div>
+          <div class="blk">
+            <div class="hd"><span class="glyph g-news">❡</span>Reading<span class="more">11 new</span></div>
+            <div class="pills"><span>Small Batch Eng.</span><span>Sunday Margin</span><span>Field Notes</span></div>
+          </div>
+          <div class="blk">
+            <div class="hd"><span class="glyph g-buy">¤</span>Purchases<span class="more">Arriving today</span></div>
+            <div class="prow"><div class="top"><b>Rain shell</b><span>$164.00</span></div><span class="s">Fieldhouse Supply · Out for delivery</span></div>
+          </div>
+        </div>
+        <div class="tabbar" aria-hidden="true">
+          <div class="on"><span class="glyph g-screen">☀</span>Today</div>
+          <div><span class="glyph g-vip">◆</span>VIP</div>
+          <div><span class="glyph g-action">▲</span>Action</div>
+          <div><span class="glyph g-news">❡</span>Reading</div>
+          <div><span class="glyph g-buy">¤</span>Purchases</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="h-ai">
+  <div class="col">
+    <p class="eyebrow">How the sorting works</p>
+    <h2 id="h-ai">Cheap rules first, the model only where it earns its keep</h2>
+    <p>Apple's on-device model (the Foundation Models framework) is small, fast and private, but it has a short context window and it only runs on Apple Intelligence hardware. So I don't want to throw every email at it. Headers already tell me most of what I need: a newsletter announces itself with <code>List-Unsubscribe</code>, a VIP is a sender match, a stranger is an unknown address. The model handles the ambiguous mail and the extraction work, and a bigger local model on my own machine handles the jobs that need more room.</p>
+  </div>
+  <div class="wide">
+    <div class="pipe">
+      <div class="stage"><span class="where">Every message · instant</span><h3>1. Header rules</h3><p>VIP list, Screener, <code>List-Unsubscribe</code>, <code>List-Id</code>, <code>Precedence: bulk</code>, schema.org <code>Order</code> markup. <b>Deterministic, free, explainable.</b></p></div>
+      <div class="stage"><span class="where">Ambiguous mail · on device</span><h3>2. Apple model</h3><p>Guided generation returns a typed result: lane, confidence, task and deadline, or order details. <b>Runs on every device, nothing leaves it.</b></p></div>
+      <div class="stage"><span class="where">Heavy jobs · my Mac</span><h3>3. oMLX</h3><p>Long-thread summaries, VIP drafts in my voice, and embeddings for search, through oMLX's OpenAI-compatible endpoint on my Mac. <b>Optional. iPhone and iPad use it when they can reach the Mac.</b></p></div>
+      <div class="stage"><span class="where">Whenever I move mail</span><h3>4. My corrections</h3><p>Moving a message asks once: "Always put mail from this sender here?" Yes becomes a stage-1 rule. <b>The model gets used less over time.</b></p></div>
+    </div>
+  </div>
+  <div class="col">
+    <p class="caption">The shape I'd ask the on-device model to fill in. Typed output means no parsing of free text, and a low confidence score sends the message to the lane I last used for that sender instead of guessing.</p>
+    <pre class="schema" aria-label="Swift sketch of the classification result">@Generable
+struct Triage {
+  @Guide(description: "vip, action, reading, purchase, or other")
+  var lane: Lane
+  @Guide(.range(0...1))
+  var confidence: Double
+  var task: Task?        // "Sign lease renewal", due 2026-10-19T17:00
+  var order: OrderInfo?  // merchant, total, items, tracking, return-by
+}</pre>
+  </div>
+</section>
+
+<section aria-labelledby="h-vip">
+  <div class="col">
+    <p class="eyebrow">VIP replies</p>
+    <h2 id="h-vip">Every reply drafted, nothing sent without me</h2>
+    <p><b>Decided:</b> every VIP message gets a full reply drafted automatically the moment it lands, and Koumara never sends anything on its own. "Quick" comes from the draft being ready, not from skipping me. A wrong reply to the people I care most about costs more than a slow one.</p>
+    <p>To keep things fast without auto-sending, Koumara <b>nudges</b> me instead: if a VIP has been waiting longer than a window I set per person, I get a reminder with the draft attached. Drafts can be regenerated shorter, warmer or more formal, and every draft is labeled as generated until I edit or send it.</p>
+  </div>
+</section>
+
+<section aria-labelledby="h-a11y">
+  <div class="col">
+    <p class="eyebrow">Accessibility</p>
+    <h2 id="h-a11y">Commitments before any pixels ship</h2>
+    <ul class="commit">
+      <li><b>Lanes for VoiceOver</b><span>Each lane is a rotor entry and a heading, so I can jump straight to Action or VIP without swiping through the list.</span></li>
+      <li><b>Never color alone</b><span>Every lane color travels with a glyph and a text label. Chips say "Draft ready", not just a red dot.</span></li>
+      <li><b>Dynamic Type to AX5</b><span>List rows reflow to stacked layouts at large sizes instead of truncating sender names.</span></li>
+      <li><b>AI is labeled</b><span>Summaries, drafts and extracted tasks are marked as generated, and the original text is always one action away.</span></li>
+      <li><b>Nudges are calm</b><span>A VIP nudge is announced once with who is waiting and for how long. There are no countdowns, because nothing is sent automatically.</span></li>
+      <li><b>Keyboard first on Mac</b><span>1–5 switch lanes, R replies, E marks done, S snoozes. Full Keyboard Access reaches every control.</span></li>
+      <li><b>Motion respects settings</b><span>Lane transitions cross-fade under Reduce Motion and drop translucency under Reduce Transparency.</span></li>
+    </ul>
+  </div>
+</section>
+
+<section aria-labelledby="h-q">
+  <div class="col">
+    <p class="eyebrow">Before I build</p>
+    <h2 id="h-q">Decisions and open questions</h2>
+    <ol class="qs">
+      <li><b>Accounts: Gmail and iCloud</b><span>Decided. Gmail syncs through the Gmail API with Google sign-in, which gives labels and fast change history. iCloud Mail syncs over IMAP with an app-specific password, since Apple offers no sign-in for third-party mail apps. Others can come later.</span></li>
+      <li><b>Replaces Apple Mail</b><span>Decided. Koumara is a full client: compose, drafts, signatures, attachments, search, and the option to become the default mail app on Mac, iPhone and iPad.</span></li>
+      <li><b>Local AI: oMLX on my Mac</b><span>Decided. oMLX serves an OpenAI-compatible API on the Mac, so drafts, long summaries and search embeddings go there. Apple's on-device model covers sorting on every device and drafts when the Mac can't be reached.</span></li>
+      <li><b>VIP replies are drafted, never sent automatically</b><span>Decided. Auto-acknowledge is gone. Nudges replace it.</span></li>
+      <li><b>Who counts as VIP?</b><span>Still open. My default: a hand-picked list, with suggestions from who I reply to fastest.</span></li>
+      <li><b>Device floor</b><span>Still open. Apple's on-device model needs Apple Intelligence hardware and the OS 26 releases. Older devices would only get header rules.</span></li>
+      <li><b>Reaching the Mac from iPhone</b><span>Still open. On home Wi-Fi it's direct. Away from home it needs a private tunnel such as Tailscale, or drafts fall back to on-device.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section aria-labelledby="h-next">
+  <div class="col">
+    <p class="eyebrow">Next design passes</p>
+    <h2 id="h-next">What comes after this brief</h2>
+    <ol class="qs">
+      <li><b>Flows</b><span>First run, VIP replies, correcting a misfiled message, newsletter reading and purchases, on iPhone, iPad and Mac. Drafted in <a href="flows.html">Koumara flows</a>.</span></li>
+      <li><b>High-fidelity screens</b><span>The Reading lane as a magazine Edition, every lane in light and dark, large text, and build specs. Drafted in <a href="screens.html">Koumara screens</a>.</span></li>
+      <li><b>SwiftUI prototype</b><span>One multiplatform target with sample mail, so the lanes can be felt before any real sync code exists.</span></li>
+    </ol>
+  </div>
+</section>
+
+<script>
+(function () {
+  var lanes = {
+    vip: {
+      title: "VIP", sub: "2 waiting · median reply 9 min this week",
+      rows: [
+        { who: "Dana Okafor", when: "12m", subj: "Contract redlines for Thursday", prev: "Attached are legal's comments on section 4…", chip: ["c-vip", "Draft ready"], sel: true },
+        { who: "Mom", when: "34m", subj: "Flight lands at 6:40", prev: "Can you grab me from arrivals? Terminal B", chip: ["c-vip", "Draft ready"] },
+        { who: "Ravi Menon", when: "2h", subj: "Can you review the a11y audit?", prev: "No rush, but before Friday would be great", chip: ["c-plain", "Replied"] }
+      ],
+      read: '<h4>Contract redlines for Thursday</h4><div class="from">Dana Okafor · 9:29 AM · waiting 12 min</div>' +
+        '<p>Hi, attached are legal’s comments on section 4 and the new indemnity language. Can you look before Thursday’s call? Mainly need to know if the accessibility warranty wording works for you.</p>' +
+        '<div class="card"><span class="k vip">Draft reply · oMLX on this Mac</span><p>Hi Dana, got these. I’ll go through section 4 tonight and send my notes on the accessibility warranty by Wednesday noon, so we have a day of buffer before the call.</p>' +
+        '<div class="btns"><span class="btn pri">Send</span><span class="btn">Edit</span><span class="btn">Send later</span></div></div>' +
+        '<div class="card"><span class="k vip">Nudge · at 10:00 AM</span><p>If Dana is still waiting at 10:00, Koumara reminds you with this draft attached. It never sends on its own.</p><div class="btns"><span class="btn">Change nudge time</span></div></div>' +
+        '<span class="fine">Drafted by oMLX on this Mac. Nothing left the Mac, and nothing sends until you press Send.</span>'
+    },
+    action: {
+      title: "Action", sub: "3 due today · 2 this week",
+      groups: [
+        ["Due today", [
+          { who: "Sign lease renewal", when: "5:00 PM", subj: "Harbor Property Management", prev: "DocuSign · 2 signatures needed", chip: ["c-action", "Today"], sel: true },
+          { who: "Approve Q4 invoice", when: "EOD", subj: "Ledgerline Billing", prev: "$2,400.00 · net 15", chip: ["c-action", "Today"] },
+          { who: "Answer Dana about section 4", when: "Thu", subj: "From VIP thread", prev: "Linked to Contract redlines", chip: ["c-vip", "VIP"] }
+        ]],
+        ["This week", [
+          { who: "RSVP to design meetup", when: "Fri", subj: "Bay Type Club", prev: "Limited seats", chip: ["c-plain", "Fri"] },
+          { who: "Send W-9", when: "Thu", subj: "Pixel & Pine Studio", prev: "Needed before first payment", chip: ["c-plain", "Thu"] }
+        ]],
+        ["Waiting on others", [
+          { who: "Audit feedback from Ravi", when: "3d", subj: "You asked on Oct 16", prev: "Nudge drafted", chip: ["c-plain", "Waiting"] }
+        ]]
+      ],
+      read: '<h4>Sign lease renewal</h4><div class="from">Harbor Property Management · received 8:02 AM</div>' +
+        '<div class="card"><span class="k action">Extracted task · on device</span><p><span class="count">Sign the 12-month renewal in DocuSign</span><br>Due today, 5:00 PM</p>' +
+        '<div class="quote">“Please complete signatures by 5pm today to lock in the current rate.”</div>' +
+        '<div class="btns"><span class="btn pri">Done</span><span class="btn">Snooze</span><span class="btn">Waiting on…</span><span class="btn">Open original</span></div></div>' +
+        '<span class="fine">The quoted sentence is where the deadline came from, so I can check it at a glance.</span>'
+    },
+    news: {
+      title: "Reading", sub: "11 new issues from 5 publications",
+      rows: [
+        { who: "Small Batch Engineering", when: "7 min", subj: "Why tiny models win on the edge", prev: "Issue 84", chip: ["c-news", "New"], sel: true },
+        { who: "The Sunday Margin", when: "3 new", subj: "The case for slower software", prev: "Plus two older issues", chip: ["c-news", "3"] },
+        { who: "Field Notes on Type", when: "4 min", subj: "Optical sizes, explained", prev: "Issue 31", chip: ["c-news", "New"] },
+        { who: "City Bike Weekly", when: "5 new", subj: "Bridge lane opens Saturday", prev: "Skim in Gist view", chip: ["c-news", "5"] },
+        { who: "Plain Language Digest", when: "", subj: "Caught up", prev: "Next issue Thursday", chip: ["c-plain", "Read"] }
+      ],
+      read: '<span class="chip c-news">Small Batch Engineering · Issue 84</span><h4>Why tiny models win on the edge</h4><div class="from">7 min read</div>' +
+        '<div class="card"><span class="k news">Gist · on device</span><ul class="gist"><li>Small models answer faster because nothing leaves the device.</li><li>Structured output beats free text for app features.</li><li>Keep prompts short; the context window is the real limit.</li></ul></div>' +
+        '<p>Most of the features people ask for are classification with good manners. You don’t need a frontier model to tell a receipt from a newsletter, you need a fast one that never makes you wait.</p>' +
+        '<div class="btns"><span class="btn pri">Mark read and next</span><span class="btn">Save</span><span class="btn">Unsubscribe</span></div>'
+    },
+    buy: {
+      title: "Purchases", sub: "$379.40 in October so far",
+      rows: [
+        { who: "Fieldhouse Supply", when: "Oct 17", subj: "Rain shell, size M", prev: "$164.00", chip: ["c-buy", "Out for delivery"], sel: true },
+        { who: "Northbound Coffee", when: "Oct 18", subj: "Whole bean, 2 lb", prev: "$38.00", chip: ["c-plain", "Delivered"] },
+        { who: "Arbor Books", when: "Oct 12", subj: "3 items", prev: "$57.40", chip: ["c-action", "Return by Oct 26"] },
+        { who: "Pixel & Pine", when: "Oct 3", subj: "Font license, desktop", prev: "$120.00", chip: ["c-plain", "Digital"] }
+      ],
+      read: '<h4>Fieldhouse Supply</h4><div class="from">Order FS-20418 · placed Oct 17</div>' +
+        '<div class="card"><span class="k buy">Receipt · from schema.org markup</span><table class="ledger"><thead><tr><th>Item</th><th>Qty</th><th>Price</th></tr></thead><tbody>' +
+        '<tr><td>Ridgeline rain shell, M, slate</td><td>1</td><td>$149.00</td></tr><tr><td>Shipping</td><td></td><td>$0.00</td></tr><tr><td>Tax</td><td></td><td>$15.00</td></tr>' +
+        '<tr><td><b>Total</b></td><td></td><td><b>$164.00</b></td></tr></tbody></table>' +
+        '<p>Out for delivery today · Return window ends Nov 16</p><div class="btns"><span class="btn pri">Track package</span><span class="btn">Add return reminder</span><span class="btn">Open original</span></div></div>'
+    },
+    screen: {
+      title: "Screener", sub: "3 first-time senders",
+      rows: [
+        { who: "Jordan Ellis", when: "8:40", subj: "Intro from Ravi", prev: "Ravi suggested we talk about…", chip: ["c-screen", "Looks personal"], sel: true },
+        { who: "hello@trailmapco.com", when: "Yesterday", subj: "Welcome to Trailmap", prev: "Thanks for signing up", chip: ["c-news", "Looks like a newsletter"] },
+        { who: "orders@arborbooks.com", when: "Oct 12", subj: "Your order has shipped", prev: "3 items on the way", chip: ["c-buy", "Looks like a receipt"] }
+      ],
+      read: '<h4>Jordan Ellis wants to reach you</h4><div class="from">jordan.ellis@example.com · first message</div>' +
+        '<p>Hi, Ravi Menon suggested we talk about accessibility audits for our checkout flow. Would you have 20 minutes next week?</p>' +
+        '<div class="card"><span class="k screen">Let them in?</span><p>Mentions Ravi Menon, who is in your contacts.</p>' +
+        '<div class="btns"><span class="btn pri">Yes, to Everything else</span><span class="btn">Yes, as VIP</span><span class="btn">Yes, to Action</span><span class="btn">No</span></div></div>' +
+        '<span class="fine">"No" hides this sender for good. You can change your mind in Settings.</span>'
+    }
+  };
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function row(r) {
+    return '<div class="row' + (r.sel ? " sel" : "") + '"><div class="top"><span class="who">' + esc(r.who) + '</span><span class="when">' + esc(r.when) + '</span></div>' +
+      '<span class="subj">' + esc(r.subj) + '</span><span class="prev">' + esc(r.prev) + '</span>' +
+      (r.chip ? '<span class="chip ' + r.chip[0] + '">' + esc(r.chip[1]) + '</span>' : "") + '</div>';
+  }
+
+  var list = document.getElementById("mList");
+  var read = document.getElementById("mRead");
+  var title = document.getElementById("macTitle");
+  var buttons = Array.prototype.slice.call(document.querySelectorAll(".m-side button[data-lane]"));
+
+  function show(key) {
+    var l = lanes[key];
+    if (!l) return;
+    var html = '<div class="lh"><strong>' + esc(l.title) + '</strong><span>' + esc(l.sub) + '</span></div>';
+    if (l.groups) {
+      l.groups.forEach(function (g) { html += '<div class="sub">' + esc(g[0]) + '</div>' + g[1].map(row).join(""); });
+    } else {
+      html += l.rows.map(row).join("");
+    }
+    list.innerHTML = html;
+    read.innerHTML = l.read;
+    title.textContent = l.title;
+    buttons.forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.lane === key)); });
+  }
+
+  buttons.forEach(function (b) { b.addEventListener("click", function () { show(b.dataset.lane); }); });
+  document.querySelector(".mac").addEventListener("keydown", function (e) {
+    var i = "12345".indexOf(e.key);
+    if (i > -1 && buttons[i]) { show(buttons[i].dataset.lane); buttons[i].focus(); }
+  });
+  show("vip");
+})();
+</script>
+
+</html>

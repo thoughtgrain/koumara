@@ -1,0 +1,688 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Koumara Screens</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,800;1,7..72,400&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: reading column for the argument, wide horizontal boards for device screens, spec tables at the end. */
+:root {
+  --paper: #F4F6F2; --surface: #FFFFFF; --sunk: #E9EDE7; --ink: #16201A; --muted: #56635B; --rule: #D5DCD4;
+  --vip: #A8231B; --action: #9A5800; --news: #2C6648; --buy: #844628; --screen: #4F5672;
+  --vip-wash: #F7E3E0; --action-wash: #F6EAD6; --news-wash: #DFEDE4; --buy-wash: #F1E4DC; --screen-wash: #E3E5EE;
+  --glass: rgba(236, 240, 235, .9);
+  /* Publication tints, sampled from each newsletter's own header color and clamped for contrast */
+  --pub-sb: #24506A; --pub-sm: #6A3A5E; --pub-fn: #7A5A12; --pub-cb: #2F5D3A;
+  --page-ink: #16201A; --page-muted: #56635B;
+  --display: "Literata", "Iowan Old Style", Georgia, serif;
+  --serif: "New York", "Literata", "Iowan Old Style", Georgia, serif;
+  --body: "Public Sans", "Helvetica Neue", Helvetica, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --ui: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0D1310; --surface: #141C17; --sunk: #1B241E; --ink: #E5EBE6; --muted: #9AA8A0; --rule: #27322B;
+    --vip: #FF7B6E; --action: #F0AC45; --news: #74C99C; --buy: #D9946D; --screen: #A9B0D4;
+    --vip-wash: #3A1A17; --action-wash: #36280F; --news-wash: #15301F; --buy-wash: #33211A; --screen-wash: #20243A;
+    --glass: rgba(24, 32, 27, .92);
+    --pub-sb: #8DBBD6; --pub-sm: #D3A4C6; --pub-fn: #DDB761; --pub-cb: #8CC79A;
+    --page-ink: #E5EBE6; --page-muted: #9AA8A0;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0D1310; --surface: #141C17; --sunk: #1B241E; --ink: #E5EBE6; --muted: #9AA8A0; --rule: #27322B;
+  --vip: #FF7B6E; --action: #F0AC45; --news: #74C99C; --buy: #D9946D; --screen: #A9B0D4;
+  --vip-wash: #3A1A17; --action-wash: #36280F; --news-wash: #15301F; --buy-wash: #33211A; --screen-wash: #20243A;
+  --glass: rgba(24, 32, 27, .92);
+  --pub-sb: #8DBBD6; --pub-sm: #D3A4C6; --pub-fn: #DDB761; --pub-cb: #8CC79A;
+  --page-ink: #E5EBE6; --page-muted: #9AA8A0;
+  color-scheme: dark;
+}
+/* Mock themes: fixed regardless of the page theme, so light and dark can sit side by side */
+.th-light {
+  --paper: #F4F6F2; --surface: #FFFFFF; --sunk: #E9EDE7; --ink: #16201A; --muted: #56635B; --rule: #D5DCD4;
+  --vip: #A8231B; --action: #9A5800; --news: #2C6648; --buy: #844628; --screen: #4F5672;
+  --vip-wash: #F7E3E0; --action-wash: #F6EAD6; --news-wash: #DFEDE4; --buy-wash: #F1E4DC; --screen-wash: #E3E5EE;
+  --glass: rgba(246, 248, 244, .92);
+  --pub-sb: #24506A; --pub-sm: #6A3A5E; --pub-fn: #7A5A12; --pub-cb: #2F5D3A;
+  --mag: #FBFAF6;
+}
+.th-dark {
+  --paper: #0D1310; --surface: #141C17; --sunk: #1B241E; --ink: #E5EBE6; --muted: #9AA8A0; --rule: #27322B;
+  --vip: #FF7B6E; --action: #F0AC45; --news: #74C99C; --buy: #D9946D; --screen: #A9B0D4;
+  --vip-wash: #3A1A17; --action-wash: #36280F; --news-wash: #15301F; --buy-wash: #33211A; --screen-wash: #20243A;
+  --glass: rgba(22, 30, 25, .94);
+  --pub-sb: #8DBBD6; --pub-sm: #D3A4C6; --pub-fn: #DDB761; --pub-cb: #8CC79A;
+  --mag: #121814;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--paper); color: var(--ink); font: 16px/1.6 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 80px;
+}
+.col { max-width: 44rem; margin-inline: auto; display: grid; gap: 16px; }
+.wide { max-width: 82rem; margin-inline: auto; }
+h1, h2, h3 { font-family: var(--display); font-weight: 600; text-wrap: balance; line-height: 1.15; margin: 0; }
+h2 { font-size: clamp(1.6rem, 3.4vw, 2.1rem); }
+h3 { font-size: 1.1rem; }
+p { margin: 0; }
+a { color: var(--news); }
+code { font: .85em var(--mono); background: var(--sunk); padding: 1px 5px; border-radius: 4px; }
+.eyebrow { font: 500 .72rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+:focus-visible { outline: 2px solid var(--vip); outline-offset: 2px; }
+header.mast { padding-block: 56px 0; }
+.mast h1 { font-size: clamp(2.4rem, 7vw, 3.8rem); }
+.mast h1 span { color: var(--vip); }
+.lede { font-size: 1.15rem; }
+section { padding-top: 64px; display: grid; gap: 22px; }
+.board { overflow-x: auto; padding-bottom: 12px; }
+.row-of { display: flex; gap: 26px; width: max-content; padding: 4px 2px; align-items: flex-start; }
+figure { margin: 0; display: grid; gap: 10px; align-content: start; }
+figcaption { font-size: .86rem; color: var(--page-muted); max-width: 300px; line-height: 1.45; }
+figcaption b { color: var(--page-ink); font-weight: 600; display: block; font-size: .92rem; }
+.notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 18px 28px; }
+.notes div { display: grid; gap: 4px; align-content: start; }
+.notes b { font-weight: 600; }
+.notes span { font-size: .92rem; color: var(--muted); }
+
+/* ---------- iPhone frame ---------- */
+.iph { width: 300px; height: 640px; border-radius: 46px; border: 10px solid #1A1F1C; background: var(--surface); color: var(--ink); overflow: hidden; position: relative; font: 13px/1.4 var(--ui); display: grid; grid-template-rows: 34px 1fr; }
+.iph.mag { background: var(--mag); }
+.iph .island { position: absolute; top: 8px; left: 50%; width: 84px; height: 22px; margin-left: -42px; background: #1A1F1C; border-radius: 12px; z-index: 4; }
+.iph .sb { display: flex; justify-content: space-between; align-items: center; padding: 6px 24px 0 28px; font-size: 12px; font-weight: 600; }
+.iph .body { overflow: hidden; position: relative; display: grid; align-content: start; }
+.navrow { display: flex; justify-content: space-between; align-items: center; padding: 4px 16px; font-size: 13px; color: var(--news); }
+.navrow .ic { display: flex; gap: 14px; }
+.lt { font: 700 30px/1.1 var(--ui); padding: 2px 16px 0; letter-spacing: -.01em; }
+.lt-sub { padding: 2px 16px 8px; color: var(--muted); font-size: 12.5px; }
+.search { margin: 0 16px 8px; background: var(--sunk); border-radius: 10px; padding: 7px 10px; color: var(--muted); font-size: 13px; }
+.tabbar { position: absolute; inset: auto 0 0 0; height: 76px; border-top: 1px solid var(--rule); background: var(--glass); display: grid; grid-template-columns: repeat(5, 1fr); padding-top: 8px; z-index: 3; }
+.tabbar div { display: grid; justify-items: center; gap: 2px; font-size: 9.5px; color: var(--muted); align-content: start; }
+.tabbar .on { color: var(--ink); font-weight: 600; }
+.tabbar .glyph { width: 24px; height: 24px; font-size: 12px; }
+.glyph { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 6px; font: 600 11px/1 var(--ui); flex: none; }
+.g-vip { color: var(--vip); background: var(--vip-wash); } .g-action { color: var(--action); background: var(--action-wash); }
+.g-news { color: var(--news); background: var(--news-wash); } .g-buy { color: var(--buy); background: var(--buy-wash); }
+.g-screen { color: var(--screen); background: var(--screen-wash); } .g-plain { color: var(--muted); background: var(--sunk); }
+.chip { display: inline-flex; align-items: center; gap: 4px; font-size: 10.5px; font-weight: 600; padding: 2px 7px; border-radius: 999px; justify-self: start; white-space: nowrap; }
+.c-vip { background: var(--vip-wash); color: var(--vip); } .c-action { background: var(--action-wash); color: var(--action); }
+.c-news { background: var(--news-wash); color: var(--news); } .c-buy { background: var(--buy-wash); color: var(--buy); }
+.c-screen { background: var(--screen-wash); color: var(--screen); } .c-plain { background: var(--sunk); color: var(--muted); }
+.sect { padding: 12px 16px 4px; font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.cell { display: grid; grid-template-columns: 36px 1fr; gap: 10px; padding: 10px 16px; border-bottom: 1px solid var(--rule); position: relative; background: var(--surface); }
+.cell .av { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; }
+.cell .main { display: grid; gap: 2px; min-width: 0; }
+.cell .t1 { display: flex; gap: 6px; align-items: baseline; }
+.cell .t1 b { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 14px; }
+.cell .t1 span { font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.cell .subj { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cell .prev { font-size: 12.5px; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.cell .meta { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 3px; }
+.swipe { display: grid; grid-template-columns: 1fr 74px 74px; border-bottom: 1px solid var(--rule); }
+.swipe .cell { grid-column: 1; border-bottom: 0; transform: translateX(-148px); width: calc(100% + 148px); }
+.swipe .act { display: grid; place-items: center; font-size: 11.5px; font-weight: 600; color: #fff; text-align: center; line-height: 1.2; }
+.swipe .a1 { background: #A8231B; } .swipe .a2 { background: #5B6760; }
+.check { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--rule); margin-top: 2px; }
+.tcell { grid-template-columns: 22px 1fr; }
+.due { font-size: 11.5px; font-weight: 600; color: var(--action); white-space: nowrap; }
+.src { font-size: 12px; color: var(--muted); }
+.quote-s { font-size: 12px; border-left: 2px solid var(--action); padding-left: 7px; color: var(--muted); }
+.summary { margin: 0 16px 6px; background: var(--paper); border-radius: 14px; padding: 12px 14px; display: grid; gap: 2px; }
+.summary b { font-size: 20px; font-variant-numeric: tabular-nums; }
+.summary span { color: var(--muted); font-size: 12px; }
+.seg { display: grid; grid-auto-flow: column; background: var(--sunk); border-radius: 9px; padding: 2px; margin: 0 16px 6px; font-size: 12px; font-weight: 600; text-align: center; }
+.seg span { padding: 5px; border-radius: 7px; color: var(--muted); }
+.seg .on { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.12); }
+.ocell { grid-template-columns: 36px 1fr auto; }
+.thumb { width: 36px; height: 36px; border-radius: 9px; display: grid; place-items: center; font: 700 12px/1 var(--serif); }
+.price { font-size: 13.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.scard { margin: 6px 16px; border: 1px solid var(--rule); border-radius: 14px; padding: 12px; display: grid; gap: 8px; background: var(--surface); }
+.scard .who { display: flex; gap: 10px; align-items: center; }
+.scard .who .av { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 700; background: var(--sunk); color: var(--muted); flex: none; }
+.scard .who div { display: grid; min-width: 0; }
+.scard .who span { font-size: 11.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.scard .sn { font-size: 12.5px; color: var(--muted); }
+.yn { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.yn span { text-align: center; padding: 7px; border-radius: 9px; font-weight: 600; font-size: 12.5px; background: var(--sunk); }
+.yn .y { background: var(--ink); color: var(--surface); }
+
+/* ---------- Magazine ---------- */
+.mg { padding: 0 18px; display: grid; gap: 10px; align-content: start; }
+.mg-top { display: flex; justify-content: space-between; padding: 4px 16px 6px; font-size: 13px; color: var(--muted); }
+.mast-mag { display: grid; gap: 2px; padding-bottom: 8px; border-bottom: 2px solid var(--ink); }
+.mast-mag .day { font: 600 10px/1 var(--ui); letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+.mast-mag .name { font: 800 31px/1 var(--serif); letter-spacing: -.02em; }
+.mast-mag .line { display: flex; justify-content: space-between; font: 500 10.5px/1.3 var(--ui); color: var(--muted); padding-top: 5px; border-top: 1px solid var(--rule); margin-top: 6px; }
+.kick { font: 700 9.5px/1.2 var(--ui); letter-spacing: .14em; text-transform: uppercase; }
+.k-sb { color: var(--pub-sb); } .k-sm { color: var(--pub-sm); } .k-fn { color: var(--pub-fn); } .k-cb { color: var(--pub-cb); }
+.hl { font: 600 23px/1.12 var(--serif); letter-spacing: -.01em; text-wrap: balance; }
+.hl-s { font: 600 15px/1.2 var(--serif); text-wrap: balance; }
+.dek { font: italic 400 13px/1.45 var(--serif); color: var(--muted); }
+.by { font: 500 10.5px/1.3 var(--ui); color: var(--muted); }
+.img { border-radius: 4px; position: relative; overflow: hidden; }
+.img-sb { background:
+  radial-gradient(circle at 72% 38%, rgba(255,255,255,.55) 0 9%, transparent 9.5%),
+  radial-gradient(circle at 72% 38%, rgba(255,255,255,.18) 0 22%, transparent 22.5%),
+  repeating-linear-gradient(90deg, rgba(255,255,255,.07) 0 2px, transparent 2px 14px),
+  linear-gradient(160deg, #2C6A8A, #163548); }
+.img-sm { background:
+  repeating-linear-gradient(0deg, rgba(255,255,255,.1) 0 1px, transparent 1px 9px),
+  linear-gradient(200deg, #8A5079, #44253E); }
+.img-fn { background:
+  radial-gradient(circle at 30% 60%, #F3E3B3 0 26%, transparent 26.5%),
+  radial-gradient(circle at 62% 46%, rgba(243,227,179,.5) 0 18%, transparent 18.5%),
+  linear-gradient(135deg, #A57E22, #5E4410); }
+.img .cap { position: absolute; left: 8px; bottom: 6px; font: 500 9px/1.2 var(--ui); color: rgba(255,255,255,.85); }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; border-top: 1px solid var(--rule); padding-top: 10px; }
+.two > div { display: grid; gap: 4px; align-content: start; }
+.pager { position: absolute; left: 0; right: 0; bottom: 22px; display: flex; justify-content: center; gap: 6px; }
+.pager i { width: 6px; height: 6px; border-radius: 50%; background: var(--rule); }
+.pager i.on { background: var(--ink); }
+.toc-sec { display: grid; gap: 6px; padding-top: 8px; border-top: 1px solid var(--rule); }
+.toc-item { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: baseline; }
+.toc-item .hl-s { font-size: 14px; }
+.toc-item .t { font: 500 10.5px/1 var(--ui); color: var(--muted); font-variant-numeric: tabular-nums; }
+.toc-item.read .hl-s { color: var(--muted); }
+.toc-item .from { grid-column: 1 / -1; font: 500 10.5px/1.2 var(--ui); color: var(--muted); margin-top: -3px; }
+.prog { height: 2px; background: var(--rule); }
+.prog i { display: block; height: 100%; background: var(--ink); }
+.copy { font: 400 13.5px/1.62 var(--serif); hyphens: auto; }
+.copy + .copy { text-indent: 1.2em; }
+.drop::first-letter { float: left; font: 600 46px/.82 var(--serif); padding: 4px 6px 0 0; color: var(--pub-sb); }
+.pull { font: italic 600 17px/1.3 var(--serif); border-top: 2px solid var(--pub-sb); border-bottom: 1px solid var(--rule); padding: 8px 0; color: var(--ink); }
+.gistpill { display: inline-flex; gap: 6px; align-items: center; font: 600 10.5px/1 var(--ui); color: var(--news); background: var(--news-wash); padding: 5px 9px; border-radius: 999px; justify-self: start; }
+.brief { display: grid; gap: 3px; padding-top: 8px; border-top: 1px solid var(--rule); }
+.brief p { font: 400 13px/1.55 var(--serif); }
+.brief p b { font-weight: 600; }
+.brief .more { font: 600 10.5px/1 var(--ui); color: var(--pub-cb); }
+.gen { font: 500 10px/1.3 var(--ui); color: var(--muted); }
+.endmark { font: 600 12px/1 var(--serif); color: var(--pub-sb); }
+
+/* iPad + Mac magazine */
+.ipad-l { width: 900px; height: 640px; border-radius: 26px; border: 12px solid #1A1F1C; background: var(--mag); color: var(--ink); overflow: hidden; font: 13px/1.4 var(--ui); position: relative; }
+.spread { display: grid; grid-template-columns: 1.55fr 1fr; gap: 0; height: calc(100% - 64px); }
+.spread .lead { padding: 18px 24px 18px 28px; display: grid; gap: 10px; align-content: start; border-right: 1px solid var(--rule); }
+.spread .side { padding: 18px 24px; display: grid; gap: 12px; align-content: start; }
+.bigmast { display: flex; align-items: baseline; justify-content: space-between; padding: 16px 28px 10px; border-bottom: 2px solid var(--ink); }
+.bigmast .name { font: 800 34px/1 var(--serif); letter-spacing: -.02em; }
+.bigmast .line { font: 500 11px/1.3 var(--ui); color: var(--muted); text-align: right; }
+.hl-xl { font: 600 38px/1.05 var(--serif); letter-spacing: -.015em; text-wrap: balance; }
+.art { display: grid; grid-template-columns: 170px 1fr; gap: 28px; padding: 22px 30px; height: 100%; }
+.art .margin { display: grid; gap: 14px; align-content: start; border-right: 1px solid var(--rule); padding-right: 18px; }
+.sidenote { display: grid; gap: 6px; font: 400 11.5px/1.5 var(--ui); color: var(--muted); }
+.sidenote b { font: 700 9.5px/1 var(--ui); letter-spacing: .12em; text-transform: uppercase; color: var(--news); }
+.art .main { display: grid; gap: 12px; align-content: start; min-width: 0; }
+.cols2 { columns: 2; column-gap: 26px; column-rule: 1px solid var(--rule); }
+.cols2 .copy { margin-bottom: 10px; }
+.cols2 .pull { break-inside: avoid; margin-bottom: 10px; }
+.mac-r { width: 1040px; border-radius: 12px; border: 1px solid var(--rule); background: var(--mag); color: var(--ink); overflow: hidden; font: 13px/1.4 var(--ui); box-shadow: 0 24px 60px -30px rgba(10,30,20,.45); }
+.mac-bar { height: 40px; display: flex; align-items: center; gap: 12px; padding-inline: 14px; border-bottom: 1px solid var(--rule); background: var(--glass); }
+.mac-bar .lights { display: flex; gap: 7px; }
+.mac-bar .lights i { width: 12px; height: 12px; border-radius: 50%; }
+.mac-bar .lights i:nth-child(1) { background: #EC6A5E; } .mac-bar .lights i:nth-child(2) { background: #F4BF4F; } .mac-bar .lights i:nth-child(3) { background: #61C554; }
+.mac-bar .mid { margin-inline: auto; display: flex; gap: 14px; align-items: center; font-weight: 600; color: var(--muted); }
+.mac-bar .tools { display: flex; gap: 14px; color: var(--muted); }
+.mac-grid { display: grid; grid-template-columns: 220px 1fr 220px; height: 600px; }
+.mac-toc { border-right: 1px solid var(--rule); padding: 18px 16px; display: grid; gap: 12px; align-content: start; background: var(--glass); }
+.mac-main { padding: 34px 0; display: grid; gap: 14px; align-content: start; justify-items: center; overflow: hidden; }
+.mac-main > * { width: min(60ch, 100% - 56px); }
+.mac-main .hl-xl { font-size: 40px; }
+.mac-main .copy { font-size: 16px; line-height: 1.65; }
+.mac-main .drop::first-letter { font-size: 64px; }
+.mac-margin { padding: 150px 22px 0 0; display: grid; gap: 18px; align-content: start; }
+
+/* AX */
+.ax .cell { grid-template-columns: 1fr; padding: 14px 16px; }
+.ax .cell .av { display: none; }
+.ax .lt { font-size: 40px; }
+.ax .cell .t1 { display: grid; gap: 2px; }
+.ax .cell .t1 b { font-size: 24px; white-space: normal; }
+.ax .cell .t1 span { font-size: 19px; }
+.ax .cell .subj { font-size: 21px; white-space: normal; }
+.ax .chip { font-size: 17px; padding: 4px 10px; }
+
+/* Specs */
+.tblwrap { overflow-x: auto; border: 1px solid var(--rule); background: var(--surface); }
+table.spec { border-collapse: collapse; width: 100%; min-width: 680px; font-size: .9rem; }
+.spec th, .spec td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--rule); vertical-align: middle; }
+.spec thead th { font: 500 .7rem/1.2 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.spec td { font-variant-numeric: tabular-nums; }
+.spec td code { white-space: nowrap; }
+.spec tr:last-child th, .spec tr:last-child td { border-bottom: 0; }
+.sw { display: inline-block; width: 14px; height: 14px; border-radius: 4px; vertical-align: -2px; margin-right: 6px; border: 1px solid rgba(0,0,0,.1); }
+.pass { font: 600 .78rem/1 var(--body); color: var(--news); }
+.ts-ex { font-family: var(--ui); }
+</style>
+
+<header class="mast">
+  <div class="col">
+    <p class="eyebrow">Design pass 3 · Detailed screens · 20 Oct 2026</p>
+    <h1>Koumara screens<span>.</span></h1>
+    <p class="lede">Detailed screens, starting where Koumara should feel least like email: newsletters assembled into a magazine. After that come the other lanes on iPhone in light and dark, the large-text layout, and the specs I'll build from.</p>
+    <p>Builds on the <a href="brief.html">brief</a> and the <a href="flows.html">flows</a>. All mail on this page is sample content.</p>
+  </div>
+</header>
+
+<!-- Edition -->
+<section aria-labelledby="s-ed">
+  <div class="col">
+    <p class="eyebrow">Reading · The Edition</p>
+    <h2 id="s-ed">Newsletters, bound into a magazine</h2>
+    <p>Twice a day (7 AM and 6 PM by default) Koumara gathers every unread newsletter into an <b>Edition</b> with a cover, a contents page and sections. Nothing is rewritten. Each article is the sender's own text, typeset in New York with a real reading measure, drop caps and pull quotes. The magazine is in the layout, not in made-up content.</p>
+  </div>
+  <div class="col notes">
+    <div><b>The cover story</b><span>The unread issue from the publication I open most, weighted toward longer reads. Ties go to the newest.</span></div>
+    <div><b>Sections</b><span>The on-device model tags each issue with a topic (Technology, Design, Ideas, City). Sections only appear when they have two or more pieces.</span></div>
+    <div><b>In brief</b><span>Short digests like City Bike Weekly don't get full pages. Each issue becomes one paragraph with a bold run-in head, the way magazines handle news briefs.</span></div>
+    <div><b>Color and images</b><span>Each publication gets a tint sampled from its own header color, clamped to stay readable. Lead images load only for publications I've allowed. Otherwise the cover is typographic.</span></div>
+  </div>
+  <div class="wide board" tabindex="0" role="region" aria-label="iPhone Edition screens, scroll sideways">
+    <div class="row-of">
+      <figure class="th-light">
+        <div class="iph mag" role="img" aria-label="iPhone Edition cover: Morning Edition masthead, a lead image, the cover story headline 'Why tiny models win on the edge', and two smaller stories below.">
+          <span class="island" aria-hidden="true"></span>
+          <div class="sb"><span>7:02</span><span>●●● ▮</span></div>
+          <div class="body">
+            <div class="mg-top"><span>‹ Reading</span><span>Aa &nbsp; ☰</span></div>
+            <div class="mg">
+              <div class="mast-mag">
+                <span class="day">Tuesday · No. 214</span>
+                <span class="name">Morning Edition</span>
+                <div class="line"><span>Oct 20, 2026</span><span>11 pieces · 48 min</span></div>
+              </div>
+              <div class="img img-sb" style="height:120px"><span class="cap">Image from Small Batch Engineering</span></div>
+              <span class="kick k-sb">Technology · Small Batch Engineering</span>
+              <div class="hl">Why tiny models win on the edge</div>
+              <p class="dek">Fast, private, and good enough is a better product than slow and brilliant.</p>
+              <span class="by">Mara Lind · 7 min</span>
+              <div class="two">
+                <div><span class="kick k-sm">Ideas</span><span class="hl-s">The case for slower software</span><span class="by">9 min</span></div>
+                <div><span class="kick k-fn">Design</span><span class="hl-s">Optical sizes, explained</span><span class="by">4 min</span></div>
+              </div>
+            </div>
+            <div class="pager" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i></div>
+          </div>
+        </div>
+        <figcaption><b>Cover</b>Masthead, lead story and two follow-ups. The issue number counts editions since I started using Koumara. Swipe left for the contents, tap any story to open it.</figcaption>
+      </figure>
+
+      <figure class="th-light">
+        <div class="iph mag" role="img" aria-label="iPhone Edition contents page listing pieces by section with reading times, and an In brief section with five items.">
+          <span class="island" aria-hidden="true"></span>
+          <div class="sb"><span>7:03</span><span>●●● ▮</span></div>
+          <div class="body">
+            <div class="mg-top"><span>‹ Cover</span><span>Aa &nbsp; ☰</span></div>
+            <div class="mg">
+              <div class="mast-mag"><span class="day">Morning Edition · Contents</span><span class="name" style="font-size:24px">In this edition</span></div>
+              <div class="toc-sec">
+                <span class="kick k-sb">Technology</span>
+                <div class="toc-item"><span class="hl-s">Why tiny models win on the edge</span><span class="t">7 min</span><span class="from">Small Batch Engineering</span></div>
+                <div class="toc-item read"><span class="hl-s">Caching is a product decision</span><span class="t">✓ Read</span><span class="from">Small Batch Engineering</span></div>
+              </div>
+              <div class="toc-sec">
+                <span class="kick k-sm">Ideas</span>
+                <div class="toc-item"><span class="hl-s">The case for slower software</span><span class="t">9 min</span><span class="from">The Sunday Margin</span></div>
+                <div class="toc-item"><span class="hl-s">Notes from a quiet launch</span><span class="t">6 min</span><span class="from">The Sunday Margin</span></div>
+              </div>
+              <div class="toc-sec">
+                <span class="kick k-fn">Design</span>
+                <div class="toc-item"><span class="hl-s">Optical sizes, explained</span><span class="t">4 min</span><span class="from">Field Notes on Type</span></div>
+              </div>
+              <div class="toc-sec">
+                <span class="kick k-cb">In brief · City</span>
+                <div class="toc-item"><span class="hl-s">5 items from City Bike Weekly</span><span class="t">3 min</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption><b>Contents</b>Grouped by section, with reading time where a magazine would put page numbers. Pieces I've read stay listed but dimmed, so the edition keeps its shape.</figcaption>
+      </figure>
+
+      <figure class="th-light">
+        <div class="iph mag" role="img" aria-label="iPhone article page: kicker, headline, standfirst, byline, a Gist button, body text with a drop cap, and a pull quote.">
+          <span class="island" aria-hidden="true"></span>
+          <div class="sb"><span>7:04</span><span>●●● ▮</span></div>
+          <div class="body">
+            <div class="prog" aria-hidden="true"><i style="width:22%"></i></div>
+            <div class="mg-top"><span>‹ Contents</span><span>Aa &nbsp; ▷ &nbsp; ☆</span></div>
+            <div class="mg">
+              <span class="kick k-sb">Technology · Issue 84</span>
+              <div class="hl" style="font-size:26px">Why tiny models win on the edge</div>
+              <p class="dek">Fast, private, and good enough is a better product than slow and brilliant.</p>
+              <span class="by">By Mara Lind · Small Batch Engineering · 7 min</span>
+              <span class="gistpill">Gist ▸ on device</span>
+              <p class="copy drop">Most of the features people ask for are classification with good manners. You don't need a frontier model to tell a receipt from a newsletter. You need a fast one that never makes anyone wait.</p>
+              <p class="copy">The interesting work moves from the model to the edges around it: what you send, what you keep, and what you refuse to guess.</p>
+              <p class="pull">"The context window is the real budget. Spend it like money."</p>
+            </div>
+          </div>
+        </div>
+        <figcaption><b>Article</b>Kicker, headline, standfirst and byline come from the sender's own HTML. The drop cap and pull quote are Koumara's typesetting: a pull quote is only used when the sender marked one as a blockquote.</figcaption>
+      </figure>
+
+      <figure class="th-light">
+        <div class="iph mag" role="img" aria-label="In brief page: five short items from City Bike Weekly, each one paragraph with a bold lead-in and a link to the full issue.">
+          <span class="island" aria-hidden="true"></span>
+          <div class="sb"><span>7:15</span><span>●●● ▮</span></div>
+          <div class="body">
+            <div class="mg-top"><span>‹ Contents</span><span>Aa &nbsp; ☰</span></div>
+            <div class="mg">
+              <span class="kick k-cb">In brief · City</span>
+              <div class="hl" style="font-size:22px">From City Bike Weekly</div>
+              <span class="gen">5 issues, one paragraph each · condensed on device</span>
+              <div class="brief"><p><b>Bridge lane opens Saturday.</b> The protected lane on the north bridge opens at 8 AM, with a ride across at 9.</p><span class="more">Full issue ›</span></div>
+              <div class="brief"><p><b>Winter tire swap.</b> Studded tires are allowed from November 1. Two shops are offering free swaps that weekend.</p><span class="more">Full issue ›</span></div>
+              <div class="brief"><p><b>Night counts are up.</b> Evening ridership on Harbor Street rose a fifth since the lights went in.</p><span class="more">Full issue ›</span></div>
+              <div class="brief"><p><b>Repair café returns.</b> First Sunday of the month at the library annex.</p><span class="more">Full issue ›</span></div>
+            </div>
+          </div>
+        </div>
+        <figcaption><b>In brief</b>The one place Koumara condenses instead of reprinting, so it's labeled as condensed and every item links to the full issue.</figcaption>
+      </figure>
+
+      <figure class="th-dark">
+        <div class="iph mag" role="img" aria-label="The same article in dark mode for night reading, with warm off-white text on a deep green-black page.">
+          <span class="island" aria-hidden="true"></span>
+          <div class="sb"><span>22:40</span><span>●●● ▮</span></div>
+          <div class="body">
+            <div class="prog" aria-hidden="true"><i style="width:64%"></i></div>
+            <div class="mg-top"><span>‹ Contents</span><span>Aa &nbsp; ▷ &nbsp; ☆</span></div>
+            <div class="mg">
+              <span class="kick k-sm">Ideas · The Sunday Margin</span>
+              <div class="hl" style="font-size:26px">The case for slower software</div>
+              <p class="dek">Release less often, write down why, and let people catch up.</p>
+              <span class="by">By Theo Arnaud · 9 min</span>
+              <p class="copy">There's a version of every product that changes faster than anyone can learn it. The fix isn't to stop shipping. It's to ship on a rhythm people can hear.</p>
+              <p class="copy">Release notes help, but only if someone reads them. The teams I admire most write the note first, then decide whether the change is worth the note.</p>
+              <p class="pull" style="border-top-color:var(--pub-sm)">"Write the note first. Then decide if the change deserves it."</p>
+            </div>
+          </div>
+        </div>
+        <figcaption><b>Evening Edition, dark</b>Follows the system appearance. Body text sits a step below pure white so long reads don't glare, and publication tints switch to their light variants.</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="col">
+    <h3>iPad: the spread</h3>
+    <p>Landscape iPad is the most magazine-like screen I have, so it gets real spreads. The cover runs the lead story across most of the width with the contents down the right. Articles set in two columns, with the gist and source details in the outer margin like sidenotes.</p>
+  </div>
+  <div class="wide board" tabindex="0" role="region" aria-label="iPad Edition spreads, scroll sideways">
+    <div class="row-of">
+      <figure class="th-light">
+        <div class="ipad-l" role="img" aria-label="iPad landscape Edition cover spread: masthead across the top, a large lead story with image on the left, and contents plus In brief on the right.">
+          <div class="bigmast"><span class="name">Morning Edition</span><span class="line">Tuesday, Oct 20 · No. 214<br>11 pieces · 48 min</span></div>
+          <div class="spread">
+            <div class="lead">
+              <div class="img img-sb" style="height:250px"><span class="cap">Image from Small Batch Engineering</span></div>
+              <span class="kick k-sb">Technology · Small Batch Engineering</span>
+              <div class="hl-xl">Why tiny models win on the edge</div>
+              <p class="dek" style="font-size:15px">Fast, private, and good enough is a better product than slow and brilliant.</p>
+              <span class="by">Mara Lind · 7 min</span>
+            </div>
+            <div class="side">
+              <span class="kick" style="color:var(--muted)">Also in this edition</span>
+              <div class="toc-sec" style="border-top:0;padding-top:0"><span class="kick k-sm">Ideas</span><span class="hl-s" style="font-size:18px">The case for slower software</span><span class="by">The Sunday Margin · 9 min</span></div>
+              <div class="toc-sec"><div class="img img-fn" style="height:84px"></div><span class="kick k-fn">Design</span><span class="hl-s" style="font-size:18px">Optical sizes, explained</span><span class="by">Field Notes on Type · 4 min</span></div>
+              <div class="toc-sec"><span class="kick k-sm">Ideas</span><span class="hl-s">Notes from a quiet launch</span><span class="by">The Sunday Margin · 6 min</span></div>
+              <div class="toc-sec"><span class="kick k-cb">In brief</span><span class="hl-s">Bridge lane opens Saturday, and 4 more from City Bike Weekly</span></div>
+            </div>
+          </div>
+        </div>
+        <figcaption><b>Cover spread</b>The lead takes about 60% of the width. When images are off for the lead's publication, the headline grows to fill the image's space instead of leaving a gap.</figcaption>
+      </figure>
+      <figure class="th-light">
+        <div class="ipad-l" role="img" aria-label="iPad landscape article spread with a left margin holding the gist, source details and reading time, and the article in two columns with a pull quote.">
+          <div class="prog" aria-hidden="true"><i style="width:30%"></i></div>
+          <div class="art">
+            <div class="margin">
+              <span class="kick k-sb">Technology</span>
+              <div class="sidenote"><b>Gist · on device</b>Small models answer faster because nothing leaves the device. Typed output beats free text for app features. The context window is the real limit.</div>
+              <div class="sidenote"><b>From</b>Small Batch Engineering, Issue 84. Sent Oct 19 to your Gmail.</div>
+              <div class="sidenote"><b>Reading</b>7 min · 2 min left</div>
+              <div class="sidenote"><b>Next</b>The case for slower software ›</div>
+            </div>
+            <div class="main">
+              <div class="hl-xl" style="font-size:34px">Why tiny models win on the edge</div>
+              <p class="dek" style="font-size:15px">Fast, private, and good enough is a better product than slow and brilliant.</p>
+              <span class="by">By Mara Lind</span>
+              <div class="cols2">
+                <p class="copy drop">Most of the features people ask for are classification with good manners. You don't need a frontier model to tell a receipt from a newsletter. You need a fast one that never makes anyone wait.</p>
+                <p class="copy">The interesting work moves from the model to the edges around it: what you send, what you keep, and what you refuse to guess.</p>
+                <p class="pull">"The context window is the real budget. Spend it like money."</p>
+                <p class="copy">A small model with a typed schema behaves like a careful clerk. It fills in the form, says how sure it is, and leaves the rest blank instead of inventing it.</p>
+                <p class="copy">That last part matters more than speed. A guess you can see is a feature; a guess you can't is a bug.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption><b>Article spread</b>Two columns only above a minimum width. Split View, Stage Manager windows and larger text sizes drop it to one column. The margin moves above the article when there's no room for it.</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="col">
+    <h3>Mac: a reading window</h3>
+    <p>Reading opens in its own window. Contents sit on the left and the article gets one generous column. The gist and source details float in the right margin beside the paragraph they describe.</p>
+  </div>
+  <div class="wide board" tabindex="0" role="region" aria-label="Mac Edition window, scrolls sideways">
+    <figure class="th-light">
+      <div class="mac-r" role="img" aria-label="Mac reading window: toolbar with edition navigation, contents on the left, a single-column article in the middle with a drop cap, and sidenotes in the right margin.">
+        <div class="mac-bar"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><span class="mid">‹ &nbsp; Morning Edition · 1 of 11 &nbsp; ›</span><span class="tools">Aa &nbsp; ▷ Listen &nbsp; ☆</span></div>
+        <div class="mac-grid">
+          <div class="mac-toc">
+            <span class="kick" style="color:var(--muted)">Tuesday · No. 214</span>
+            <div class="toc-sec" style="border-top:0;padding-top:0"><span class="kick k-sb">Technology</span><span class="hl-s" style="color:var(--ink)">Why tiny models win on the edge</span><span class="hl-s" style="color:var(--muted);font-size:13.5px">Caching is a product decision ✓</span></div>
+            <div class="toc-sec"><span class="kick k-sm">Ideas</span><span class="hl-s" style="font-size:13.5px">The case for slower software</span><span class="hl-s" style="font-size:13.5px">Notes from a quiet launch</span></div>
+            <div class="toc-sec"><span class="kick k-fn">Design</span><span class="hl-s" style="font-size:13.5px">Optical sizes, explained</span></div>
+            <div class="toc-sec"><span class="kick k-cb">In brief</span><span class="hl-s" style="font-size:13.5px">City Bike Weekly · 5 items</span></div>
+          </div>
+          <div class="mac-main">
+            <span class="kick k-sb">Technology · Small Batch Engineering · Issue 84</span>
+            <div class="hl-xl">Why tiny models win on the edge</div>
+            <p class="dek" style="font-size:17px">Fast, private, and good enough is a better product than slow and brilliant.</p>
+            <span class="by">By Mara Lind · 7 min</span>
+            <p class="copy drop">Most of the features people ask for are classification with good manners. You don't need a frontier model to tell a receipt from a newsletter. You need a fast one that never makes anyone wait.</p>
+            <p class="copy">The interesting work moves from the model to the edges around it: what you send, what you keep, and what you refuse to guess.</p>
+          </div>
+          <div class="mac-margin">
+            <div class="sidenote"><b>Gist · on device</b>Small models answer faster because nothing leaves the device. Typed output beats free text. The context window is the real limit.</div>
+            <div class="sidenote"><b>From</b>Small Batch Engineering · Gmail · Oct 19</div>
+            <div class="sidenote"><b>Keys</b>Space page · ⌘] next piece · ⌘⇧G gist</div>
+          </div>
+        </div>
+      </div>
+      <figcaption style="max-width:none"><b>Mac reading window</b>The margin collapses into a Gist button below about 1,100 points of window width. Text size follows the window's Aa setting and is remembered per publication.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- Lanes -->
+<section aria-labelledby="s-lanes">
+  <div class="col">
+    <p class="eyebrow">Lanes · iPhone</p>
+    <h2 id="s-lanes">The other lanes, light and dark</h2>
+    <p>Same structure everywhere: native large title, a one-line summary, then rows built for that lane's job. Each screen is shown in both appearances. Lane colors only appear in glyphs and chips, so the screens stay calm in dark mode.</p>
+  </div>
+  <div class="wide board" tabindex="0" role="region" aria-label="VIP and Action screens in light and dark, scroll sideways">
+    <div class="row-of">
+      <figure class="th-light pair" data-caption="VIP">
+        <div class="iph" role="img" aria-label="VIP lane: two people waiting with drafts ready, one row swiped to reveal Send draft and Later actions, and a replied message.">
+          <span class="island" aria-hidden="true"></span>
+          <div class="sb"><span>9:41</span><span>●●● ▮</span></div>
+          <div class="body">
+            <div class="navrow"><span>Today</span><span class="ic"><span>⌕</span><span>✎</span></span></div>
+            <div class="lt">VIP</div>
+            <div class="lt-sub">2 waiting · you reply in 9 min on average</div>
+            <div class="sect">Waiting</div>
+            <div class="cell"><span class="av" style="background:var(--vip-wash);color:var(--vip)">DO</span><div class="main"><div class="t1"><b>Dana Okafor</b><span>12m</span></div><span class="subj">Contract redlines for Thursday</span><span class="prev">Attached are legal's comments on section 4 and the new indemnity language.</span><div class="meta"><span class="chip c-vip">◆ Draft ready</span><span class="chip c-plain">Gmail</span></div></div></div>
+            <div class="swipe"><div class="cell"><span class="av" style="background:var(--vip-wash);color:var(--vip)">M</span><div class="main"><div class="t1"><b>Mom</b><span>8m</span></div><span class="subj">Flight lands at 6:40</span><span class="prev">Can you grab me from arrivals? Terminal B.</span><div class="meta"><span class="chip c-vip">◆ Draft ready</span></div></div></div><span class="act a1">Send<br>draft</span><span class="act a2">Later</span></div>
+            <div class="sect">Replied</div>
+            <div class="cell"><span class="av" style="background:var(--sunk);color:var(--muted)">RM</span><div class="main"><div class="t1"><b>Ravi Menon</b><span>2h</span></div><span class="subj">Can you review the a11y audit?</span><div class="meta"><span class="chip c-plain">✓ Replied 1h ago</span></div></div></div>
+            <div class="tabbar" aria-hidden="true"><div><span class="glyph g-plain">☀</span>Today</div><div class="on"><span class="glyph g-vip">◆</span>VIP</div><div><span class="glyph g-action">▲</span>Action</div><div><span class="glyph g-news">❡</span>Reading</div><div><span class="glyph g-buy">¤</span>Purchases</div></div>
+          </div>
+        </div>
+        <figcaption><b>VIP</b>Swipe left for "Send draft" and "Later". Sending from a swipe still shows the draft in a confirmation sheet first, because sending text I haven't seen isn't a one-gesture action.</figcaption>
+      </figure>
+      <figure class="th-light pair" data-caption="Action">
+        <div class="iph" role="img" aria-label="Action lane: tasks due today with due times and source sentences, tasks this week, and a waiting-on-others task.">
+          <span class="island" aria-hidden="true"></span>
+          <div class="sb"><span>9:41</span><span>●●● ▮</span></div>
+          <div class="body">
+            <div class="navrow"><span>Today</span><span class="ic"><span>⌕</span><span>＋</span></span></div>
+            <div class="lt">Action</div>
+            <div class="lt-sub">3 due today · 2 this week</div>
+            <div class="sect">Due today</div>
+            <div class="cell tcell"><span class="check"></span><div class="main"><div class="t1"><b>Sign lease renewal</b><span class="due">5:00 PM</span></div><span class="src">Harbor Property Management · iCloud</span><span class="quote-s">"Please complete signatures by 5pm today"</span></div></div>
+            <div class="cell tcell"><span class="check"></span><div class="main"><div class="t1"><b>Approve Q4 invoice</b><span class="due">EOD</span></div><span class="src">Ledgerline Billing · $2,400.00</span></div></div>
+            <div class="sect">This week</div>
+            <div class="cell tcell"><span class="check"></span><div class="main"><div class="t1"><b>Send Dana section 4 notes</b><span class="due" style="color:var(--muted)">Wed</span></div><span class="src">From your reply · <span style="color:var(--vip)">◆ VIP</span></span></div></div>
+            <div class="sect">Waiting on others</div>
+            <div class="cell tcell"><span class="check" style="border-style:dashed"></span><div class="main"><div class="t1"><b>Audit feedback from Ravi</b><span class="due" style="color:var(--muted)">3d</span></div><span class="src">Nudge drafted</span></div></div>
+            <div class="tabbar" aria-hidden="true"><div><span class="glyph g-plain">☀</span>Today</div><div><span class="glyph g-vip">◆</span>VIP</div><div class="on"><span class="glyph g-action">▲</span>Action</div><div><span class="glyph g-news">❡</span>Reading</div><div><span class="glyph g-buy">¤</span>Purchases</div></div>
+          </div>
+        </div>
+        <figcaption><b>Action</b>The quoted sentence shows where a deadline came from. Waiting-on-others tasks get a dashed check so they read as "not mine to finish".</figcaption>
+      </figure>
+    </div>
+  </div>
+  <div class="wide board" tabindex="0" role="region" aria-label="Purchases and Screener screens in light and dark, scroll sideways">
+    <div class="row-of">
+      <figure class="th-light pair" data-caption="Purchases">
+        <div class="iph" role="img" aria-label="Purchases lane: monthly total, a segmented control, an order arriving today, an open return window, and recent orders.">
+          <span class="island" aria-hidden="true"></span>
+          <div class="sb"><span>9:41</span><span>●●● ▮</span></div>
+          <div class="body">
+            <div class="navrow"><span>Today</span><span class="ic"><span>⌕</span><span>⇪</span></span></div>
+            <div class="lt">Purchases</div>
+            <div class="summary"><b>$379.40</b><span>October · 6 orders · Gmail and iCloud</span></div>
+            <div class="seg"><span class="on">Orders</span><span>Deliveries</span><span>Returns</span></div>
+            <div class="sect">Arriving today</div>
+            <div class="cell ocell"><span class="thumb" style="background:var(--buy-wash);color:var(--buy)">FS</span><div class="main"><b style="font-size:14px">Rain shell</b><span class="src">Fieldhouse Supply</span><span class="chip c-buy">Out for delivery · 3 stops</span></div><span class="price">$164.00</span></div>
+            <div class="sect">Return open</div>
+            <div class="cell ocell"><span class="thumb" style="background:var(--action-wash);color:var(--action)">AB</span><div class="main"><b style="font-size:14px">3 books</b><span class="src">Arbor Books</span><span class="chip c-action">Return by Oct 26</span></div><span class="price">$57.40</span></div>
+            <div class="sect">Recent</div>
+            <div class="cell ocell"><span class="thumb" style="background:var(--sunk);color:var(--muted)">NC</span><div class="main"><b style="font-size:14px">Whole bean, 2 lb</b><span class="src">Northbound Coffee · Delivered Oct 18</span></div><span class="price">$38.00</span></div>
+            <div class="tabbar" aria-hidden="true"><div><span class="glyph g-plain">☀</span>Today</div><div><span class="glyph g-vip">◆</span>VIP</div><div><span class="glyph g-action">▲</span>Action</div><div><span class="glyph g-news">❡</span>Reading</div><div class="on"><span class="glyph g-buy">¤</span>Purchases</div></div>
+          </div>
+        </div>
+        <figcaption><b>Purchases</b>Prices are right-aligned in tabular figures so they line up. The merchant monogram stands in for a logo, since loading logos would mean fetching remote images.</figcaption>
+      </figure>
+      <figure class="th-light pair" data-caption="Screener">
+        <div class="iph" role="img" aria-label="Screener: first-time senders as cards with a guess at what they are and Yes or No buttons.">
+          <span class="island" aria-hidden="true"></span>
+          <div class="sb"><span>9:41</span><span>●●● ▮</span></div>
+          <div class="body">
+            <div class="navrow"><span>‹ Today</span><span class="ic"><span>⋯</span></span></div>
+            <div class="lt">Screener</div>
+            <div class="lt-sub">3 first-time senders</div>
+            <div class="scard"><div class="who"><span class="av">JE</span><div><b>Jordan Ellis</b><span>jordan.ellis@example.com</span></div></div><span><b>Intro from Ravi</b></span><span class="sn">Mentions Ravi Menon, who is in your contacts.</span><span class="chip c-screen">Looks personal</span><div class="yn"><span class="y">Let in</span><span>Never</span></div></div>
+            <div class="scard"><div class="who"><span class="av">TM</span><div><b>Trailmap</b><span>hello@trailmapco.com</span></div></div><span class="chip c-news">❡ Looks like a newsletter</span><div class="yn"><span class="y">Into Reading</span><span>Never</span></div></div>
+            <div class="scard"><div class="who"><span class="av">AB</span><div><b>Arbor Books</b><span>orders@arborbooks.com</span></div></div><span class="chip c-buy">¤ Looks like a receipt</span><div class="yn"><span class="y">Into Purchases</span><span>Never</span></div></div>
+            <div class="tabbar" aria-hidden="true"><div class="on"><span class="glyph g-plain">☀</span>Today</div><div><span class="glyph g-vip">◆</span>VIP</div><div><span class="glyph g-action">▲</span>Action</div><div><span class="glyph g-news">❡</span>Reading</div><div><span class="glyph g-buy">¤</span>Purchases</div></div>
+          </div>
+        </div>
+        <figcaption><b>Screener</b>Reached from Today rather than a tab, because it's a short daily chore, not a place to browse. The "Yes" button names the lane the sender will go to.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- Large text -->
+<section aria-labelledby="s-ax">
+  <div class="col">
+    <p class="eyebrow">Large text</p>
+    <h2 id="s-ax">VIP at accessibility size AX3</h2>
+    <p>At the largest text sizes, rows stop trying to fit on one line. Avatars drop away, the name and time stack, the subject wraps instead of truncating, and previews hide. Two VIPs per screen is the honest result, and that's fine: the content is what matters at this size.</p>
+  </div>
+  <div class="wide board" tabindex="0" role="region" aria-label="Default and large text VIP screens, scroll sideways">
+    <div class="row-of">
+      <figure class="th-light ax">
+        <div class="iph" role="img" aria-label="VIP lane at accessibility text size AX3: two people waiting, each with name, wait time, wrapped subject and a Draft ready chip, all in very large text.">
+          <span class="island" aria-hidden="true"></span>
+          <div class="sb"><span>9:41</span><span>●●● ▮</span></div>
+          <div class="body">
+            <div class="lt">VIP</div>
+            <div class="cell"><span class="av"></span><div class="main"><div class="t1"><b>Dana Okafor</b><span>Waiting 12 min</span></div><span class="subj">Contract redlines for Thursday</span><div class="meta"><span class="chip c-vip">◆ Draft ready</span></div></div></div>
+            <div class="cell"><span class="av"></span><div class="main"><div class="t1"><b>Mom</b><span>Waiting 8 min</span></div><span class="subj">Flight lands at 6:40</span><div class="meta"><span class="chip c-vip">◆ Draft ready</span></div></div></div>
+          </div>
+        </div>
+        <figcaption><b>AX3</b>The tab bar is replaced by the system's large-content viewer on long press. Time reads "Waiting 12 min" in words instead of "12m".</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- Specs -->
+<section aria-labelledby="s-spec">
+  <div class="col">
+    <p class="eyebrow">Specs</p>
+    <h2 id="s-spec">What I'll build from</h2>
+    <p>Everything maps to system styles so Dynamic Type works for free. The only custom values are lane colors and the reading typography.</p>
+    <h3>Type</h3>
+  </div>
+  <div class="wide tblwrap">
+    <table class="spec">
+      <thead><tr><th scope="col">Use</th><th scope="col">SwiftUI style</th><th scope="col">Default size</th><th scope="col">Example</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Lane title</th><td><code>.largeTitle.bold()</code></td><td>34 pt</td><td class="ts-ex" style="font:700 22px/1.2 var(--ui)">VIP</td></tr>
+        <tr><th scope="row">Sender name</th><td><code>.headline</code></td><td>17 pt semibold</td><td class="ts-ex" style="font-weight:600">Dana Okafor</td></tr>
+        <tr><th scope="row">Subject</th><td><code>.subheadline</code></td><td>15 pt</td><td class="ts-ex">Contract redlines for Thursday</td></tr>
+        <tr><th scope="row">Preview, source</th><td><code>.footnote</code> + secondary</td><td>13 pt</td><td class="ts-ex" style="color:var(--muted);font-size:13px">Attached are legal's comments…</td></tr>
+        <tr><th scope="row">Chips</th><td><code>.caption.weight(.semibold)</code></td><td>12 pt</td><td><span class="chip c-vip">◆ Draft ready</span></td></tr>
+        <tr><th scope="row">Edition masthead</th><td><code>.system(.largeTitle, design: .serif).weight(.heavy)</code></td><td>34 pt</td><td style="font:800 22px/1.2 var(--serif)">Morning Edition</td></tr>
+        <tr><th scope="row">Article headline</th><td><code>.system(.title, design: .serif).weight(.semibold)</code></td><td>28 pt</td><td style="font:600 19px/1.2 var(--serif)">Why tiny models win on the edge</td></tr>
+        <tr><th scope="row">Article body</th><td><code>.system(.body, design: .serif)</code>, line spacing 6</td><td>17 pt</td><td style="font:400 15px/1.6 var(--serif)">Most of the features people ask for…</td></tr>
+        <tr><th scope="row">Kicker</th><td><code>.caption2.weight(.bold)</code>, tracking 1.4, uppercase</td><td>11 pt</td><td><span class="kick k-sb">Technology</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col"><h3>Lane colors and contrast</h3><p class="caption" style="color:var(--muted);font-size:.92rem">Text contrast for each lane color on its own chip tint, computed with the WCAG 2.2 formula. Every pair clears 4.5:1 for normal text.</p></div>
+  <div class="wide tblwrap">
+    <table class="spec">
+      <thead><tr><th scope="col">Lane</th><th scope="col">Light text / tint</th><th scope="col">Contrast</th><th scope="col">Dark text / tint</th><th scope="col">Contrast</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">◆ VIP</th><td><span class="sw" style="background:#A8231B"></span><code>#A8231B</code> / <code>#F7E3E0</code></td><td>5.83:1 <span class="pass">AA</span></td><td><span class="sw" style="background:#FF7B6E"></span><code>#FF7B6E</code> / <code>#3A1A17</code></td><td>6.20:1 <span class="pass">AA</span></td></tr>
+        <tr><th scope="row">▲ Action</th><td><span class="sw" style="background:#9A5800"></span><code>#9A5800</code> / <code>#F6EAD6</code></td><td>4.68:1 <span class="pass">AA</span></td><td><span class="sw" style="background:#F0AC45"></span><code>#F0AC45</code> / <code>#36280F</code></td><td>7.29:1 <span class="pass">AAA</span></td></tr>
+        <tr><th scope="row">❡ Reading</th><td><span class="sw" style="background:#2C6648"></span><code>#2C6648</code> / <code>#DFEDE4</code></td><td>5.60:1 <span class="pass">AA</span></td><td><span class="sw" style="background:#74C99C"></span><code>#74C99C</code> / <code>#15301F</code></td><td>7.17:1 <span class="pass">AAA</span></td></tr>
+        <tr><th scope="row">¤ Purchases</th><td><span class="sw" style="background:#844628"></span><code>#844628</code> / <code>#F1E4DC</code></td><td>5.84:1 <span class="pass">AA</span></td><td><span class="sw" style="background:#D9946D"></span><code>#D9946D</code> / <code>#33211A</code></td><td>6.12:1 <span class="pass">AA</span></td></tr>
+        <tr><th scope="row">◐ Screener</th><td><span class="sw" style="background:#4F5672"></span><code>#4F5672</code> / <code>#E3E5EE</code></td><td>5.75:1 <span class="pass">AA</span></td><td><span class="sw" style="background:#A9B0D4"></span><code>#A9B0D4</code> / <code>#20243A</code></td><td>7.16:1 <span class="pass">AAA</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col">
+    <h3>Layout rules</h3>
+    <div class="notes">
+      <div><b>Spacing</b><span>16 pt side margins on iPhone, 20 on iPad, system list insets on Mac. Rows use 10 pt vertical padding, growing with Dynamic Type.</span></div>
+      <div><b>Reading measure</b><span>Article text is capped at about 66 characters per line on every device. Wider screens get margins and sidenotes, not longer lines.</span></div>
+      <div><b>Chips</b><span>Capsule, 12 pt semibold, always glyph plus words. Never more than two chips on a row.</span></div>
+      <div><b>Hit targets</b><span>44 × 44 pt minimum on touch, including chips that act as filters.</span></div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  document.querySelectorAll("figure.pair").forEach(function (fig) {
+    var clone = fig.cloneNode(true);
+    clone.classList.remove("th-light");
+    clone.classList.add("th-dark");
+    var name = fig.getAttribute("data-caption") || "";
+    var cap = clone.querySelector("figcaption");
+    if (cap) cap.innerHTML = "<b>" + name + ", dark</b>Same layout and content in dark appearance.";
+    var img = clone.querySelector("[role=img]");
+    if (img) img.setAttribute("aria-label", name + " lane in dark appearance, same content as the light version.");
+    fig.parentNode.insertBefore(clone, fig.nextSibling);
+  });
+})();
+</script>
+
+</html>
