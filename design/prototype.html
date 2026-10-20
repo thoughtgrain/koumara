@@ -1,0 +1,1446 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Koumara Prototype</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,800;1,7..72,400&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: the phone on the left as the working prototype, a side panel with the screen map, notes and demo controls. */
+:root {
+  --paper: #F4F6F2; --surface: #FFFFFF; --sunk: #E9EDE7; --ink: #16201A; --muted: #56635B; --rule: #D5DCD4;
+  --vip: #A8231B; --action: #9A5800; --news: #2C6648; --buy: #844628; --screen: #4F5672;
+  --vip-wash: #F7E3E0; --action-wash: #F6EAD6; --news-wash: #DFEDE4; --buy-wash: #F1E4DC; --screen-wash: #E3E5EE;
+  --glass: rgba(246, 248, 244, .92); --mag: #FBFAF6; --scrim: rgba(10, 20, 14, .34);
+  --pub-sb: #24506A; --pub-sm: #6A3A5E; --pub-fn: #7A5A12; --pub-cb: #2F5D3A;
+  --page-ink: #16201A; --page-muted: #56635B; --page-rule: #D5DCD4; --page-surface: #FFFFFF;
+  --display: "Literata", "Iowan Old Style", Georgia, serif;
+  --serif: "New York", "Literata", "Iowan Old Style", Georgia, serif;
+  --body: "Public Sans", "Helvetica Neue", Helvetica, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --ui: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0D1310; --surface: #141C17; --sunk: #1B241E; --ink: #E5EBE6; --muted: #9AA8A0; --rule: #27322B;
+    --vip: #FF7B6E; --action: #F0AC45; --news: #74C99C; --buy: #D9946D; --screen: #A9B0D4;
+    --vip-wash: #3A1A17; --action-wash: #36280F; --news-wash: #15301F; --buy-wash: #33211A; --screen-wash: #20243A;
+    --glass: rgba(22, 30, 25, .94); --mag: #121814; --scrim: rgba(0, 0, 0, .5);
+    --pub-sb: #8DBBD6; --pub-sm: #D3A4C6; --pub-fn: #DDB761; --pub-cb: #8CC79A;
+    --page-ink: #E5EBE6; --page-muted: #9AA8A0; --page-rule: #27322B; --page-surface: #141C17;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0D1310; --surface: #141C17; --sunk: #1B241E; --ink: #E5EBE6; --muted: #9AA8A0; --rule: #27322B;
+  --vip: #FF7B6E; --action: #F0AC45; --news: #74C99C; --buy: #D9946D; --screen: #A9B0D4;
+  --vip-wash: #3A1A17; --action-wash: #36280F; --news-wash: #15301F; --buy-wash: #33211A; --screen-wash: #20243A;
+  --glass: rgba(22, 30, 25, .94); --mag: #121814; --scrim: rgba(0, 0, 0, .5);
+  --pub-sb: #8DBBD6; --pub-sm: #D3A4C6; --pub-fn: #DDB761; --pub-cb: #8CC79A;
+  --page-ink: #E5EBE6; --page-muted: #9AA8A0; --page-rule: #27322B; --page-surface: #141C17;
+  color-scheme: dark;
+}
+/* Phone appearance switch, independent of the page theme */
+.ph-light {
+  --paper: #F4F6F2; --surface: #FFFFFF; --sunk: #E9EDE7; --ink: #16201A; --muted: #56635B; --rule: #D5DCD4;
+  --vip: #A8231B; --action: #9A5800; --news: #2C6648; --buy: #844628; --screen: #4F5672;
+  --vip-wash: #F7E3E0; --action-wash: #F6EAD6; --news-wash: #DFEDE4; --buy-wash: #F1E4DC; --screen-wash: #E3E5EE;
+  --glass: rgba(246, 248, 244, .92); --mag: #FBFAF6; --scrim: rgba(10, 20, 14, .34);
+  --pub-sb: #24506A; --pub-sm: #6A3A5E; --pub-fn: #7A5A12; --pub-cb: #2F5D3A;
+  color-scheme: light;
+}
+.ph-dark {
+  --paper: #0D1310; --surface: #141C17; --sunk: #1B241E; --ink: #E5EBE6; --muted: #9AA8A0; --rule: #27322B;
+  --vip: #FF7B6E; --action: #F0AC45; --news: #74C99C; --buy: #D9946D; --screen: #A9B0D4;
+  --vip-wash: #3A1A17; --action-wash: #36280F; --news-wash: #15301F; --buy-wash: #33211A; --screen-wash: #20243A;
+  --glass: rgba(22, 30, 25, .94); --mag: #121814; --scrim: rgba(0, 0, 0, .5);
+  --pub-sb: #8DBBD6; --pub-sm: #D3A4C6; --pub-fn: #DDB761; --pub-cb: #8CC79A;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--paper); color: var(--page-ink); font: 16px/1.55 var(--body); margin: 0;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 64px;
+}
+.top { max-width: 72rem; margin: 0 auto; padding-block: 36px 22px; display: grid; gap: 8px; }
+.top h1 { font: 600 clamp(2rem, 6vw, 3rem)/1.05 var(--display); margin: 0; }
+.top h1 span { color: var(--vip); }
+.top p { margin: 0; max-width: 46rem; color: var(--page-muted); }
+.top .eyebrow { font: 500 .72rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--page-muted); }
+.stage { max-width: 72rem; margin: 0 auto; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 40px; align-items: start; }
+@media (max-width: 820px) { .stage { grid-template-columns: 1fr; justify-items: center; gap: 28px; } }
+
+/* ---------- Side panel ---------- */
+.panel { display: grid; gap: 22px; min-width: 0; width: 100%; }
+.panel h2 { font: 600 1.15rem/1.2 var(--display); margin: 0; }
+.panel .card { border: 1px solid var(--page-rule); background: var(--page-surface); padding: 16px 18px; display: grid; gap: 10px; }
+.note-title { font: 600 1.3rem/1.2 var(--display); margin: 0; }
+.note-body { color: var(--page-muted); font-size: .95rem; display: grid; gap: 8px; }
+.note-body p { margin: 0; }
+.map { display: grid; gap: 14px; }
+.map .grp { display: grid; gap: 6px; }
+.map .grp > span { font: 500 .68rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--page-muted); }
+.map .links { display: flex; flex-wrap: wrap; gap: 6px; }
+.map button, .ctl button { all: unset; box-sizing: border-box; cursor: pointer; font: 500 .84rem/1 var(--body); padding: 7px 10px; border: 1px solid var(--page-rule); border-radius: 7px; color: var(--page-ink); }
+.map button:hover, .ctl button:hover { background: var(--sunk); }
+.map button[aria-current="true"] { background: var(--page-ink); color: var(--paper); border-color: var(--page-ink); }
+.map button:focus-visible, .ctl button:focus-visible { outline: 2px solid var(--vip); outline-offset: 2px; }
+.ctl { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* ---------- Phone ---------- */
+.phone { width: 360px; height: 760px; border: 9px solid #1A1F1C; border-radius: 52px; background: var(--surface); color: var(--ink); position: relative; overflow: hidden; overflow: clip; font: 14px/1.4 var(--ui); box-shadow: 0 30px 70px -36px rgba(10, 30, 20, .55); }
+.island { position: absolute; top: 9px; left: 50%; width: 96px; height: 26px; margin-left: -48px; background: #1A1F1C; border-radius: 14px; z-index: 40; }
+.sbar { position: absolute; top: 0; left: 0; right: 0; height: 44px; display: flex; justify-content: space-between; align-items: center; padding: 6px 26px 0 30px; font-size: 13px; font-weight: 600; z-index: 30; pointer-events: none; }
+.vp { position: absolute; inset: 0; overflow: hidden; }
+.scr { position: absolute; inset: 0; background: var(--surface); display: flex; flex-direction: column; }
+.scr.mag { background: var(--mag); }
+.scr:not(.raw)::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 44px; background: var(--surface); z-index: 5; pointer-events: none; }
+.scr.mag:not(.raw)::before { background: var(--mag); }
+.topbar { position: absolute; top: 44px; left: 0; right: 0; height: 3px; background: var(--rule); z-index: 6; }
+.topbar i { display: block; height: 100%; width: 0; background: var(--ink); }
+.scroll { flex: 1; overflow-y: auto; overflow-x: hidden; padding-top: 44px; padding-bottom: 96px; scrollbar-width: none; }
+.scroll::-webkit-scrollbar { display: none; }
+.no-tabs .scroll { padding-bottom: 30px; }
+@media (prefers-reduced-motion: no-preference) {
+  .scr.in-push { animation: inPush .32s cubic-bezier(.2, .8, .2, 1) both; }
+  .scr.in-pop { animation: inPop .28s cubic-bezier(.2, .8, .2, 1) both; }
+  .scr.in-fade { animation: inFade .2s ease-out both; }
+  @keyframes inPush { from { transform: translateX(100%); box-shadow: -10px 0 30px rgba(0,0,0,.15); } to { transform: none; } }
+  @keyframes inPop { from { transform: translateX(-28%); opacity: .6; } to { transform: none; opacity: 1; } }
+  @keyframes inFade { from { opacity: .3; } to { opacity: 1; } }
+}
+button { font: inherit; color: inherit; }
+.b { all: unset; box-sizing: border-box; cursor: pointer; }
+.b:focus-visible, .phone [tabindex]:focus-visible, .phone input:focus-visible, .phone textarea:focus-visible { outline: 2px solid var(--vip); outline-offset: 2px; border-radius: 6px; }
+.nav { display: flex; align-items: center; justify-content: space-between; padding: 4px 14px 2px; min-height: 36px; color: var(--news); font-size: 15px; }
+.nav .l, .nav .r { display: flex; gap: 16px; align-items: center; }
+.nav .b { color: var(--news); padding: 4px 2px; min-height: 30px; display: inline-flex; align-items: center; gap: 2px; }
+.nav .ttl { font-weight: 600; color: var(--ink); font-size: 15px; }
+.lt { font: 700 32px/1.1 var(--ui); padding: 2px 16px 0; letter-spacing: -.01em; margin: 0; }
+.sub { padding: 2px 16px 10px; color: var(--muted); font-size: 13px; }
+.sect { padding: 14px 16px 6px; font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; display: flex; justify-content: space-between; align-items: baseline; }
+.sect .b { color: var(--news); text-transform: none; letter-spacing: 0; font-size: 13px; }
+.glyph { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 6px; font: 600 11.5px/1 var(--ui); flex: none; }
+.g-vip { color: var(--vip); background: var(--vip-wash); } .g-action { color: var(--action); background: var(--action-wash); }
+.g-news { color: var(--news); background: var(--news-wash); } .g-buy { color: var(--buy); background: var(--buy-wash); }
+.g-screen { color: var(--screen); background: var(--screen-wash); } .g-plain { color: var(--muted); background: var(--sunk); }
+.chip { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+.c-vip { background: var(--vip-wash); color: var(--vip); } .c-action { background: var(--action-wash); color: var(--action); }
+.c-news { background: var(--news-wash); color: var(--news); } .c-buy { background: var(--buy-wash); color: var(--buy); }
+.c-screen { background: var(--screen-wash); color: var(--screen); } .c-plain { background: var(--sunk); color: var(--muted); }
+
+/* Rows */
+.row { display: grid; grid-template-columns: 38px 1fr; gap: 11px; padding: 11px 16px; border-bottom: 1px solid var(--rule); background: var(--surface); text-align: left; width: 100%; }
+.row.nav-row { cursor: pointer; }
+.row .av { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-size: 12.5px; font-weight: 700; background: var(--sunk); color: var(--muted); }
+.row .av.vip { background: var(--vip-wash); color: var(--vip); }
+.row .main { display: grid; gap: 2px; min-width: 0; }
+.row .t1 { display: flex; gap: 6px; align-items: baseline; }
+.row .t1 b { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; font-weight: 600; }
+.row .t1 span { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.row .s1 { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row .s2 { font-size: 13px; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.row .meta { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 3px; }
+.row.plain { grid-template-columns: 1fr auto; align-items: center; }
+.row.plain .chev { color: var(--muted); }
+.row.glyphrow { grid-template-columns: 26px 1fr auto; align-items: center; }
+.tile { margin: 0 16px 10px; border-radius: 16px; background: var(--paper); padding: 12px 14px; display: grid; gap: 8px; text-align: left; width: calc(100% - 32px); }
+.tile .hd { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; }
+.tile .hd .r { margin-left: auto; font-weight: 500; font-size: 12.5px; color: var(--muted); }
+.tile > * { min-width: 0; max-width: 100%; }
+.tile .ln { display: flex; gap: 8px; align-items: baseline; font-size: 14px; width: 100%; text-align: left; cursor: pointer; padding: 2px 0; }
+.tile .ln span:first-child { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tile .ln .m { font-size: 12.5px; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.tile.mini-ed { background: var(--mag); border: 1px solid var(--rule); }
+.check { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--rule); display: grid; place-items: center; color: transparent; font-size: 13px; font-weight: 700; flex: none; }
+.check.done { background: var(--action); border-color: var(--action); color: var(--surface); }
+.check.dashed { border-style: dashed; }
+.trow { display: grid; grid-template-columns: 30px 1fr; gap: 8px; padding: 11px 16px; border-bottom: 1px solid var(--rule); align-items: start; background: var(--surface); }
+.trow.doneanim .ttext b { text-decoration: line-through; color: var(--muted); }
+.trow .ttext { display: grid; gap: 2px; text-align: left; min-width: 0; }
+.trow .ttext b { font-size: 15px; font-weight: 600; }
+.trow .due { font-size: 12.5px; font-weight: 600; color: var(--action); white-space: nowrap; }
+.trow .src { font-size: 13px; color: var(--muted); }
+.quote-s { font-size: 12.5px; border-left: 2px solid var(--action); padding-left: 8px; color: var(--muted); margin-top: 2px; }
+.collapse { transition: max-height .35s ease, opacity .3s; max-height: 200px; overflow: hidden; }
+.collapse.gone { max-height: 0; opacity: 0; }
+
+/* Tab bar */
+.tabbar { position: absolute; left: 0; right: 0; bottom: 0; height: 84px; border-top: 1px solid var(--rule); background: var(--glass); backdrop-filter: blur(12px); display: grid; grid-template-columns: repeat(5, 1fr); padding-top: 7px; z-index: 20; }
+.tabbar .b { display: grid; justify-items: center; align-content: start; gap: 3px; font-size: 10.5px; color: var(--muted); position: relative; }
+.tabbar .b[aria-selected="true"] { color: var(--ink); font-weight: 600; }
+.tabbar .glyph { width: 26px; height: 26px; font-size: 12.5px; }
+.tabbar .badge { position: absolute; top: -3px; left: 50%; margin-left: 7px; min-width: 17px; height: 17px; padding: 0 5px; border-radius: 9px; background: var(--vip); color: #fff; font-size: 10.5px; font-weight: 700; display: grid; place-items: center; }
+
+/* Buttons and fields */
+.btn { all: unset; box-sizing: border-box; cursor: pointer; display: inline-flex; justify-content: center; align-items: center; gap: 6px; padding: 11px 14px; border-radius: 12px; font: 600 15px/1 var(--ui); background: var(--sunk); color: var(--ink); text-align: center; }
+.btn.pri { background: var(--ink); color: var(--surface); }
+.btn.red { background: var(--vip); color: #fff; }
+.btn.sm { padding: 7px 10px; font-size: 12.5px; border-radius: 9px; }
+.btn.full { width: 100%; }
+.btn[disabled] { opacity: .45; cursor: default; }
+.btn:focus-visible { outline: 2px solid var(--vip); outline-offset: 2px; }
+.btns { display: flex; flex-wrap: wrap; gap: 6px; }
+.field { display: grid; gap: 4px; padding: 0 16px; }
+.field label { font-size: 12px; font-weight: 600; color: var(--muted); }
+.field input, .field textarea { font: 15px/1.4 var(--ui); color: var(--ink); background: var(--sunk); border: 0; border-radius: 10px; padding: 10px 12px; width: 100%; }
+.field textarea { min-height: 170px; resize: none; font-family: var(--ui); }
+.searchbox { margin: 0 16px 10px; display: flex; gap: 8px; align-items: center; background: var(--sunk); border-radius: 11px; padding: 8px 11px; color: var(--muted); font-size: 15px; width: calc(100% - 32px); }
+.searchbox input { all: unset; flex: 1; color: var(--ink); font: 15px/1.2 var(--ui); }
+.seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; background: var(--sunk); border-radius: 10px; padding: 2px; margin: 0 16px 10px; }
+.seg .b { text-align: center; padding: 6px; border-radius: 8px; color: var(--muted); font-size: 13px; font-weight: 600; }
+.seg .b[aria-selected="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.12); }
+.toggle { width: 46px; height: 28px; border-radius: 14px; background: var(--rule); position: relative; flex: none; transition: background .2s; }
+.toggle::after { content: ""; position: absolute; top: 2px; left: 2px; width: 24px; height: 24px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.25); transition: left .2s; }
+.toggle[aria-checked="true"] { background: var(--news); }
+.toggle[aria-checked="true"]::after { left: 20px; }
+.toggle.vipt[aria-checked="true"] { background: var(--vip); }
+.group { margin: 0 16px 14px; border-radius: 14px; background: var(--paper); overflow: hidden; }
+.group .gi { display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-bottom: 1px solid var(--rule); min-height: 46px; text-align: left; width: 100%; }
+.group .gi:last-child { border-bottom: 0; }
+.group .gi .tx { flex: 1; min-width: 0; display: grid; gap: 1px; }
+.group .gi .tx span { font-size: 12.5px; color: var(--muted); }
+.group .gi .val { color: var(--muted); font-size: 14px; white-space: nowrap; }
+.foot { padding: 0 30px 14px; font-size: 12.5px; color: var(--muted); margin-top: -6px; }
+.stepper { display: inline-flex; align-items: center; gap: 6px; }
+.stepper .b { width: 30px; height: 28px; border-radius: 8px; background: var(--surface); display: grid; place-items: center; font-weight: 600; }
+.stepper output { min-width: 54px; text-align: center; font-size: 13px; font-variant-numeric: tabular-nums; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--news); display: inline-block; margin-right: 6px; }
+
+/* Thread */
+.msg { padding: 12px 16px; border-bottom: 1px solid var(--rule); display: grid; gap: 6px; }
+.msg .from { display: flex; gap: 8px; align-items: baseline; font-size: 13px; color: var(--muted); }
+.msg .from b { color: var(--ink); font-size: 15px; }
+.msg p { margin: 0; font-size: 15px; line-height: 1.5; }
+.why { all: unset; cursor: pointer; display: inline-flex; gap: 6px; align-items: center; margin: 0 16px 6px; font-size: 12.5px; color: var(--muted); }
+.why u { color: var(--news); text-decoration: none; font-weight: 600; }
+.draft { margin: 12px 16px; border: 1.5px solid var(--vip); border-radius: 16px; padding: 12px 14px; display: grid; gap: 10px; }
+.draft .lab { font-size: 11.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--vip); }
+.draft .txt { font-size: 15px; line-height: 1.5; }
+@media (prefers-reduced-motion: no-preference) { .draft .txt.swap { animation: inFade .35s ease-out both; } }
+.task-card { margin: 12px 16px; border-radius: 16px; background: var(--action-wash); padding: 12px 14px; display: grid; gap: 8px; }
+.task-card .lab { font-size: 11.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--action); }
+.task-card b { font-size: 16px; }
+.promise { margin: 12px 16px; border: 1px solid var(--rule); border-radius: 16px; padding: 12px 14px; display: grid; gap: 8px; background: var(--surface); }
+.sentmsg { background: var(--paper); }
+
+/* Sheets, toasts, banner */
+.scrim { position: absolute; inset: 0; background: var(--scrim); z-index: 50; }
+.sheet { position: absolute; left: 0; right: 0; bottom: 0; z-index: 51; background: var(--surface); border-radius: 20px 20px 0 0; padding: 10px 0 30px; display: grid; gap: 12px; box-shadow: 0 -16px 40px -14px rgba(0,0,0,.45); max-height: 92%; overflow-y: auto; }
+.sheet.tall { top: 50px; max-height: none; border-radius: 16px 16px 0 0; align-content: start; }
+.sheet::before { content: ""; width: 38px; height: 5px; border-radius: 3px; background: var(--rule); justify-self: center; }
+.sheet .sh-head { display: flex; justify-content: space-between; align-items: center; padding: 0 16px; }
+.sheet .sh-head h2 { margin: 0; font: 600 16px/1.2 var(--ui); }
+.sheet .pad { padding: 0 16px; display: grid; gap: 10px; }
+.sheet .txt { font: 400 15px/1.55 var(--serif); border: 1px solid var(--rule); border-radius: 12px; padding: 11px 13px; background: var(--paper); }
+@media (prefers-reduced-motion: no-preference) {
+  .sheet { animation: sheetUp .34s cubic-bezier(.2, .9, .3, 1.04) both; }
+  .scrim { animation: inFade .25s ease-out both; }
+  @keyframes sheetUp { from { transform: translateY(100%); } to { transform: none; } }
+}
+.toast { position: absolute; left: 14px; right: 14px; bottom: 96px; z-index: 60; background: #1A1F1C; color: #F0F3F1; border-radius: 14px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 14px; box-shadow: 0 10px 24px -10px rgba(0,0,0,.5); }
+.toast .b { color: #FF9A8F; font-weight: 600; }
+.no-tabs .toast { bottom: 28px; }
+.banner { position: absolute; top: 48px; left: 10px; right: 10px; z-index: 70; background: var(--glass); backdrop-filter: blur(16px); border-radius: 20px; padding: 11px 13px; display: grid; gap: 3px; text-align: left; box-shadow: 0 12px 30px -10px rgba(0,0,0,.4); border: 1px solid var(--rule); }
+.banner .ap { display: flex; gap: 6px; align-items: center; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.banner .ap i { font-style: normal; width: 16px; height: 16px; border-radius: 4px; background: var(--vip); color: #fff; display: grid; place-items: center; font-size: 9px; }
+.banner .dr { border-left: 2px solid var(--vip); padding-left: 8px; font-size: 13px; color: var(--muted); }
+@media (prefers-reduced-motion: no-preference) {
+  .banner { animation: bannerIn .4s cubic-bezier(.2, .9, .3, 1.1) both; }
+  @keyframes bannerIn { from { transform: translateY(-140%); } to { transform: none; } }
+}
+
+/* VIP swipe */
+.srow { position: relative; overflow: hidden; border-bottom: 1px solid var(--rule); }
+.srow > .row { border-bottom: 0; position: relative; z-index: 1; touch-action: pan-y; user-select: none; -webkit-user-select: none; transition: transform .32s cubic-bezier(.2, .9, .3, 1.15); cursor: grab; }
+.srow.dragging > .row { transition: none; cursor: grabbing; box-shadow: -8px 0 18px -10px rgba(0,0,0,.35), 8px 0 18px -10px rgba(0,0,0,.35); }
+.under { position: absolute; inset: 0; display: flex; align-items: center; gap: 10px; padding: 0 14px; visibility: hidden; }
+.under.lead { background: var(--vip-wash); }
+.under.trail { background: var(--screen-wash); justify-content: flex-end; }
+.seal { width: 42px; height: 42px; position: relative; flex: none; }
+.seal svg { width: 42px; height: 42px; transform: rotate(-90deg); }
+.seal .track { fill: none; stroke: var(--rule); stroke-width: 3; }
+.seal .prog { fill: none; stroke: var(--vip); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 106.8; stroke-dashoffset: 106.8; }
+.seal .core { position: absolute; inset: 6px; border-radius: 50%; display: grid; place-items: center; font: 700 13px/1 var(--ui); color: var(--vip); background: var(--surface); transition: background .15s, color .15s, transform .2s cubic-bezier(.3, 1.6, .5, 1); }
+.seal.armed .core { background: var(--vip); color: var(--surface); transform: scale(1.12); }
+.peek { display: grid; gap: 2px; min-width: 0; flex: none; width: 0; overflow: hidden; }
+.peek .lab { font: 700 9.5px/1 var(--ui); letter-spacing: .1em; text-transform: uppercase; color: var(--vip); white-space: nowrap; }
+.peek .dr { font: italic 400 12.5px/1.35 var(--serif); color: var(--ink); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.dial { display: flex; gap: 5px; }
+.dial span { font: 600 11px/1 var(--ui); padding: 6px 8px; border-radius: 999px; background: var(--surface); color: var(--muted); border: 1px solid var(--rule); transition: background .15s, color .15s, transform .2s cubic-bezier(.3, 1.6, .5, 1); }
+.dial span.on { background: var(--screen); color: var(--surface); border-color: var(--screen); transform: scale(1.08); }
+.stamp { position: absolute; right: 22px; top: 50%; z-index: 2; width: 60px; height: 60px; margin-top: -30px; border-radius: 50%; display: grid; place-items: center; background: var(--vip); color: var(--surface); font: 700 9.5px/1.1 var(--ui); letter-spacing: .08em; text-transform: uppercase; text-align: center; box-shadow: inset 0 0 0 3px rgba(255,255,255,.35), 0 6px 14px -6px rgba(0,0,0,.4); transform: rotate(-12deg); }
+.stamp b { display: block; font-size: 15px; letter-spacing: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .stamp { animation: stampIn .42s cubic-bezier(.3, 1.4, .5, 1) both; }
+  @keyframes stampIn { 0% { transform: rotate(-12deg) scale(2.2); opacity: 0; } 60% { transform: rotate(-12deg) scale(.92); opacity: 1; } 100% { transform: rotate(-12deg) scale(1); } }
+  .caught > * { animation: rise .45s ease-out both; }
+  .caught > :nth-child(2) { animation-delay: .12s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+}
+.caught { display: grid; justify-items: center; gap: 6px; padding: 30px 16px 16px; text-align: center; }
+.caught .big { font: 600 27px/1.15 var(--serif); letter-spacing: -.01em; }
+.caught .stat { font: 500 12px/1.3 var(--ui); color: var(--muted); }
+.empty { padding: 40px 30px; text-align: center; color: var(--muted); display: grid; gap: 6px; justify-items: center; }
+.empty b { color: var(--ink); font: 600 19px/1.2 var(--serif); }
+
+/* Magazine */
+.mg { padding: 0 20px 20px; display: grid; gap: 10px; align-content: start; }
+.mast-mag { display: grid; gap: 2px; padding-bottom: 8px; border-bottom: 2px solid var(--ink); }
+.mast-mag .day { font: 600 10.5px/1 var(--ui); letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+.mast-mag .name { font: 800 34px/1 var(--serif); letter-spacing: -.02em; }
+.mast-mag .line { display: flex; justify-content: space-between; font: 500 11px/1.3 var(--ui); color: var(--muted); padding-top: 6px; border-top: 1px solid var(--rule); margin-top: 7px; }
+.kick { font: 700 10px/1.25 var(--ui); letter-spacing: .14em; text-transform: uppercase; }
+.k-sb { color: var(--pub-sb); } .k-sm { color: var(--pub-sm); } .k-fn { color: var(--pub-fn); } .k-cb { color: var(--pub-cb); }
+.hl { font: 600 25px/1.12 var(--serif); letter-spacing: -.01em; text-wrap: balance; margin: 0; }
+.hl-s { font: 600 16px/1.22 var(--serif); text-wrap: balance; }
+.dek { font: italic 400 14px/1.45 var(--serif); color: var(--muted); margin: 0; }
+.by { font: 500 11.5px/1.3 var(--ui); color: var(--muted); }
+.img { border-radius: 4px; position: relative; overflow: hidden; }
+.img .cap { position: absolute; left: 8px; bottom: 6px; font: 500 9.5px/1.2 var(--ui); color: rgba(255,255,255,.85); }
+.img-sb { background: radial-gradient(circle at 72% 38%, rgba(255,255,255,.55) 0 9%, transparent 9.5%), radial-gradient(circle at 72% 38%, rgba(255,255,255,.18) 0 22%, transparent 22.5%), repeating-linear-gradient(90deg, rgba(255,255,255,.07) 0 2px, transparent 2px 14px), linear-gradient(160deg, #2C6A8A, #163548); }
+.img-sm { background: repeating-linear-gradient(0deg, rgba(255,255,255,.1) 0 1px, transparent 1px 9px), linear-gradient(200deg, #8A5079, #44253E); }
+.img-fn { background: radial-gradient(circle at 30% 60%, #F3E3B3 0 26%, transparent 26.5%), radial-gradient(circle at 62% 46%, rgba(243,227,179,.5) 0 18%, transparent 18.5%), linear-gradient(135deg, #A57E22, #5E4410); }
+.story { all: unset; cursor: pointer; display: grid; gap: 6px; text-align: left; }
+.story:focus-visible { outline: 2px solid var(--vip); outline-offset: 3px; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; border-top: 1px solid var(--rule); padding-top: 10px; }
+.toc-sec { display: grid; gap: 4px; padding-top: 10px; border-top: 1px solid var(--rule); }
+.toc-item { all: unset; cursor: pointer; display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; align-items: baseline; padding: 5px 0; }
+.toc-item:focus-visible { outline: 2px solid var(--vip); outline-offset: 2px; }
+.toc-item .t { font: 500 11px/1 var(--ui); color: var(--muted); font-variant-numeric: tabular-nums; }
+.toc-item .from { grid-column: 1 / -1; font: 500 11px/1.2 var(--ui); color: var(--muted); }
+.toc-item.read .hl-s { color: var(--muted); }
+.copy { font: 400 16px/1.62 var(--serif); margin: 0; hyphens: auto; }
+.copy + .copy { text-indent: 1.2em; }
+.drop::first-letter { float: left; font: 600 52px/.82 var(--serif); padding: 5px 7px 0 0; color: var(--pub-sb); }
+.pull { font: italic 600 19px/1.3 var(--serif); border-top: 2px solid var(--pub-sb); border-bottom: 1px solid var(--rule); padding: 10px 0; margin: 4px 0; }
+.gist { all: unset; cursor: pointer; display: grid; gap: 6px; background: var(--news-wash); color: var(--ink); border-radius: 12px; padding: 9px 12px; font: 13.5px/1.45 var(--ui); }
+.gist .gl { font: 700 10.5px/1 var(--ui); letter-spacing: .1em; text-transform: uppercase; color: var(--news); }
+.gist:focus-visible { outline: 2px solid var(--vip); outline-offset: 2px; }
+.prog { height: 3px; background: var(--rule); position: sticky; top: 0; z-index: 2; }
+.prog i { display: block; height: 100%; background: var(--ink); width: 0; }
+.brief { display: grid; gap: 4px; padding-top: 10px; border-top: 1px solid var(--rule); }
+.brief p { font: 400 15px/1.55 var(--serif); margin: 0; }
+.upnext { all: unset; cursor: pointer; display: grid; gap: 4px; border: 1px solid var(--rule); border-radius: 14px; padding: 12px 14px; background: var(--surface); }
+.upnext:focus-visible { outline: 2px solid var(--vip); outline-offset: 2px; }
+.thumb { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; font: 700 12.5px/1 var(--serif); }
+.timeline { display: grid; gap: 0; margin: 0 16px 14px; }
+.timeline .st { display: grid; grid-template-columns: 22px 1fr; gap: 10px; align-items: start; padding-bottom: 12px; position: relative; }
+.timeline .st::before { content: ""; position: absolute; left: 10px; top: 20px; bottom: 0; width: 2px; background: var(--rule); }
+.timeline .st:last-child::before { display: none; }
+.timeline .st i { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--rule); background: var(--surface); display: grid; place-items: center; font-style: normal; font-size: 11px; font-weight: 700; z-index: 1; }
+.timeline .st.done i { background: var(--buy); border-color: var(--buy); color: var(--surface); }
+.timeline .st.now i { border-color: var(--buy); color: var(--buy); }
+.timeline .st span { display: grid; font-size: 14px; }
+.timeline .st span small { color: var(--muted); font-size: 12.5px; }
+.money { font-variant-numeric: tabular-nums; font-weight: 600; }
+.lines { margin: 0 16px 14px; display: grid; }
+.lines div { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--rule); font-size: 14px; font-variant-numeric: tabular-nums; }
+.lines div:last-child { border-bottom: 0; font-weight: 700; }
+
+/* Onboarding */
+.ob { flex: 1; display: grid; align-content: center; justify-items: center; gap: 12px; padding: 60px 26px 40px; text-align: center; }
+.ob .lanes { display: flex; gap: 5px; }
+.ob h2 { font: 700 30px/1.1 var(--ui); margin: 0; }
+.ob p { margin: 0; color: var(--muted); font-size: 15px; max-width: 270px; }
+.ob .acts { display: grid; gap: 8px; width: 100%; margin-top: 28px; }
+.obs { flex: 1; overflow-y: auto; padding: 56px 0 30px; display: grid; align-content: start; gap: 10px; }
+.obs h2 { font: 700 26px/1.15 var(--ui); margin: 0; padding: 0 20px; }
+.obs > p { margin: 0; padding: 0 20px; color: var(--muted); font-size: 14.5px; }
+.obs .acts { padding: 8px 16px 0; display: grid; gap: 8px; }
+.steps { margin: 0 16px; padding: 12px 14px 12px 32px; background: var(--paper); border-radius: 14px; display: grid; gap: 6px; font-size: 14px; }
+.meter { display: grid; gap: 8px; padding: 6px 20px; }
+.meter .m { display: grid; grid-template-columns: 22px 1fr 46px; gap: 8px; align-items: center; font-size: 12.5px; }
+.meter .trk { height: 7px; border-radius: 4px; background: var(--sunk); overflow: hidden; }
+.meter .trk i { display: block; height: 100%; width: 0; transition: width .5s ease; }
+.meter .n { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
+.sysalert { margin: auto 24px; background: var(--glass); border-radius: 16px; padding: 18px 16px 0; display: grid; gap: 6px; text-align: center; border: 1px solid var(--rule); }
+.sysalert b { font-size: 16px; }
+.sysalert p { margin: 0; font-size: 13px; color: var(--muted); }
+.sysalert .two-b { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--rule); margin: 10px -16px 0; }
+.sysalert .two-b .b { padding: 12px; color: var(--news); font-size: 15px; }
+.sysalert .two-b .b + .b { border-left: 1px solid var(--rule); font-weight: 600; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+</style>
+
+<header class="top">
+  <span class="eyebrow">Design pass 4 · Clickable prototype · iPhone</span>
+  <h1>Koumara prototype<span>.</span></h1>
+  <p>Every iPhone screen, linked and working with sample mail. Tap through it like the real app, or jump anywhere with the screen map. Nothing here sends real mail.</p>
+</header>
+
+<main class="stage">
+  <div>
+    <div class="phone ph-light" id="phone" role="region" aria-label="Koumara iPhone prototype">
+      <span class="island" aria-hidden="true"></span>
+      <div class="sbar" aria-hidden="true"><span id="clock">9:41</span><span>●●● ▮</span></div>
+      <div class="vp" id="vp"></div>
+      <div id="overlay"></div>
+    </div>
+  </div>
+  <aside class="panel" aria-label="Prototype notes and controls">
+    <div class="card" aria-live="polite">
+      <h2 class="note-title" id="noteTitle">Welcome</h2>
+      <div class="note-body" id="noteBody"></div>
+    </div>
+    <div class="card">
+      <h2>Demo controls</h2>
+      <div class="ctl">
+        <button type="button" id="ctlVip">Simulate a VIP email</button>
+        <button type="button" id="ctlTheme">Phone: dark</button>
+        <button type="button" id="ctlReset">Start over</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Screen map</h2>
+      <nav class="map" id="map" aria-label="Jump to a screen"></nav>
+    </div>
+  </aside>
+</main>
+<span class="sr" id="live" aria-live="polite"></span>
+
+<script>
+(function () {
+  "use strict";
+  var phone = document.getElementById("phone");
+  var vp = document.getElementById("vp");
+  var overlay = document.getElementById("overlay");
+  var live = document.getElementById("live");
+  var REDUCED = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function money(n) { return "$" + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+  function say(t) { live.textContent = ""; setTimeout(function () { live.textContent = t; }, 40); }
+  function first(name) { return name.split(" ")[0]; }
+
+  /* ---------------- Sample data ---------------- */
+  var VIPS = {
+    dana: {
+      id: "dana", name: "Dana Okafor", init: "DO", acct: "Gmail", when: "12m", nudge: 30,
+      subj: "Contract redlines for Thursday",
+      body: "Hi, attached are legal's comments on section 4 and the new indemnity language. Can you look before Thursday's call? Mainly need to know if the accessibility warranty wording works for you.",
+      drafts: {
+        base: "Hi Dana, got these. I'll go through section 4 tonight and send my notes on the accessibility warranty by Wednesday noon, so we have a day of buffer before the call.",
+        shorter: "Hi Dana, got these. Notes on section 4 by Wednesday noon.",
+        warmer: "Hi Dana, thanks for pulling this together so quickly. I'll dig into section 4 tonight and get you my notes on the accessibility warranty by Wednesday noon, which leaves us a comfortable day before the call.",
+        formal: "Hi Dana, thank you for sending legal's comments. I will review section 4 this evening and send my notes on the accessibility warranty by noon on Wednesday, ahead of Thursday's call.",
+        rewrite: "Thanks, Dana. Section 4 is on my list for tonight. Expect my accessibility warranty notes by Wednesday at noon."
+      },
+      promise: { title: "Send Dana section 4 notes", due: "Wed 12 PM", quote: "send my notes on the accessibility warranty by Wednesday noon" }
+    },
+    mom: {
+      id: "mom", name: "Mom", init: "M", acct: "iCloud", when: "8m", nudge: 15,
+      subj: "Flight lands at 6:40",
+      body: "Can you grab me from arrivals? Terminal B. I'll text when we land.",
+      drafts: {
+        base: "I'll be there! I'll wait at arrivals in Terminal B from 6:30. Text me when you land.",
+        shorter: "Yes! Terminal B, 6:30. Text when you land.",
+        warmer: "Of course! Can't wait to see you. I'll be at Terminal B arrivals from 6:30, just text me when you're down.",
+        formal: "Yes, I'll meet you at Terminal B arrivals at 6:30. Please text me when you land.",
+        rewrite: "On it. Terminal B arrivals, I'll be there by 6:30."
+      },
+      promise: null
+    },
+    dana2: {
+      id: "dana2", name: "Dana Okafor", init: "DO", acct: "Gmail", when: "now", nudge: 30,
+      subj: "Can we move Thursday's call to 2 PM?",
+      body: "Legal can only join after lunch. Would 2 PM Thursday work instead of 11?",
+      drafts: {
+        base: "2 PM Thursday works for me. I'll update the invite now.",
+        shorter: "2 PM works. Updating the invite.",
+        warmer: "No problem at all, 2 PM Thursday is great. I'll update the invite now so everyone has it.",
+        formal: "Yes, 2 PM on Thursday works for me. I will update the calendar invitation.",
+        rewrite: "Works for me. Moving the call to 2 PM Thursday now."
+      },
+      promise: { title: "Move Thursday call to 2 PM", due: "Today", quote: "I'll update the invite now" }
+    }
+  };
+  var PICKS = [
+    { id: "dana", name: "Dana Okafor", init: "DO", why: "You reply in about 20 min", on: true },
+    { id: "mom", name: "Mom", init: "M", why: "Contacts favorite", on: true },
+    { id: "ravi", name: "Ravi Menon", init: "RM", why: "You reply in about 2 h", on: false },
+    { id: "jess", name: "Jess Liu", init: "JL", why: "Contacts favorite", on: false }
+  ];
+  var TASKS = [
+    { id: "lease", title: "Sign lease renewal", due: "5:00 PM", grp: "today", src: "Harbor Property Management · iCloud", from: "Harbor Property Management", subj: "Your lease renewal is ready to sign", quote: "Please complete signatures by 5pm today to lock in the current rate.", body: "Hi, your 12-month renewal is ready in DocuSign. Please complete signatures by 5pm today to lock in the current rate. Two signatures are needed." },
+    { id: "invoice", title: "Approve Q4 invoice", due: "EOD", grp: "today", src: "Ledgerline Billing · $2,400.00", from: "Ledgerline Billing", subj: "Invoice INV-4471 awaiting approval", quote: "Approval is needed by end of day to keep net-15 terms.", body: "Invoice INV-4471 for $2,400.00 is waiting for your approval. Approval is needed by end of day to keep net-15 terms." },
+    { id: "rsvp", title: "RSVP to design meetup", due: "Fri", grp: "week", src: "Bay Type Club · Gmail", from: "Bay Type Club", subj: "October meetup: optical sizes", quote: "Please RSVP by Friday, seats are limited.", body: "Our October meetup is about optical sizes in variable fonts. Please RSVP by Friday, seats are limited." },
+    { id: "w9", title: "Send W-9", due: "Thu", grp: "week", src: "Pixel & Pine Studio · Gmail", from: "Pixel & Pine Studio", subj: "Paperwork before first payment", quote: "We need a W-9 from you before we can release the first payment.", body: "Thanks for signing on. We need a W-9 from you before we can release the first payment. Thursday would be ideal." },
+    { id: "ravi", title: "Audit feedback from Ravi", due: "3d", grp: "waiting", src: "You asked on Oct 17", from: "Ravi Menon", subj: "Can you review the a11y audit?", quote: null, body: "You asked Ravi for feedback on the audit three days ago. Koumara drafted a gentle nudge you can send." }
+  ];
+  var PIECES = [
+    { id: "p1", pub: "Small Batch Engineering", k: "sb", sec: "Technology", issue: "Issue 84", title: "Why tiny models win on the edge", dek: "Fast, private, and good enough is a better product than slow and brilliant.", by: "Mara Lind", min: 7, img: "sb",
+      gist: "Small models answer faster because nothing leaves the device. Typed output beats free text for app features. The context window is the real limit.",
+      body: ["Most of the features people ask for are classification with good manners. You don't need a frontier model to tell a receipt from a newsletter. You need a fast one that never makes anyone wait.", "The interesting work moves from the model to the edges around it: what you send, what you keep, and what you refuse to guess.", "A small model with a typed schema behaves like a careful clerk. It fills in the form, says how sure it is, and leaves the rest blank instead of inventing it.", "That last part matters more than speed. A guess you can see is a feature; a guess you can't see is a bug."],
+      pull: "The context window is the real budget. Spend it like money." },
+    { id: "p2", pub: "The Sunday Margin", k: "sm", sec: "Ideas", issue: "Oct 18", title: "The case for slower software", dek: "Release less often, write down why, and let people catch up.", by: "Theo Arnaud", min: 9, img: "sm",
+      gist: "Ship on a rhythm people can follow. Write the release note before the change. Fewer, clearer changes build more trust.",
+      body: ["There's a version of every product that changes faster than anyone can learn it. The fix isn't to stop shipping. It's to ship on a rhythm people can hear.", "Release notes help, but only if someone reads them. The teams I admire most write the note first, then decide whether the change is worth the note.", "Slowness, done on purpose, is a kind of respect for the people using the thing."],
+      pull: "Write the note first. Then decide if the change deserves it." },
+    { id: "p3", pub: "Field Notes on Type", k: "fn", sec: "Design", issue: "Issue 31", title: "Optical sizes, explained", dek: "Why caption text needs a different cut than a headline.", by: "Ines Duarte", min: 4, img: "fn",
+      gist: "Small text needs wider spacing and sturdier strokes. Large text can be tighter and more delicate. Optical sizes do this automatically.",
+      body: ["Shrink a headline face down to caption size and it falls apart: the thin strokes vanish and the letters crowd each other.", "Optical sizes are separate drawings of the same typeface for different sizes. Small sizes get open spacing and sturdier strokes; large sizes get tighter spacing and finer detail.", "Variable fonts make this automatic. Set the size, and the drawing follows."],
+      pull: null },
+    { id: "p4", pub: "The Sunday Margin", k: "sm", sec: "Ideas", issue: "Oct 11", title: "Notes from a quiet launch", dek: "A launch with no announcement still found its audience.", by: "Theo Arnaud", min: 6, img: null,
+      gist: "No launch post, no countdown. People found it through a changelog and a single forum reply.",
+      body: ["We shipped without telling anyone. Not as a stunt; we just didn't have the energy for a launch.", "Three weeks later, the changelog was our most visited page. People were reading it the way you'd read a diary."],
+      pull: null }
+  ];
+  var BRIEFS = [
+    ["Bridge lane opens Saturday.", "The protected lane on the north bridge opens at 8 AM, with a group ride across at 9."],
+    ["Winter tire swap.", "Studded tires are allowed from November 1. Two shops are offering free swaps that weekend."],
+    ["Night counts are up.", "Evening ridership on Harbor Street rose by a fifth since the new lights went in."],
+    ["Repair café returns.", "First Sunday of the month at the library annex, 10 AM to 1 PM."]
+  ];
+  var PUBS = [
+    { id: "sb", name: "Small Batch Engineering", mono: "SB", opened: "9 of the last 10", freq: "Weekly", pieces: ["p1"] },
+    { id: "sm", name: "The Sunday Margin", mono: "SM", opened: "9 of the last 10", freq: "Weekly", pieces: ["p2", "p4"] },
+    { id: "fn", name: "Field Notes on Type", mono: "FN", opened: "7 of the last 10", freq: "Fortnightly", pieces: ["p3"] },
+    { id: "cb", name: "City Bike Weekly", mono: "CB", opened: "6 of the last 10", freq: "Weekly", pieces: [] },
+    { id: "dw", name: "Deals Weekly", mono: "DW", opened: "0 of the last 12", freq: "Weekly", pieces: [] }
+  ];
+  var ORDERS = [
+    { id: "fs", item: "Rain shell", merchant: "Fieldhouse Supply", mono: "FS", total: 164, date: "Oct 17", grp: "arriving", chip: ["c-buy", "Out for delivery · 3 stops"], number: "FS-20418", acct: "Gmail",
+      lines: [["Ridgeline shell, M, slate", 149], ["Shipping", 0], ["Tax", 15]], steps: [["Ordered", "Oct 17", "done"], ["Shipped", "Oct 18", "done"], ["Out for delivery", "Today", "now"], ["Delivered", "", ""]], ret: "Nov 16",
+      emails: [["Order confirmed", "Oct 17"], ["Your order has shipped", "Oct 18"], ["Out for delivery today", "Today"]] },
+    { id: "ab", item: "3 books", merchant: "Arbor Books", mono: "AB", total: 57.4, date: "Oct 12", grp: "returns", chip: ["c-action", "Return by Oct 26"], number: "AB-55102", acct: "iCloud",
+      lines: [["Field notes, vol. 2", 24], ["The shape of type", 19.9], ["City cycling atlas", 9], ["Tax", 4.5]], steps: [["Ordered", "Oct 12", "done"], ["Shipped", "Oct 13", "done"], ["Out for delivery", "Oct 15", "done"], ["Delivered", "Oct 15", "done"]], ret: "Oct 26",
+      emails: [["Thanks for your order", "Oct 12"], ["Your order has shipped", "Oct 13"], ["Delivered", "Oct 15"]] },
+    { id: "nc", item: "Whole bean, 2 lb", merchant: "Northbound Coffee", mono: "NC", total: 38, date: "Oct 18", grp: "recent", chip: ["c-plain", "Delivered Oct 18"], number: "NC-9031", acct: "Gmail",
+      lines: [["House blend, 2 lb", 34], ["Shipping", 4]], steps: [["Ordered", "Oct 16", "done"], ["Shipped", "Oct 17", "done"], ["Out for delivery", "Oct 18", "done"], ["Delivered", "Oct 18", "done"]], ret: null,
+      emails: [["Order received", "Oct 16"], ["Delivered", "Oct 18"]] },
+    { id: "pp", item: "Font license", merchant: "Pixel & Pine", mono: "PP", total: 120, date: "Oct 3", grp: "recent", chip: ["c-plain", "Digital"], number: "PP-118", acct: "Gmail",
+      lines: [["Desktop license, 3 seats", 120]], steps: [["Purchased", "Oct 3", "done"], ["Download ready", "Oct 3", "done"]], ret: null,
+      emails: [["Your license and download", "Oct 3"]] },
+    { id: "lh", item: "LED bulbs ×6", merchant: "Lantern Hardware", mono: "LH", total: 24, date: "Oct 9", grp: "recent", chip: ["c-plain", "Refunded"], number: "LH-7720", acct: "iCloud", refunded: true,
+      lines: [["Warm LED bulbs, 6 pack", 24]], steps: [["Ordered", "Oct 2", "done"], ["Returned", "Oct 8", "done"], ["Refunded", "Oct 9", "done"]], ret: null,
+      emails: [["Order confirmed", "Oct 2"], ["Return received", "Oct 8"], ["Refund issued", "Oct 9"]] }
+  ];
+  var ARBOR = [["3 books", "Oct 12", 57.4, "ab"], ["Field guide to ferns", "Aug 3", 32], ["Gift card", "Jun 14", 50], ["2 books", "Mar 2", 41.9], ["Type specimen print", "Jan 20", 31.5]];
+  var MERCHANTS = [["Fieldhouse Supply", 9, 1204], ["Pixel & Pine", 4, 480], ["Northbound Coffee", 11, 418], ["Arbor Books", 5, 212.8], ["Lantern Hardware", 3, 96.5]];
+  var SCREENER = [
+    { id: "je", name: "Jordan Ellis", init: "JE", email: "jordan.ellis@example.com", subj: "Intro from Ravi", note: "Mentions Ravi Menon, who is in your contacts.", chip: ["c-screen", "Looks personal"], yes: "Let in" },
+    { id: "tm", name: "Trailmap", init: "TM", email: "hello@trailmapco.com", subj: "Welcome to Trailmap", note: "Has a newsletter unsubscribe header.", chip: ["c-news", "❡ Looks like a newsletter"], yes: "Into Reading" },
+    { id: "ao", name: "Arbor Books", init: "AB", email: "orders@arborbooks.com", subj: "Your order has shipped", note: "Includes order details.", chip: ["c-buy", "¤ Looks like a receipt"], yes: "Into Purchases" }
+  ];
+  var RULES = [
+    ["g-buy", "¤", "orders@arborbooks.com", "Sort by content · from a move in Reading"],
+    ["g-news", "❡", "Trailmap", "Always Reading · from Screener"],
+    ["g-vip", "◆", "Dana Okafor", "VIP · nudge after 30 min"],
+    ["g-screen", "◐", "promo@deals.example", "Never · from Screener"]
+  ];
+
+  /* ---------------- State ---------------- */
+  var S;
+  function fresh() {
+    return {
+      onboarded: false,
+      ob: [{ s: "ob-welcome" }],
+      tab: "today",
+      stacks: { today: [{ s: "today" }], vip: [{ s: "vip" }], action: [{ s: "action" }], reading: [{ s: "reading" }], purchases: [{ s: "purchases" }] },
+      acct: { gmail: false, icloud: false },
+      picks: PICKS.map(function (p) { return p.on; }),
+      sortPct: 0,
+      obGroups: { news: false, buy: false },
+      waiting: ["dana", "mom"],
+      replied: [{ id: "ravi", name: "Ravi Menon", init: "RM", subj: "Can you review the a11y audit?", note: "✓ Replied 1h ago" }],
+      later: [],
+      sent: {},
+      tone: {},
+      promiseAsk: null,
+      tasks: TASKS.map(function (t) { return Object.assign({}, t); }),
+      readMode: "edition",
+      read: {},
+      gistOpen: {},
+      muted: {},
+      unsub: {},
+      pFilter: "orders",
+      psearch: "",
+      pchips: [],
+      tracking: {},
+      business: {},
+      screener: SCREENER.slice(),
+      query: "",
+      nudges: { dana: 30, mom: 15 },
+      edition: { am: true, pm: true },
+      images: { sb: true, sm: true, fn: true, cb: false, dw: false },
+      ai: { away: true },
+      notif: { vip: true, ret: true, ed: false },
+      sheet: null,
+      toast: null,
+      banner: null,
+      stamping: null
+    };
+  }
+
+  function stack() { return S.onboarded ? S.stacks[S.tab] : S.ob; }
+  function cur() { var st = stack(); return st[st.length - 1]; }
+
+  /* ---------------- Small builders ---------------- */
+  function nav(left, title, right) {
+    return '<div class="nav"><div class="l">' + (left || "") + '</div>' + (title ? '<span class="ttl">' + esc(title) + '</span>' : "") + '<div class="r">' + (right || "") + '</div></div>';
+  }
+  function backBtn(label) { return '<button class="b" data-a="back" aria-label="Back to ' + esc(label) + '">‹ ' + esc(label) + '</button>'; }
+  function lt(t) { return '<h1 class="lt" tabindex="-1" data-focus>' + esc(t) + '</h1>'; }
+  function subline(t) { return '<div class="sub">' + esc(t) + '</div>'; }
+  function sect(t, extra) { return '<div class="sect"><span>' + esc(t) + '</span>' + (extra || "") + '</div>'; }
+  function chip(c) { return '<span class="chip ' + c[0] + '">' + esc(c[1]) + '</span>'; }
+  function toggle(on, act, label, extraCls) {
+    return '<button class="b toggle' + (extraCls ? " " + extraCls : "") + '" role="switch" aria-checked="' + (on ? "true" : "false") + '" aria-label="' + esc(label) + '" data-a="' + act + '"></button>';
+  }
+  function topActions() {
+    return '<button class="b" data-a="go" data-s="search" aria-label="Search all mail">⌕</button><button class="b" data-a="compose" aria-label="New message">✎</button>';
+  }
+  function vipRow(v, swipe) {
+    var draft = v.drafts[S.tone[v.id] || "base"];
+    var row = '<div class="row nav-row" role="button" tabindex="0" data-a="go" data-s="thread" data-id="' + v.id + '" aria-label="' + esc(v.name + ", waiting " + v.when + ", " + v.subj + ", draft ready") + '">' +
+      '<span class="av vip" aria-hidden="true">' + esc(v.init) + '</span><div class="main"><div class="t1"><b>' + esc(v.name) + '</b><span>' + esc(v.when) + '</span></div>' +
+      '<span class="s1">' + esc(v.subj) + '</span><span class="s2">' + esc(v.body) + '</span><div class="meta">' + chip(["c-vip", "◆ Draft ready"]) + chip(["c-plain", v.acct]) + '</div></div></div>';
+    if (!swipe) return row;
+    return '<div class="srow collapse" data-id="' + v.id + '">' +
+      '<div class="under lead" aria-hidden="true"><span class="seal"><svg viewBox="0 0 42 42"><circle class="track" cx="21" cy="21" r="17"/><circle class="prog" cx="21" cy="21" r="17"/></svg><span class="core">◆</span></span><span class="peek"><span class="lab">Your draft</span><span class="dr">' + esc(draft) + '</span></span></div>' +
+      '<div class="under trail" aria-hidden="true"><span class="dial"><span>1 hr</span><span>Tonight</span><span>Tomorrow</span></span></div>' +
+      row + (S.stamping === v.id ? '<span class="stamp" aria-hidden="true"><span><b>◆</b>Sent</span></span>' : "") + '</div>';
+  }
+  function taskRow(t) {
+    var waitingT = t.grp === "waiting";
+    return '<div class="trow collapse" data-id="' + t.id + '">' +
+      '<button class="b check' + (waitingT ? " dashed" : "") + (t.done ? " done" : "") + '" data-a="taskDone" data-id="' + t.id + '" aria-label="Mark done: ' + esc(t.title) + '">✓</button>' +
+      '<button class="b ttext" data-a="go" data-s="task" data-id="' + t.id + '"><span style="display:flex;gap:8px;align-items:baseline"><b style="flex:1">' + esc(t.title) + '</b><span class="due"' + (t.grp === "today" ? "" : ' style="color:var(--muted)"') + '>' + esc(t.due) + '</span></span>' +
+      '<span class="src">' + esc(t.src) + '</span>' + (t.quote && t.grp === "today" ? '<span class="quote-s">"' + esc(t.quote) + '"</span>' : "") + '</button></div>';
+  }
+  function orderRow(o) {
+    return '<button class="b row nav-row" style="grid-template-columns:38px 1fr auto" data-a="go" data-s="order" data-id="' + o.id + '">' +
+      '<span class="thumb" style="background:var(--' + (o.grp === "arriving" ? "buy" : o.grp === "returns" ? "action" : "sunk") + (o.grp === "recent" ? "" : "-wash") + ');color:var(--' + (o.grp === "arriving" ? "buy" : o.grp === "returns" ? "action" : "muted") + ')" aria-hidden="true">' + esc(o.mono) + '</span>' +
+      '<span class="main"><b style="font-size:15px">' + esc(o.item) + '</b><span class="s2" style="-webkit-line-clamp:1">' + esc(o.merchant) + '</span><span class="meta">' + chip(o.chip) + '</span></span>' +
+      '<span class="money" style="font-size:15px">' + (o.refunded ? '<s style="color:var(--muted)">' + money(o.total) + '</s>' : money(o.total)) + '</span></button>';
+  }
+  function piece(id) { for (var i = 0; i < PIECES.length; i++) if (PIECES[i].id === id) return PIECES[i]; }
+  function order(id) { for (var i = 0; i < ORDERS.length; i++) if (ORDERS[i].id === id) return ORDERS[i]; }
+  function task(id) { for (var i = 0; i < S.tasks.length; i++) if (S.tasks[i].id === id) return S.tasks[i]; }
+  function pub(id) { for (var i = 0; i < PUBS.length; i++) if (PUBS[i].id === id) return PUBS[i]; }
+  function unreadCount() { return PIECES.filter(function (p) { return !S.read[p.id]; }).length + BRIEFS.length + 2; }
+
+  /* ---------------- Screens ---------------- */
+  var SCREENS = {};
+
+  /* Onboarding */
+  SCREENS["ob-welcome"] = function () {
+    return { tabs: false, raw: true, html:
+      '<div class="ob"><div class="lanes" aria-hidden="true"><span class="glyph g-vip">◆</span><span class="glyph g-action">▲</span><span class="glyph g-news">❡</span><span class="glyph g-buy">¤</span><span class="glyph g-screen">◐</span></div>' +
+      '<h2 tabindex="-1" data-focus>Koumara</h2><p>Your mail, sorted into lanes on this iPhone. Nothing is sent to a server for sorting.</p>' +
+      '<div class="acts"><button class="btn pri full" data-a="go" data-s="ob-google">Continue with Gmail</button><button class="btn full" data-a="go" data-s="ob-icloud">Add iCloud Mail</button></div>' +
+      '<p style="font-size:12.5px">You can add both. More providers later.</p></div>' };
+  };
+  SCREENS["ob-google"] = function () {
+    return { tabs: false, raw: true, html:
+      '<div class="ob" style="background:var(--scrim)"><div class="sysalert" role="alertdialog" aria-labelledby="gTitle"><b id="gTitle" tabindex="-1" data-focus>“Koumara” Wants to Use “google.com” to Sign In</b>' +
+      '<p>This allows the app and website to share information about you.</p><div class="two-b"><button class="b" data-a="back">Cancel</button><button class="b" data-a="gmailOk">Continue</button></div></div></div>' };
+  };
+  SCREENS["ob-icloud"] = function () {
+    return { tabs: false, raw: true, html:
+      '<div class="obs">' + nav(backBtn("Back"), "", "") + '<h2 tabindex="-1" data-focus>Add iCloud Mail</h2>' +
+      (S.acct.gmail ? '<p><span class="dot"></span>Gmail is connected.</p>' : "") +
+      '<p>Apple doesn\'t let other mail apps sign in with your Apple Account, so iCloud needs an app-specific password. It only works for mail, and you can revoke it anytime.</p>' +
+      '<ol class="steps"><li>Go to account.apple.com and sign in.</li><li>Open Sign-In and Security, then App-Specific Passwords.</li><li>Create one named “Koumara” and paste it below.</li></ol>' +
+      '<div class="field"><label for="icpw">App-specific password</label><input id="icpw" type="password" autocomplete="off" placeholder="xxxx-xxxx-xxxx-xxxx"></div>' +
+      '<div class="acts"><button class="btn pri full" data-a="icloudOk">Add iCloud Mail</button><button class="btn full" data-a="go" data-s="ob-vips">' + (S.acct.gmail ? "Skip for now" : "Use Gmail only") + '</button></div></div>' };
+  };
+  SCREENS["ob-vips"] = function () {
+    var n = S.picks.filter(Boolean).length;
+    return { tabs: false, raw: true, html:
+      '<div class="obs"><h2 tabindex="-1" data-focus>Who can\'t wait?</h2><p>Suggested from who you reply to fastest and your Contacts favorites. Their mail always arrives with a reply drafted.</p><div class="group" style="margin-top:6px">' +
+      PICKS.map(function (p, i) {
+        return '<div class="gi"><span class="av" style="width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;background:var(--vip-wash);color:var(--vip)" aria-hidden="true">' + p.init + '</span><span class="tx"><b>' + esc(p.name) + '</b><span>' + esc(p.why) + '</span></span>' +
+          '<button class="b toggle vipt" role="switch" aria-checked="' + S.picks[i] + '" aria-label="' + esc(p.name) + ' is a VIP" data-a="pick" data-i="' + i + '"></button></div>';
+      }).join("") + '</div><p style="font-size:13px">Add anyone else later from a message or Contacts.</p>' +
+      '<div class="acts"><button class="btn pri full" data-a="go" data-s="ob-sorting">Continue with ' + n + ' VIP' + (n === 1 ? "" : "s") + '</button></div></div>' };
+  };
+  SCREENS["ob-sorting"] = function () {
+    var p = S.sortPct;
+    function bar(g, c, w, n) { return '<div class="m"><span class="glyph ' + g + '" aria-hidden="true">' + c + '</span><span class="trk"><i data-w="' + w + '" style="width:' + Math.round(w * p / 100) + '%;background:var(--' + g.slice(2) + ')"></i></span><span class="n" data-n="' + n + '">' + Math.round(n * p / 100).toLocaleString() + '</span></div>'; }
+    return { tabs: false, raw: true, html:
+      '<div class="obs"><h2 tabindex="-1" data-focus>Sorting your last 90 days</h2><p id="sortLine">' + Math.round(4212 * p / 100).toLocaleString() + ' of 4,212 · on this iPhone</p>' +
+      '<div class="meter" role="img" aria-label="Sorting progress, ' + p + ' percent">' + bar("g-vip", "◆", 8, 61) + bar("g-action", "▲", 14, 118) + bar("g-news", "❡", 78, 1630) + bar("g-buy", "¤", 22, 244) + bar("g-screen", "◐", 30, 86) + '</div>' +
+      '<div class="tile" style="margin-top:8px"><b>While you wait</b><span style="color:var(--muted);font-size:13.5px">86 senders have never been let in. Want to go through them?</span></div>' +
+      '<div class="acts"><button class="btn pri full" data-a="go" data-s="ob-screener">Open Screener</button><button class="btn full" data-a="go" data-s="ob-default">I\'ll do it later</button></div></div>' };
+  };
+  SCREENS["ob-screener"] = function () {
+    function grp(key, g, c, name, n, act) {
+      var done = S.obGroups[key];
+      return '<div class="tile"><div class="hd"><span class="glyph ' + g + '" aria-hidden="true">' + c + '</span>' + name + '<span class="r">' + n + '</span></div>' +
+        (done ? '<span style="font-size:13.5px;color:var(--muted)">✓ All ' + n + ' let in</span>' : '<div class="btns"><button class="btn sm" data-a="obGroup" data-k="' + key + '">' + act + '</button></div>') + '</div>';
+    }
+    return { tabs: false, raw: true, html:
+      '<div class="obs">' + nav(backBtn("Sorting"), "", "") + '<h2 tabindex="-1" data-focus>Screener</h2><p>Grouped by what they look like. Decide a group at once, or one at a time.</p>' +
+      grp("news", "g-news", "❡", "Newsletters", 52, "Let all 52 into Reading") + grp("buy", "g-buy", "¤", "Stores", 19, "Let all 19 into Purchases") +
+      '<div class="tile"><div class="hd"><span class="glyph g-screen" aria-hidden="true">◐</span>People<span class="r">15</span></div><span style="font-size:13.5px;color:var(--muted)">People are always reviewed one at a time. They\'ll be waiting in the Screener.</span></div>' +
+      '<div class="acts"><button class="btn pri full" data-a="go" data-s="ob-default">Done</button></div></div>' };
+  };
+  SCREENS["ob-default"] = function () {
+    return { tabs: false, raw: true, html:
+      '<div class="obs"><h2 tabindex="-1" data-focus>Make Koumara your mail app</h2><p>So links like “email this” open here instead of Apple Mail.</p>' +
+      '<ol class="steps"><li>Open Settings.</li><li>Go to Apps, then Default Apps.</li><li>Tap Email and choose Koumara.</li></ol>' +
+      '<div class="acts"><button class="btn pri full" data-a="openSettingsSys">Open Settings</button><button class="btn full" data-a="finishOb">Not now</button></div></div>' };
+  };
+
+  /* Today */
+  SCREENS.today = function () {
+    var ws = S.waiting.map(function (id) { return VIPS[id]; });
+    var today = S.tasks.filter(function (t) { return t.grp === "today" && !t.done; });
+    var lead = piece("p1");
+    var html = nav('<button class="b" data-a="go" data-s="settings" aria-label="Settings">⚙</button>', "", topActions()) + lt("Today") + subline("Tuesday, October 20");
+    html += '<div class="tile"><div class="hd"><span class="glyph g-vip" aria-hidden="true">◆</span>VIP<span class="r">' + (ws.length ? ws.length + " waiting" : "All answered") + '</span></div>' +
+      (ws.length ? ws.map(function (v) { return '<button class="b ln" data-a="go" data-s="thread" data-id="' + v.id + '"><span>' + esc(v.name) + ' · ' + esc(v.subj) + '</span><span class="chip c-vip">Draft ready</span></button>'; }).join("") : '<span style="font-size:13.5px;color:var(--muted)">Everyone\'s heard back.</span>') + '</div>';
+    html += '<div class="tile"><div class="hd"><span class="glyph g-action" aria-hidden="true">▲</span>Action<span class="r">' + today.length + ' due today</span></div>' +
+      today.map(function (t) { return '<button class="b ln" data-a="go" data-s="task" data-id="' + t.id + '"><span>' + esc(t.title) + '</span><span class="m">' + esc(t.due) + '</span></button>'; }).join("") + '</div>';
+    html += '<button class="b tile mini-ed" data-a="tab" data-t="reading"><div class="hd"><span class="glyph g-news" aria-hidden="true">❡</span>Morning Edition<span class="r">' + unreadCount() + ' pieces · 48 min</span></div>' +
+      '<span class="kick k-sb">' + esc(lead.sec + " · " + lead.pub) + '</span><span class="hl-s" style="font-size:18px">' + esc(lead.title) + '</span></button>';
+    html += '<div class="tile"><div class="hd"><span class="glyph g-buy" aria-hidden="true">¤</span>Purchases<span class="r">1 arriving</span></div>' +
+      '<button class="b ln" data-a="go" data-s="order" data-id="fs" data-t="purchases"><span>Rain shell · out for delivery</span><span class="m">$164.00</span></button>' +
+      '<button class="b ln" data-a="go" data-s="order" data-id="ab" data-t="purchases"><span>Arbor Books return window</span><span class="chip c-action">6 days</span></button></div>';
+    html += '<button class="b tile" data-a="go" data-s="screener"><div class="hd"><span class="glyph g-screen" aria-hidden="true">◐</span>Screener<span class="r">' + (S.screener.length ? S.screener.length + " new senders ›" : "Clear") + '</span></div>' +
+      (S.screener.length ? '<span style="font-size:14px">' + esc(S.screener[0].name + " · " + S.screener[0].subj) + '</span>' : "") + '</button>';
+    return { tabs: true, html: html };
+  };
+
+  /* VIP */
+  SCREENS.vip = function () {
+    var html = nav("", "", topActions()) + lt("VIP");
+    html += subline(S.waiting.length ? S.waiting.length + " waiting · you reply in 9 min on average" : "All answered");
+    if (S.waiting.length) html += sect("Waiting") + S.waiting.map(function (id) { return vipRow(VIPS[id], true); }).join("");
+    else html += '<div class="caught"><span class="big">Everyone\'s heard back.</span><span class="stat">' + S.replied.length + ' replies today</span></div>';
+    if (S.later.length) html += sect("Later") + S.later.map(function (l) { return '<div class="row"><span class="av vip" aria-hidden="true">' + esc(VIPS[l.id].init) + '</span><div class="main"><div class="t1"><b>' + esc(VIPS[l.id].name) + '</b><span>' + esc(l.when) + '</span></div><span class="s1">' + esc(VIPS[l.id].subj) + '</span></div></div>'; }).join("");
+    html += sect("Replied") + S.replied.map(function (r) {
+      return '<div class="row"><span class="av" aria-hidden="true">' + esc(r.init) + '</span><div class="main"><div class="t1"><b>' + esc(r.name) + '</b><span>' + (r.note.indexOf("now") > -1 ? "now" : "2h") + '</span></div><span class="s1">' + esc(r.subj) + '</span><div class="meta">' + chip(["c-plain", r.note]) + '</div></div></div>';
+    }).join("");
+    html += '<p class="foot" style="margin-top:10px">Swipe right on a waiting row to read and send its draft. Swipe left for Later.</p>';
+    return { tabs: true, html: html, after: bindSwipes };
+  };
+
+  SCREENS.thread = function (p) {
+    var v = VIPS[p.id];
+    var tone = S.tone[v.id] || "base";
+    var sent = S.sent[v.id];
+    var html = nav(backBtn(S.tab === "today" ? "Today" : "VIP"), "", '<button class="b" data-a="compose" data-id="' + v.id + '" aria-label="Reply manually">↩</button>');
+    html += '<h1 class="lt" style="font-size:22px;line-height:1.2" tabindex="-1" data-focus>' + esc(v.subj) + '</h1>';
+    html += '<button class="why" data-a="why" data-id="' + v.id + '"><span class="glyph g-vip" aria-hidden="true">◆</span>In VIP because Dana is on your VIP list. <u>Why?</u></button>'.replace("Dana", esc(first(v.name)));
+    html += '<div class="msg"><div class="from"><b>' + esc(v.name) + '</b><span>' + esc(v.acct) + ' · ' + (v.when === "now" ? "now" : "9:29 AM") + '</span></div><p>' + esc(v.body) + '</p></div>';
+    if (sent) {
+      html += '<div class="msg sentmsg"><div class="from"><b>You</b><span>now</span></div><p>' + esc(sent) + '</p></div>';
+      if (S.promiseAsk === v.id && v.promise) {
+        html += '<div class="promise"><b>Track this promise?</b><span style="font-size:13.5px;color:var(--muted)">“' + esc(v.promise.quote) + '”</span><div class="btns"><button class="btn sm" style="background:var(--action);color:var(--surface)" data-a="addPromise" data-id="' + v.id + '">Add to Action</button><button class="btn sm" data-a="noPromise">No</button></div></div>';
+      }
+    } else {
+      html += '<div class="draft"><span class="lab">Draft · oMLX on your Mac</span><div class="txt" id="draftTxt" aria-live="polite">' + esc(v.drafts[tone]) + '</div>' +
+        '<div class="btns" role="group" aria-label="Rewrite the draft">' + [["shorter", "Shorter"], ["warmer", "Warmer"], ["formal", "More formal"], ["rewrite", "Rewrite"]].map(function (t) {
+          return '<button class="btn sm" data-a="tone" data-id="' + v.id + '" data-tone="' + t[0] + '" aria-pressed="' + (tone === t[0]) + '"' + (tone === t[0] ? ' style="background:var(--vip-wash);color:var(--vip)"' : "") + '>' + t[1] + '</button>';
+        }).join("") + '</div>' +
+        '<div class="btns"><button class="btn red" style="flex:2" data-a="sendVip" data-id="' + v.id + '">Send</button><button class="btn" style="flex:1" data-a="compose" data-id="' + v.id + '">Edit</button></div>' +
+        '<span style="font-size:12px;color:var(--muted)">Nothing sends until you press Send. Every send waits 10 seconds so you can undo.</span></div>';
+    }
+    return { tabs: true, html: html };
+  };
+
+  /* Action */
+  SCREENS.action = function () {
+    var groups = [["today", "Due today"], ["week", "This week"], ["waiting", "Waiting on others"]];
+    var open = S.tasks.filter(function (t) { return !t.gone; });
+    var html = nav("", "", '<button class="b" data-a="go" data-s="search" aria-label="Search all mail">⌕</button>') + lt("Action");
+    html += subline(open.filter(function (t) { return t.grp === "today"; }).length + " due today · " + open.filter(function (t) { return t.grp === "week"; }).length + " this week");
+    groups.forEach(function (g) {
+      var ts = open.filter(function (t) { return t.grp === g[0]; });
+      if (ts.length) html += sect(g[1]) + ts.map(taskRow).join("");
+    });
+    if (!open.length) html += '<div class="empty"><b>Nothing to do.</b><span>New requests in your mail will show up here with their deadlines.</span></div>';
+    return { tabs: true, html: html };
+  };
+  SCREENS.task = function (p) {
+    var t = task(p.id);
+    var html = nav(backBtn(S.tab === "today" ? "Today" : "Action"), "", "");
+    html += '<h1 class="lt" style="font-size:22px;line-height:1.2" tabindex="-1" data-focus>' + esc(t.subj) + '</h1>';
+    html += '<button class="why" data-a="why" data-id="task:' + t.id + '"><span class="glyph g-action" aria-hidden="true">▲</span>In Action because it asks you to do something. <u>Why?</u></button>';
+    html += '<div class="task-card"><span class="lab">' + (t.grp === "waiting" ? "Waiting on " + esc(first(t.from)) : "Extracted task · on device") + '</span><b>' + esc(t.title) + '</b><span style="font-size:14px">Due ' + esc(t.due) + '</span>' +
+      (t.quote ? '<span class="quote-s" style="color:var(--ink)">“' + esc(t.quote) + '”</span>' : "") +
+      '<div class="btns"><button class="btn sm pri" data-a="taskDone" data-id="' + t.id + '" data-back="1">' + (t.done ? "✓ Done" : "Done") + '</button><button class="btn sm" data-a="snoozeTask" data-id="' + t.id + '">Snooze</button>' + (t.grp === "waiting" ? '<button class="btn sm" data-a="compose" data-to="Ravi Menon" data-subj="Re: Can you review the a11y audit?" data-body="Hi Ravi, just checking in on the audit when you have a minute. No rush if this week is busy.">Send nudge</button>' : '<button class="btn sm" data-a="compose" data-to="' + esc(t.from) + '" data-subj="Re: ' + esc(t.subj) + '">Reply</button>') + '</div></div>';
+    html += '<div class="msg"><div class="from"><b>' + esc(t.from) + '</b><span>' + esc(t.src.split(" · ").pop()) + '</span></div><p>' + esc(t.body) + '</p></div>';
+    return { tabs: true, html: html };
+  };
+
+  /* Reading */
+  SCREENS.reading = function () {
+    var seg = '<div class="seg" role="tablist" aria-label="Reading view"><button class="b" role="tab" aria-selected="' + (S.readMode === "edition") + '" data-a="readMode" data-m="edition">Edition</button><button class="b" role="tab" aria-selected="' + (S.readMode === "shelf") + '" data-a="readMode" data-m="shelf">Shelf</button></div>';
+    if (S.readMode === "shelf") {
+      var html = nav("", "", '<button class="b" data-a="go" data-s="set-reading" aria-label="Reading settings">⚙</button>') + lt("Reading") + subline(unreadCount() + " unread from " + PUBS.length + " publications") + seg;
+      html += PUBS.map(function (p) {
+        var latest = p.pieces.length ? piece(p.pieces[0]).title : (p.id === "cb" ? "Bridge lane opens Saturday" : "This week's deals");
+        var n = p.pieces.filter(function (id) { return !S.read[id]; }).length + (p.id === "cb" ? 4 : 0);
+        return '<button class="b row nav-row" style="grid-template-columns:38px 1fr auto;align-items:center" data-a="go" data-s="pub" data-id="' + p.id + '"><span class="thumb" style="background:var(--news-wash);color:var(--news)" aria-hidden="true">' + p.mono + '</span><span class="main"><b style="font-size:15px">' + esc(p.name) + '</b><span class="s2" style="-webkit-line-clamp:1">' + (S.unsub[p.id] ? "Unsubscribed" : S.muted[p.id] ? "Muted for 2 weeks" : esc(latest)) + '</span></span><span style="font-weight:700;color:var(--news);font-size:13px">' + (n || "✓") + '</span></button>';
+      }).join("");
+      return { tabs: true, html: html };
+    }
+    var lead = piece("p1"), a = piece("p2"), b = piece("p3");
+    var h = nav("", "", '<button class="b" data-a="go" data-s="contents">Contents</button>') + seg;
+    h += '<div class="mg"><div class="mast-mag"><span class="day">Tuesday · No. 214</span><h1 class="name" tabindex="-1" data-focus style="margin:0">Morning Edition</h1><div class="line"><span>Oct 20, 2026</span><span>' + unreadCount() + ' pieces · 48 min</span></div></div>' +
+      '<button class="story" data-a="go" data-s="article" data-id="p1"><div class="img img-sb" style="height:150px"><span class="cap">Image from ' + esc(lead.pub) + '</span></div><span class="kick k-sb">' + esc(lead.sec + " · " + lead.pub) + '</span><span class="hl">' + esc(lead.title) + '</span><span class="dek">' + esc(lead.dek) + '</span><span class="by">' + esc(lead.by) + ' · ' + lead.min + ' min' + (S.read.p1 ? " · ✓ Read" : "") + '</span></button>' +
+      '<div class="two"><button class="story" data-a="go" data-s="article" data-id="p2"><span class="kick k-sm">' + a.sec + '</span><span class="hl-s">' + esc(a.title) + '</span><span class="by">' + a.min + ' min' + (S.read.p2 ? " · ✓" : "") + '</span></button>' +
+      '<button class="story" data-a="go" data-s="article" data-id="p3"><span class="kick k-fn">' + b.sec + '</span><span class="hl-s">' + esc(b.title) + '</span><span class="by">' + b.min + ' min' + (S.read.p3 ? " · ✓" : "") + '</span></button></div>' +
+      '<button class="story toc-sec" data-a="go" data-s="brief"><span class="kick k-cb">In brief · City</span><span class="hl-s">Bridge lane opens Saturday, and 3 more from City Bike Weekly</span></button>' +
+      '<button class="story toc-sec" data-a="go" data-s="contents"><span class="kick" style="color:var(--muted)">Contents</span><span class="hl-s">All ' + unreadCount() + ' pieces in this edition ›</span></button></div>';
+    return { tabs: true, mag: true, html: h };
+  };
+  SCREENS.contents = function () {
+    var secs = [["Technology", "k-sb", ["p1"]], ["Ideas", "k-sm", ["p2", "p4"]], ["Design", "k-fn", ["p3"]]];
+    var h = nav(backBtn("Edition"), "", "") + '<div class="mg"><div class="mast-mag"><span class="day">Morning Edition · Contents</span><h1 class="name" style="font-size:27px;margin:0" tabindex="-1" data-focus>In this edition</h1></div>';
+    secs.forEach(function (s) {
+      h += '<div class="toc-sec"><span class="kick ' + s[1] + '">' + s[0] + '</span>' + s[2].map(function (id) {
+        var p = piece(id);
+        return '<button class="toc-item' + (S.read[id] ? " read" : "") + '" data-a="go" data-s="article" data-id="' + id + '"><span class="hl-s">' + esc(p.title) + '</span><span class="t">' + (S.read[id] ? "✓ Read" : p.min + " min") + '</span><span class="from">' + esc(p.pub) + '</span></button>';
+      }).join("") + '</div>';
+    });
+    h += '<div class="toc-sec"><span class="kick k-cb">In brief · City</span><button class="toc-item" data-a="go" data-s="brief"><span class="hl-s">4 items from City Bike Weekly</span><span class="t">3 min</span></button></div></div>';
+    return { tabs: true, mag: true, html: h };
+  };
+  SCREENS.article = function (p) {
+    var a = piece(p.id);
+    var idx = PIECES.indexOf(a), next = PIECES[idx + 1];
+    var open = S.gistOpen[a.id];
+    var h = nav(backBtn("Edition"), "", '<button class="b" data-a="listen" aria-label="Listen">▷</button><button class="b" data-a="save" aria-label="Save for later">☆</button>');
+    h += '<article class="mg"><span class="kick k-' + a.k + '">' + esc(a.sec + " · " + a.issue) + '</span><h1 class="hl" style="font-size:28px" tabindex="-1" data-focus>' + esc(a.title) + '</h1><p class="dek">' + esc(a.dek) + '</p><span class="by">By ' + esc(a.by) + ' · ' + esc(a.pub) + ' · ' + a.min + ' min</span>';
+    h += '<button class="gist" data-a="gist" data-id="' + a.id + '" aria-expanded="' + !!open + '"><span class="gl">Gist · on device ' + (open ? "▾" : "▸") + '</span>' + (open ? '<span>' + esc(a.gist) + '</span>' : "") + '</button>';
+    if (a.img) h += '<div class="img img-' + a.img + '" style="height:130px"><span class="cap">Image from ' + esc(a.pub) + '</span></div>';
+    a.body.forEach(function (para, i) {
+      h += '<p class="copy' + (i === 0 ? " drop" : "") + '"' + (i === 0 && a.k !== "sb" ? ' style="--pub-sb:var(--pub-' + a.k + ')"' : "") + '>' + esc(para) + '</p>';
+      if (i === 1 && a.pull) h += '<p class="pull" style="border-top-color:var(--pub-' + a.k + ')">“' + esc(a.pull) + '”</p>';
+    });
+    h += '<p style="text-align:center;font:600 13px var(--serif);color:var(--pub-' + a.k + ')" aria-hidden="true">◆</p>';
+    h += '<span class="chip c-news" style="justify-self:start">✓ Marked read</span>';
+    if (next) h += '<button class="upnext" data-a="replace" data-s="article" data-id="' + next.id + '"><span class="kick k-' + next.k + '">Up next · ' + esc(next.pub) + ' · ' + next.min + ' min</span><span class="hl-s">' + esc(next.title) + '</span><span class="by">' + esc(next.dek) + '</span></button>';
+    else h += '<button class="upnext" data-a="replace" data-s="brief"><span class="kick k-cb">Up next · In brief</span><span class="hl-s">4 items from City Bike Weekly</span></button>';
+    h += '</article>';
+    S.read[a.id] = true;
+    return { tabs: false, mag: true, top: '<div class="topbar" aria-hidden="true"><i id="progBar"></i></div>', html: h, after: bindProgress };
+  };
+  SCREENS.brief = function () {
+    var h = nav(backBtn("Edition"), "", "") + '<div class="mg"><span class="kick k-cb">In brief · City</span><h1 class="hl" tabindex="-1" data-focus>From City Bike Weekly</h1><span class="by">4 issues, one paragraph each · condensed on device</span>';
+    h += BRIEFS.map(function (b) { return '<div class="brief"><p><b>' + esc(b[0]) + '</b> ' + esc(b[1]) + '</p><button class="b" style="font:600 12px var(--ui);color:var(--pub-cb);justify-self:start" data-a="toast" data-msg="Opens the full issue">Full issue ›</button></div>'; }).join("");
+    h += '<p class="by" style="margin-top:8px">That\'s the edition. Next one at 6:00 PM.</p></div>';
+    return { tabs: false, mag: true, html: h };
+  };
+  SCREENS.pub = function (p) {
+    var pb = pub(p.id);
+    var h = nav(backBtn("Reading"), "", "") + '<h1 class="lt" style="font-size:24px" tabindex="-1" data-focus>' + esc(pb.name) + '</h1>' + subline(pb.freq + " · you open " + pb.opened);
+    if (pb.pieces.length) h += pb.pieces.map(function (id) {
+      var a = piece(id);
+      return '<button class="b row nav-row" style="grid-template-columns:1fr" data-a="go" data-s="article" data-id="' + id + '"><span class="main"><span class="kick k-' + a.k + '">' + esc(a.issue + " · " + a.min + " min") + (S.read[id] ? " · ✓ Read" : "") + '</span><b class="hl-s">' + esc(a.title) + '</b><span class="s2">Gist: ' + esc(a.gist.split(". ")[0]) + '.</span></span></button>';
+    }).join("");
+    else h += '<div class="empty" style="padding:24px"><span>' + (pb.id === "cb" ? "Short issues from this publication appear in the Edition's In brief section." : "No issues in this edition.") + '</span></div>';
+    h += '<div class="pad" style="padding:14px 16px;display:grid;gap:8px">' +
+      '<button class="btn full" data-a="mute" data-id="' + pb.id + '">' + (S.muted[pb.id] ? "Unmute" : "Mute for 2 weeks") + '</button>' +
+      '<button class="btn full" data-a="unsub" data-id="' + pb.id + '"' + (S.unsub[pb.id] ? " disabled" : "") + '>' + (S.unsub[pb.id] ? "Unsubscribed" : "Unsubscribe") + '</button>' +
+      '<span class="foot" style="padding:0;margin:0">Unsubscribe uses the sender\'s one-click unsubscribe, so no web page opens.</span></div>';
+    return { tabs: true, html: h };
+  };
+
+  /* Purchases */
+  SCREENS.purchases = function () {
+    var f = S.pFilter;
+    var list = ORDERS.filter(function (o) { return f === "orders" || (f === "deliveries" && o.grp === "arriving") || (f === "returns" && o.grp === "returns"); });
+    var h = nav("", "", '<button class="b" data-a="go" data-s="year" aria-label="Year view">⇪</button>') + lt("Purchases");
+    h += '<div class="tile" style="gap:2px"><b style="font-size:22px;font-variant-numeric:tabular-nums">$379.40</b><span style="font-size:12.5px;color:var(--muted)">October · 5 orders · Gmail and iCloud</span></div>';
+    h += '<button class="b searchbox" data-a="go" data-s="psearch"><span aria-hidden="true">⌕</span><span>Search orders, or ask a question</span></button>';
+    h += '<div class="seg" role="tablist" aria-label="Filter">' + [["orders", "Orders"], ["deliveries", "Deliveries"], ["returns", "Returns"]].map(function (x) { return '<button class="b" role="tab" aria-selected="' + (f === x[0]) + '" data-a="pFilter" data-f="' + x[0] + '">' + x[1] + '</button>'; }).join("") + '</div>';
+    var groups = [["arriving", "Arriving today"], ["returns", "Return open"], ["recent", "Recent"]];
+    groups.forEach(function (g) { var os = list.filter(function (o) { return o.grp === g[0]; }); if (os.length) h += sect(g[1]) + os.map(orderRow).join(""); });
+    h += '<button class="b" style="display:block;padding:14px 16px;color:var(--news);font-size:14px" data-a="go" data-s="year">2026 so far ›</button>';
+    return { tabs: true, html: h };
+  };
+  SCREENS.order = function (p) {
+    var o = order(p.id);
+    var h = nav(backBtn(S.tab === "today" ? "Today" : "Purchases"), "", "") + '<h1 class="lt" style="font-size:26px" tabindex="-1" data-focus>' + esc(o.item) + '</h1>' + subline(o.merchant + " · Order " + o.number + " · " + o.acct);
+    h += '<ol class="timeline" style="list-style:none;padding:0" aria-label="Order progress">' + o.steps.map(function (s, i) {
+      return '<li class="st ' + s[2] + '"' + (s[2] === "now" ? ' aria-current="step"' : "") + '><i aria-hidden="true">' + (s[2] === "done" ? "✓" : s[2] === "now" ? "●" : "") + '</i><span><b style="font-weight:' + (s[2] === "now" ? 700 : 500) + '">' + esc(s[0]) + '</b><small>' + esc(s[1] || "Not yet") + '</small></span></li>';
+    }).join("") + '</ol>';
+    h += '<div class="lines">' + o.lines.map(function (l) { return '<div><span>' + esc(l[0]) + '</span><span>' + money(l[1]) + '</span></div>'; }).join("") + '<div><span>Total</span><span>' + money(o.total) + '</span></div></div>';
+    h += '<div class="pad" style="padding:0 16px;display:grid;gap:8px">';
+    if (o.grp === "arriving") h += '<button class="btn full" style="' + (S.tracking[o.id] ? "" : "background:var(--buy);color:var(--surface)") + '" data-a="track" data-id="' + o.id + '">' + (S.tracking[o.id] ? "✓ On your Lock Screen" : "Track on Lock Screen") + '</button>';
+    if (o.ret) h += '<div class="tile" style="margin:0;width:100%"><div class="hd"><span class="glyph g-action" aria-hidden="true">▲</span>Return by ' + o.ret + '</div><span style="font-size:13px;color:var(--muted)">Koumara reminds you 3 days before the window closes.</span></div>';
+    h += '<div class="group" style="margin:0"><div class="gi"><span class="tx"><b>Business expense</b><span>Included when you export business orders</span></span>' + toggle(S.business[o.id], "biz\" data-id=\"" + o.id, "Business expense") + '</div>' +
+      '<button class="b gi" data-a="go" data-s="order-emails" data-id="' + o.id + '"><span class="tx"><b>Built from ' + o.emails.length + ' emails</b><span>Open the originals</span></span><span class="val">›</span></button></div></div>';
+    return { tabs: true, html: h };
+  };
+  SCREENS["order-emails"] = function (p) {
+    var o = order(p.id);
+    var h = nav(backBtn(o.item), "", "") + '<h1 class="lt" style="font-size:24px" tabindex="-1" data-focus>' + o.emails.length + ' emails</h1>' + subline("From " + o.merchant + " about order " + o.number);
+    h += o.emails.map(function (e) { return '<div class="row"><span class="av" aria-hidden="true">' + esc(o.mono) + '</span><div class="main"><div class="t1"><b>' + esc(o.merchant) + '</b><span>' + esc(e[1]) + '</span></div><span class="s1">' + esc(e[0]) + '</span></div></div>'; }).join("");
+    return { tabs: true, html: h };
+  };
+  SCREENS.psearch = function () {
+    var q = S.psearch.trim().toLowerCase();
+    var h = nav(backBtn("Purchases"), "", "") + '<h1 class="lt" style="font-size:24px" tabindex="-1" data-focus>Search orders</h1>';
+    h += '<form class="searchbox" data-form="psearch" role="search"><span aria-hidden="true">⌕</span><input id="pq" type="search" aria-label="Search orders, or ask a question" placeholder="Ask in plain words" value="' + esc(S.psearch) + '"></form>';
+    if (!q) {
+      h += sect("Try") + ["what did I buy from Arbor this year", "coffee", "returns closing soon"].map(function (s) { return '<button class="b row plain nav-row" data-a="pq" data-q="' + esc(s) + '"><span>' + esc(s) + '</span><span class="chev">›</span></button>'; }).join("");
+      return { tabs: true, html: h };
+    }
+    if (q.indexOf("arbor") > -1) {
+      var chips = S.pchips;
+      h += '<div class="btns" style="padding:0 16px 8px">' + chips.map(function (c, i) { return '<button class="btn sm" style="background:var(--buy-wash);color:var(--buy)" data-a="rmChip" data-i="' + i + '" aria-label="Remove filter ' + esc(c) + '">' + esc(c) + ' ✕</button>'; }).join("") + '</div>';
+      var rows = chips.indexOf("2026") > -1 ? ARBOR : ARBOR.concat([["Notebook set", "Nov 2025", 18]]);
+      var total = rows.reduce(function (a, r) { return a + r[2]; }, 0);
+      h += '<div class="tile" style="gap:2px"><b>' + rows.length + ' orders · ' + money(total) + '</b><span style="font-size:12.5px;color:var(--muted)">Understood on this iPhone</span></div>';
+      h += rows.map(function (r) { return '<button class="b row plain nav-row" ' + (r[3] ? 'data-a="go" data-s="order" data-id="' + r[3] + '"' : 'data-a="toast" data-msg="Older orders open the same way"') + '><span class="main"><b style="font-size:15px">' + esc(r[0]) + '</b><span class="s2">' + esc(r[1]) + '</span></span><span class="money">' + money(r[2]) + '</span></button>'; }).join("");
+      return { tabs: true, html: h };
+    }
+    var hits = ORDERS.filter(function (o) { return (o.item + " " + o.merchant + " " + o.chip[1]).toLowerCase().indexOf(q.split(" ")[0]) > -1 || (q.indexOf("return") > -1 && o.ret); });
+    h += hits.length ? hits.map(orderRow).join("") : '<div class="empty"><b>No orders found.</b><span>Try a store name, an item, or a question like “returns closing soon”.</span></div>';
+    return { tabs: true, html: h };
+  };
+  SCREENS.year = function () {
+    var h = nav(backBtn("Purchases"), "", "") + '<h1 class="lt" tabindex="-1" data-focus>2026 so far</h1>';
+    h += '<div class="tile" style="gap:2px"><b style="font-size:22px;font-variant-numeric:tabular-nums">$4,812.30</b><span style="font-size:12.5px;color:var(--muted)">64 orders · Gmail and iCloud combined</span></div>' + sect("By store");
+    h += MERCHANTS.map(function (m) { return '<div class="row plain"><span class="main"><b style="font-size:15px">' + esc(m[0]) + '</b><span class="s2">' + m[1] + ' orders</span></span><span class="money">' + money(m[2]) + '</span></div>'; }).join("");
+    h += '<div style="padding:14px 16px;display:grid;gap:8px"><button class="btn pri full" data-a="toast" data-msg="CSV with 64 orders ready to share">Export CSV</button><button class="btn full" data-a="toast" data-msg="CSV with ' + (Object.keys(S.business).filter(function (k) { return S.business[k]; }).length) + ' business orders ready to share">Export business orders only</button></div>';
+    return { tabs: true, html: h };
+  };
+
+  /* Screener, search, settings */
+  SCREENS.screener = function () {
+    var h = nav(backBtn("Today"), "", "") + lt("Screener") + subline(S.screener.length ? S.screener.length + " first-time senders" : "No one waiting");
+    if (!S.screener.length) h += '<div class="empty"><b>No new senders.</b><span>First-time senders wait here until you decide.</span></div>';
+    h += S.screener.map(function (c) {
+      return '<div class="tile collapse" data-id="' + c.id + '" style="background:var(--surface);border:1px solid var(--rule)"><div style="display:flex;gap:10px;align-items:center"><span class="av" style="width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:11.5px;font-weight:700;background:var(--sunk);color:var(--muted)" aria-hidden="true">' + c.init + '</span><span style="display:grid;min-width:0"><b>' + esc(c.name) + '</b><span style="font-size:12.5px;color:var(--muted)">' + esc(c.email) + '</span></span></div>' +
+        '<b style="font-size:14px">' + esc(c.subj) + '</b><span style="font-size:13px;color:var(--muted)">' + esc(c.note) + '</span>' + chip(c.chip) +
+        '<div class="btns"><button class="btn pri" style="flex:1" data-a="screen" data-id="' + c.id + '" data-yes="1">' + esc(c.yes) + '</button><button class="btn" style="flex:1" data-a="screen" data-id="' + c.id + '">Never</button></div></div>';
+    }).join("");
+    return { tabs: true, html: h };
+  };
+  SCREENS.search = function () {
+    var q = S.query.trim().toLowerCase();
+    var h = nav(backBtn("Back"), "", "") + '<h1 class="lt" style="font-size:26px" tabindex="-1" data-focus>Search</h1>';
+    h += '<form class="searchbox" data-form="search" role="search"><span aria-hidden="true">⌕</span><input id="gq" type="search" aria-label="Search all mail" placeholder="People, subjects, orders, articles" value="' + esc(S.query) + '"></form>';
+    if (!q) {
+      h += sect("Suggestions") + ["Dana", "lease", "models", "Arbor"].map(function (s) { return '<button class="b row plain nav-row" data-a="gq" data-q="' + s + '"><span>' + s + '</span><span class="chev">›</span></button>'; }).join("");
+      h += '<p class="foot" style="margin-top:10px">Search by meaning runs on oMLX at home, so “that note about caching” finds the right article even without the exact words.</p>';
+      return { tabs: true, html: h };
+    }
+    var res = [];
+    Object.keys(VIPS).forEach(function (k) { var v = VIPS[k]; if (k === "dana2" && S.waiting.indexOf("dana2") < 0) return; if ((v.name + " " + v.subj + " " + v.body).toLowerCase().indexOf(q) > -1) res.push(['<span class="glyph g-vip" aria-hidden="true">◆</span>', v.name + " · " + v.subj, 'data-a="go" data-s="thread" data-id="' + k + '"']); });
+    S.tasks.forEach(function (t) { if ((t.title + " " + t.from + " " + t.body).toLowerCase().indexOf(q) > -1) res.push(['<span class="glyph g-action" aria-hidden="true">▲</span>', t.title, 'data-a="go" data-s="task" data-id="' + t.id + '"']); });
+    PIECES.forEach(function (p) { if ((p.title + " " + p.pub + " " + p.body.join(" ")).toLowerCase().indexOf(q) > -1) res.push(['<span class="glyph g-news" aria-hidden="true">❡</span>', p.title + " · " + p.pub, 'data-a="go" data-s="article" data-id="' + p.id + '"']); });
+    ORDERS.forEach(function (o) { if ((o.item + " " + o.merchant).toLowerCase().indexOf(q) > -1) res.push(['<span class="glyph g-buy" aria-hidden="true">¤</span>', o.item + " · " + o.merchant, 'data-a="go" data-s="order" data-id="' + o.id + '"']); });
+    h += sect(res.length + " result" + (res.length === 1 ? "" : "s"));
+    h += res.length ? res.map(function (r) { return '<button class="b row glyphrow nav-row" ' + r[2] + '>' + r[0] + '<span class="s1">' + esc(r[1]) + '</span><span class="chev" style="color:var(--muted)">›</span></button>'; }).join("") : '<div class="empty"><b>Nothing found.</b><span>Try a name, a store, or a few words from the message.</span></div>';
+    return { tabs: true, html: h };
+  };
+  SCREENS.settings = function () {
+    function item(s, g, c, t, sub) { return '<button class="b gi" data-a="go" data-s="' + s + '"><span class="glyph ' + g + '" aria-hidden="true">' + c + '</span><span class="tx"><b>' + t + '</b>' + (sub ? '<span>' + sub + '</span>' : "") + '</span><span class="val">›</span></button>'; }
+    var h = nav(backBtn("Today"), "", "") + lt("Settings");
+    h += '<div class="group" style="margin-top:8px">' + item("set-accounts", "g-plain", "@", "Accounts", (S.acct.gmail ? "Gmail" : "") + (S.acct.gmail && S.acct.icloud ? " and " : "") + (S.acct.icloud ? "iCloud" : "") || "None") + item("set-default", "g-plain", "✉", "Default mail app") + '</div>';
+    h += '<div class="group">' + item("set-vips", "g-vip", "◆", "VIPs and nudges", "2 people") + item("set-reading", "g-news", "❡", "Reading and the Edition") + item("set-rules", "g-screen", "◐", "Sorting rules", RULES.length + " rules") + '</div>';
+    h += '<div class="group">' + item("set-ai", "g-plain", "✦", "AI on your devices", "On-device and oMLX") + item("set-notifs", "g-plain", "◔", "Notifications") + '</div>';
+    return { tabs: true, html: h };
+  };
+  SCREENS["set-accounts"] = function () {
+    var h = nav(backBtn("Settings"), "", "") + '<h1 class="lt" style="font-size:26px" tabindex="-1" data-focus>Accounts</h1>';
+    h += '<div class="group" style="margin-top:8px"><div class="gi"><span class="tx"><b>Gmail</b><span>' + (S.acct.gmail ? "Signed in with Google · syncs labels" : "Not connected") + '</span></span>' + (S.acct.gmail ? '<span class="val"><span class="dot"></span>On</span>' : '<button class="btn sm" data-a="go" data-s="ob-google-in">Add</button>') + '</div>' +
+      '<div class="gi"><span class="tx"><b>iCloud Mail</b><span>' + (S.acct.icloud ? "App-specific password · IMAP" : "Not connected") + '</span></span>' + (S.acct.icloud ? '<span class="val"><span class="dot"></span>On</span>' : '<button class="btn sm" data-a="acctOn" data-k="icloud">Add</button>') + '</div>' +
+      '<div class="gi" style="opacity:.6"><span class="tx"><b>Other providers</b><span>Coming later</span></span></div></div>';
+    h += '<p class="foot">Mail from both accounts shares the same lanes. Each message shows which account it came to.</p>';
+    return { tabs: true, html: h };
+  };
+  SCREENS["set-vips"] = function () {
+    var h = nav(backBtn("Settings"), "", "") + '<h1 class="lt" style="font-size:26px" tabindex="-1" data-focus>VIPs and nudges</h1>';
+    h += '<div class="group" style="margin-top:8px">' + [["dana", "Dana Okafor"], ["mom", "Mom"]].map(function (x) {
+      return '<div class="gi"><span class="tx"><b>' + x[1] + '</b><span>Nudge me after</span></span><span class="stepper"><button class="b" data-a="nudge" data-id="' + x[0] + '" data-d="-5" aria-label="Shorter wait for ' + x[1] + '">−</button><output aria-live="polite">' + S.nudges[x[0]] + ' min</output><button class="b" data-a="nudge" data-id="' + x[0] + '" data-d="5" aria-label="Longer wait for ' + x[1] + '">+</button></span></div>';
+    }).join("") + '<button class="b gi" data-a="toast" data-msg="Pick from Contacts or any message"><span class="tx"><b style="color:var(--news)">Add a VIP</b></span></button></div>';
+    h += '<p class="foot">Every VIP message gets a reply drafted right away. If they\'re still waiting after this long, you get one reminder with the draft attached. Koumara never sends on its own.</p>';
+    return { tabs: true, html: h };
+  };
+  SCREENS["set-reading"] = function () {
+    var h = nav(backBtn("Back"), "", "") + '<h1 class="lt" style="font-size:26px" tabindex="-1" data-focus>Reading</h1>';
+    h += sect("Edition") + '<div class="group"><div class="gi"><span class="tx"><b>Morning Edition</b><span>7:00 AM</span></span>' + toggle(S.edition.am, "edAm", "Morning Edition") + '</div><div class="gi"><span class="tx"><b>Evening Edition</b><span>6:00 PM</span></span>' + toggle(S.edition.pm, "edPm", "Evening Edition") + '</div></div>';
+    h += sect("Show images from") + '<div class="group">' + PUBS.map(function (p) { return '<div class="gi"><span class="tx"><b>' + esc(p.name) + '</b></span>' + toggle(S.images[p.id], "img\" data-id=\"" + p.id, "Show images from " + p.name) + '</div>'; }).join("") + '</div>';
+    h += '<p class="foot">Images are blocked until you allow them, which also blocks tracking pixels. Unopened issues leave the shelf after 14 days and stay in search.</p>';
+    return { tabs: true, html: h };
+  };
+  SCREENS["set-ai"] = function () {
+    var h = nav(backBtn("Settings"), "", "") + '<h1 class="lt" style="font-size:26px" tabindex="-1" data-focus>AI on your devices</h1>';
+    h += sect("This iPhone") + '<div class="group"><div class="gi"><span class="tx"><b>Apple on-device model</b><span>Sorting, task extraction, gists, search questions</span></span><span class="val"><span class="dot"></span>Ready</span></div></div>';
+    h += sect("Your Mac") + '<div class="group"><div class="gi"><span class="tx"><b>oMLX</b><span>VIP drafts, long summaries, search by meaning</span></span><span class="val"><span class="dot"></span>Connected</span></div>' +
+      '<div class="gi"><span class="tx"><b>Address</b><span style="font-family:var(--mono);font-size:12px">http://your-mac.local:8000/v1</span></span></div>' +
+      '<button class="b gi" data-a="toast" data-msg="oMLX answered from your Mac"><span class="tx"><b style="color:var(--news)">Test connection</b></span></button></div>';
+    h += sect("Away from home") + '<div class="group"><div class="gi"><span class="tx"><b>Draft on this iPhone instead</b><span>Shorter drafts when your Mac can\'t be reached</span></span>' + toggle(S.ai.away, "aiAway", "Draft on this iPhone when away") + '</div></div>';
+    h += '<p class="foot">Nothing is sent to a cloud service. Drafts say which model wrote them.</p>';
+    return { tabs: true, html: h };
+  };
+  SCREENS["set-rules"] = function () {
+    var h = nav(backBtn("Settings"), "", "") + '<h1 class="lt" style="font-size:26px" tabindex="-1" data-focus>Sorting rules</h1>' + subline("Rules you made. They run before the model.");
+    h += RULES.map(function (r) { return '<div class="row glyphrow"><span class="glyph ' + r[0] + '" aria-hidden="true">' + r[1] + '</span><span class="main"><b style="font-size:15px">' + esc(r[2]) + '</b><span class="s2">' + esc(r[3]) + '</span></span><button class="btn sm" data-a="toast" data-msg="Rule removed for ' + esc(r[2]) + '">Remove</button></div>'; }).join("");
+    return { tabs: true, html: h };
+  };
+  SCREENS["set-notifs"] = function () {
+    var h = nav(backBtn("Settings"), "", "") + '<h1 class="lt" style="font-size:26px" tabindex="-1" data-focus>Notifications</h1>';
+    h += '<div class="group" style="margin-top:8px"><div class="gi"><span class="tx"><b>VIP mail</b><span>Time Sensitive, with the draft attached</span></span>' + toggle(S.notif.vip, "nVip", "VIP mail notifications") + '</div>' +
+      '<div class="gi"><span class="tx"><b>Return windows</b><span>3 days before a return closes</span></span>' + toggle(S.notif.ret, "nRet", "Return window reminders") + '</div>' +
+      '<div class="gi"><span class="tx"><b>Edition ready</b><span>When the Morning or Evening Edition is bound</span></span>' + toggle(S.notif.ed, "nEd", "Edition ready notifications") + '</div></div>';
+    h += '<p class="foot">Everything else stays quiet. Newsletters, receipts and the Screener never notify.</p>';
+    return { tabs: true, html: h };
+  };
+  SCREENS["set-default"] = function () {
+    var h = nav(backBtn("Settings"), "", "") + '<h1 class="lt" style="font-size:26px" tabindex="-1" data-focus>Default mail app</h1>';
+    h += '<ol class="steps" style="margin-top:8px"><li>Open Settings.</li><li>Go to Apps, then Default Apps.</li><li>Tap Email and choose Koumara.</li></ol>';
+    h += '<div style="padding:14px 16px"><button class="btn pri full" data-a="openSettingsSys">Open Settings</button></div>';
+    return { tabs: true, html: h };
+  };
+  SCREENS["ob-google-in"] = function () { var r = SCREENS["ob-google"](); r.tabs = false; return r; };
+
+  /* ---------------- Notes for the side panel ---------------- */
+  var NOTES = {
+    "ob-welcome": ["Welcome", "The privacy promise comes first, in one sentence. Gmail and iCloud are the two accounts at launch."],
+    "ob-google": ["Google sign-in", "The standard system sheet for signing in with Google. Koumara never sees the Google password."],
+    "ob-google-in": ["Google sign-in", "Same system sheet, reached from Settings."],
+    "ob-icloud": ["iCloud password", "Apple doesn't offer sign-in for third-party mail apps, so Koumara explains the app-specific password instead of just asking for one."],
+    "ob-vips": ["Pick VIPs", "Suggestions come from reply speed in Sent mail, computed on the phone. Only Contacts favorites start switched on."],
+    "ob-sorting": ["Sorting", "Header rules run first, so the bars move fast. The Screener is offered right away so nobody sits watching."],
+    "ob-screener": ["Screener batch", "86 decisions become three: newsletters and stores in bulk, people one at a time."],
+    "ob-default": ["Default mail app", "Points to the real iOS setting. Skippable, and it lives in Settings too."],
+    today: ["Today", "One scroll across every lane: who's waiting, what's due, the Edition, deliveries and the Screener. Everything taps through to its lane."],
+    vip: ["VIP", "Swipe right on a waiting row: the draft slides out, the seal sets past 60%, and letting go opens the draft to read. Swipe left for the Later dial. Tap a row to open the thread."],
+    thread: ["VIP thread", "The draft is already written. Tone buttons rewrite it without typing a prompt. Sending waits 10 seconds for Undo. If the reply promises something with a date, Koumara offers to add it to Action."],
+    action: ["Action", "Tap the circle to finish a task, or the task to see the email it came from. The quoted sentence shows where each deadline came from."],
+    task: ["Task", "The extracted task sits above the original email, with the source sentence quoted so it can be checked at a glance."],
+    reading: ["Reading", "The Edition binds unread newsletters into a magazine twice a day. The Shelf lists publications for browsing and pruning."],
+    contents: ["Contents", "Reading time stands in for page numbers. Read pieces stay listed but dimmed."],
+    article: ["Article", "The sender's own words, typeset in New York with a drop cap and pull quote. The gist is collapsed by default. Reaching the end marks it read and offers the next piece."],
+    brief: ["In brief", "Short digests are condensed to one paragraph each, labeled as condensed, with a link to every full issue."],
+    pub: ["Publication", "Open rate tells you if a subscription still earns its place. Unsubscribe is one tap."],
+    purchases: ["Purchases", "Orders, not emails: every message about one order folds into one row. Filters for deliveries and open returns."],
+    order: ["Order", "The timeline is built from every email about the order. Track on the Lock Screen, mark it as a business expense, or open the original emails."],
+    "order-emails": ["Source emails", "The originals are always one tap away from anything Koumara built."],
+    psearch: ["Search orders", "Questions in plain words become filters you can see and remove. Try the Arbor question."],
+    year: ["Year view", "Totals by store across both accounts, with a CSV export for taxes."],
+    screener: ["Screener", "One decision per sender. The Yes button names the lane they'll go to. Undo is in the toast."],
+    search: ["Search", "One search across every lane. Results show their lane glyph so you know where you'll land."],
+    settings: ["Settings", "Grouped by what you're changing: accounts, lanes, AI and notifications."],
+    "set-accounts": ["Accounts", "Gmail and iCloud side by side, sharing the same lanes."],
+    "set-vips": ["VIPs and nudges", "Each VIP has their own nudge time. Koumara reminds you once; it never sends."],
+    "set-reading": ["Reading settings", "Edition times and per-publication image permissions. Blocking images blocks tracking pixels too."],
+    "set-ai": ["AI settings", "Shows what runs where: Apple's model on the phone, oMLX on the Mac, and what happens when the Mac is out of reach."],
+    "set-rules": ["Sorting rules", "Every rule says where it came from, so the misbehaving one is easy to find."],
+    "set-notifs": ["Notifications", "Only three kinds of notification exist, and each can be turned off."],
+    "set-default": ["Default mail app", "Instructions for the system setting, reachable any time."],
+    "sheet-review": ["Read before sending", "Letting go of the swipe opens the draft here. The Send button names the person."],
+    "sheet-compose": ["Compose", "Plain compose with the From account switchable. Opening Edit on a draft brings the draft in."],
+    "sheet-why": ["Why is this here?", "Every lane decision explains itself: which step decided, and what the evidence was."]
+  };
+
+  var MAP = [
+    ["Onboarding", [["ob-welcome", "Welcome"], ["ob-google", "Google sign-in"], ["ob-icloud", "iCloud password"], ["ob-vips", "Pick VIPs"], ["ob-sorting", "Sorting"], ["ob-screener", "Screener batch"], ["ob-default", "Default app"]]],
+    ["Lanes", [["today", "Today"], ["vip", "VIP"], ["thread", "VIP thread"], ["action", "Action"], ["task", "Task"], ["screener", "Screener"]]],
+    ["Reading", [["reading", "Edition"], ["contents", "Contents"], ["article", "Article"], ["brief", "In brief"], ["shelf", "Shelf"], ["pub", "Publication"]]],
+    ["Purchases", [["purchases", "Purchases"], ["order", "Order"], ["order-emails", "Source emails"], ["psearch", "Search orders"], ["year", "Year view"]]],
+    ["Everywhere", [["search", "Search"], ["sheet-compose", "Compose"], ["sheet-why", "Why is this here?"], ["sheet-review", "Read before sending"]]],
+    ["Settings", [["settings", "Settings"], ["set-accounts", "Accounts"], ["set-vips", "VIPs and nudges"], ["set-reading", "Reading"], ["set-ai", "AI"], ["set-rules", "Sorting rules"], ["set-notifs", "Notifications"], ["set-default", "Default app"]]]
+  ];
+
+  /* ---------------- Rendering ---------------- */
+  var lastKey = null, focusNext = false;
+  function render(anim) {
+    var c = cur();
+    var fn = SCREENS[c.s];
+    var r = fn(c.p || {});
+    var key = c.s + ":" + JSON.stringify(c.p || {});
+    var old = vp.querySelector(".scroll");
+    var keep = (!anim && key === lastKey && old) ? old.scrollTop : 0;
+    var tabs = S.onboarded && r.tabs;
+    var html = '<div class="scr' + (r.mag ? " mag" : "") + (r.raw ? " raw" : "") + (tabs ? "" : " no-tabs") + (anim ? " in-" + anim : "") + '">' + (r.top || "") + (r.raw ? r.html : '<div class="scroll">' + r.html + '</div>');
+    if (tabs) html += tabbar();
+    html += '</div>';
+    vp.innerHTML = html;
+    var sc = vp.querySelector(".scroll");
+    if (sc && keep) sc.scrollTop = keep;
+    lastKey = key;
+    phone.classList.toggle("no-tabs", !tabs);
+    if (r.after) r.after();
+    if (focusNext) {
+      focusNext = false;
+      var f = vp.querySelector("[data-focus]");
+      if (f) f.focus({ preventScroll: true });
+    }
+    renderOverlay();
+    updatePanel(S.sheet ? "sheet-" + S.sheet.type : c.s === "reading" && S.readMode === "shelf" ? "shelf" : c.s);
+  }
+  function tabbar() {
+    var t = [["today", "Today", "g-plain", "☀"], ["vip", "VIP", "g-vip", "◆"], ["action", "Action", "g-action", "▲"], ["reading", "Reading", "g-news", "❡"], ["purchases", "Purchases", "g-buy", "¤"]];
+    return '<div class="tabbar" role="tablist" aria-label="Lanes">' + t.map(function (x) {
+      var badge = x[0] === "vip" && S.waiting.length ? '<span class="badge" aria-hidden="true">' + S.waiting.length + '</span>' : "";
+      return '<button class="b" role="tab" aria-selected="' + (S.tab === x[0]) + '" data-a="tab" data-t="' + x[0] + '"' + (badge ? ' aria-label="' + x[1] + ", " + S.waiting.length + ' waiting"' : "") + '><span class="glyph ' + x[2] + '" aria-hidden="true">' + x[3] + '</span>' + x[1] + badge + '</button>';
+    }).join("") + '</div>';
+  }
+  function renderOverlay() {
+    var h = "";
+    if (S.banner) {
+      var v = VIPS[S.banner];
+      h += '<button class="b banner" data-a="openBanner" aria-label="New VIP email from ' + esc(v.name) + ': ' + esc(v.subj) + '. Draft ready. Open."><span class="ap"><i aria-hidden="true">◆</i>Koumara · VIP · now</span><b>' + esc(v.name) + '</b><span style="font-size:13.5px">' + esc(v.subj) + '</span><span class="dr">Draft: “' + esc(v.drafts.base) + '”</span></button>';
+    }
+    if (S.sheet) {
+      var sh = S.sheet;
+      h += '<div class="scrim" data-a="closeSheet"></div>';
+      if (sh.type === "review") {
+        var rv = VIPS[sh.id];
+        h += '<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="shT"><div class="sh-head"><h2 id="shT" tabindex="-1" data-sfocus>To ' + esc(rv.name) + '</h2><button class="b" style="color:var(--news)" data-a="closeSheet">Cancel</button></div>' +
+          '<div class="pad"><span style="font-size:12.5px;color:var(--muted)">Drafted by oMLX on your Mac</span><div class="txt">' + esc(rv.drafts[S.tone[rv.id] || "base"]) + '</div><div class="btns"><button class="btn" style="flex:1" data-a="editFromSheet" data-id="' + rv.id + '">Edit</button><button class="btn red" style="flex:2" data-a="sendFromSheet" data-id="' + rv.id + '">Send to ' + esc(first(rv.name)) + '</button></div></div></div>';
+      } else if (sh.type === "why") {
+        h += '<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="shT"><div class="sh-head"><h2 id="shT" tabindex="-1" data-sfocus>Why it\'s here</h2><button class="b" style="color:var(--news)" data-a="closeSheet">Done</button></div><div class="pad">' + whyBody(sh.id) + '</div></div>';
+      } else if (sh.type === "compose") {
+        h += '<div class="sheet tall" role="dialog" aria-modal="true" aria-labelledby="shT"><div class="sh-head"><button class="b" style="color:var(--news)" data-a="closeSheet">Cancel</button><h2 id="shT" tabindex="-1" data-sfocus>' + (sh.reply ? "Reply" : "New message") + '</h2><button class="b" style="color:var(--vip);font-weight:700" data-a="sendCompose">Send</button></div>' +
+          '<div class="seg" role="tablist" aria-label="Send from"><button class="b" role="tab" aria-selected="' + (sh.from !== "iCloud") + '" data-a="from" data-f="Gmail">From Gmail</button><button class="b" role="tab" aria-selected="' + (sh.from === "iCloud") + '" data-a="from" data-f="iCloud">From iCloud</button></div>' +
+          '<div class="field"><label for="cTo">To</label><input id="cTo" value="' + esc(sh.to || "") + '" autocomplete="off"></div><div class="field"><label for="cSubj">Subject</label><input id="cSubj" value="' + esc(sh.subj || "") + '"></div>' +
+          '<div class="field"><label for="cBody">Message</label><textarea id="cBody">' + esc(sh.body || "") + '</textarea></div>' +
+          (sh.reply ? '<p class="foot" style="padding:0 16px;margin:0">Started from the generated draft. Once you change a word, it\'s yours.</p>' : "") + '</div>';
+      }
+    }
+    if (S.toast) h += '<div class="toast" role="status"><span>' + esc(S.toast.msg) + '</span>' + (S.toast.undo ? '<button class="b" data-a="undo">Undo</button>' : "") + '</div>';
+    overlay.innerHTML = h;
+    var sf = overlay.querySelector("[data-sfocus]");
+    if (sf && S.sheet && S.sheet.fresh) { S.sheet.fresh = false; sf.focus(); }
+  }
+  function whyBody(id) {
+    if (String(id).indexOf("task:") === 0) {
+      var t = task(id.slice(5));
+      return '<div class="tile" style="margin:0;width:100%"><b>Decided by the on-device model</b><span style="font-family:var(--mono);font-size:12px;line-height:1.6">✓ Asks you to do something<br>✓ Deadline found: ' + esc(t.due) + '<br>· Confidence: high</span></div><span style="font-size:13.5px;color:var(--muted)">The sentence it used:</span><span class="quote-s" style="color:var(--ink)">“' + esc(t.quote || t.body) + '”</span>' +
+        '<button class="btn full" data-a="toast" data-msg="Moved. Koumara will ask about this sender once.">Move to another lane</button>';
+    }
+    var v = VIPS[id];
+    return '<div class="tile" style="margin:0;width:100%"><b>Decided by a header rule</b><span style="font-family:var(--mono);font-size:12px;line-height:1.6">✓ Sender is on your VIP list<br>· On-device model: not needed</span></div><span style="font-size:13.5px;color:var(--muted)">' + esc(first(v.name)) + ' was added to VIPs during setup. Change nudge times in Settings.</span>' +
+      '<button class="btn full" data-a="goSettingsVip">VIPs and nudges</button>';
+  }
+
+  function updatePanel(key) {
+    var n = NOTES[key] || NOTES[key === "shelf" ? "reading" : "today"];
+    if (key === "shelf") n = ["Shelf", "Publications as rows with unread counts. Open one to see its issues, mute it, or unsubscribe in one tap."];
+    document.getElementById("noteTitle").textContent = n[0];
+    document.getElementById("noteBody").innerHTML = "<p>" + esc(n[1]) + "</p>";
+    Array.prototype.forEach.call(document.querySelectorAll("#map button"), function (b) { b.setAttribute("aria-current", String(b.dataset.k === key)); });
+  }
+  function buildMap() {
+    document.getElementById("map").innerHTML = MAP.map(function (g) {
+      return '<div class="grp"><span>' + g[0] + '</span><div class="links">' + g[1].map(function (x) { return '<button type="button" data-k="' + x[0] + '">' + x[1] + '</button>'; }).join("") + '</div></div>';
+    }).join("");
+  }
+
+  /* ---------------- Navigation ---------------- */
+  function go(s, p, anim) { if (s === "ob-sorting") startSorting(); stack().push({ s: s, p: p || {} }); focusNext = true; render(anim === undefined ? "push" : anim); }
+  function back() { var st = stack(); if (st.length > 1) { st.pop(); focusNext = true; render("pop"); } }
+  function replaceTop(s, p) { var st = stack(); st[st.length - 1] = { s: s, p: p || {} }; focusNext = true; render("fade"); var sc = vp.querySelector(".scroll"); if (sc) sc.scrollTop = 0; }
+  function tab(t) {
+    if (!S.onboarded) return;
+    if (S.tab === t) { S.stacks[t] = [S.stacks[t][0]]; } else S.tab = t;
+    focusNext = true; render("fade");
+  }
+  function finishOb() { S.onboarded = true; S.tab = "today"; S.stacks.today = [{ s: "today" }]; focusNext = true; render("fade"); }
+  function ensureOnboarded() { if (!S.onboarded) { S.acct.gmail = true; S.acct.icloud = true; S.sortPct = 100; S.onboarded = true; } }
+
+  function jump(k) {
+    S.sheet = null;
+    if (k.indexOf("ob-") === 0) {
+      S.onboarded = false; S.ob = [{ s: "ob-welcome" }];
+      if (k === "ob-sorting") startSorting();
+      if (k !== "ob-welcome") S.ob.push({ s: k });
+      focusNext = true; render("fade"); return;
+    }
+    ensureOnboarded();
+    var m = {
+      today: ["today"], vip: ["vip"], thread: ["vip", "thread", { id: S.waiting[0] || "dana" }], action: ["action"], task: ["action", "task", { id: "lease" }], screener: ["today", "screener"],
+      reading: ["reading"], shelf: ["reading"], contents: ["reading", "contents"], article: ["reading", "article", { id: "p1" }], brief: ["reading", "brief"], pub: ["reading", "pub", { id: "sm" }],
+      purchases: ["purchases"], order: ["purchases", "order", { id: "fs" }], "order-emails": ["purchases", "order-emails", { id: "fs" }], psearch: ["purchases", "psearch"], year: ["purchases", "year"],
+      search: ["today", "search"], settings: ["today", "settings"], "set-accounts": ["today", "set-accounts"], "set-vips": ["today", "set-vips"], "set-reading": ["today", "set-reading"], "set-ai": ["today", "set-ai"], "set-rules": ["today", "set-rules"], "set-notifs": ["today", "set-notifs"], "set-default": ["today", "set-default"],
+      "sheet-compose": ["today"], "sheet-why": ["vip", "thread", { id: S.waiting[0] || "dana" }], "sheet-review": ["vip"]
+    }[k];
+    if (!m) return;
+    S.tab = m[0];
+    S.readMode = k === "shelf" ? "shelf" : (m[0] === "reading" ? "edition" : S.readMode);
+    S.stacks[m[0]] = [{ s: m[0] }];
+    if (k.indexOf("set-") === 0) S.stacks.today.push({ s: "settings" });
+    if (m[1]) S.stacks[m[0]].push({ s: m[1], p: m[2] || {} });
+    if (k === "sheet-compose") S.sheet = { type: "compose", fresh: true };
+    if (k === "sheet-why") S.sheet = { type: "why", id: S.waiting[0] || "dana", fresh: true };
+    if (k === "sheet-review") { if (!S.waiting.length) S.waiting = ["dana", "mom"]; S.sheet = { type: "review", id: S.waiting[0], fresh: true }; }
+    focusNext = !S.sheet; render("fade");
+  }
+
+  var sortTimer = null;
+  function startSorting() {
+    clearInterval(sortTimer);
+    S.sortPct = REDUCED ? 100 : 0;
+    if (REDUCED) return;
+    sortTimer = setInterval(function () {
+      S.sortPct = Math.min(100, S.sortPct + 4);
+      if (S.onboarded || cur().s !== "ob-sorting") { clearInterval(sortTimer); S.sortPct = 100; return; }
+      var p = S.sortPct;
+      Array.prototype.forEach.call(vp.querySelectorAll(".meter i[data-w]"), function (i) { i.style.width = Math.round(+i.dataset.w * p / 100) + "%"; });
+      Array.prototype.forEach.call(vp.querySelectorAll(".meter .n[data-n]"), function (n) { n.textContent = Math.round(+n.dataset.n * p / 100).toLocaleString(); });
+      var line = document.getElementById("sortLine"); if (line) line.textContent = Math.round(4212 * p / 100).toLocaleString() + " of 4,212 · on this iPhone";
+      var m = vp.querySelector(".meter"); if (m) m.setAttribute("aria-label", "Sorting progress, " + p + " percent");
+      if (S.sortPct >= 100) { clearInterval(sortTimer); say("Sorting finished."); }
+    }, 120);
+  }
+
+  /* ---------------- Toasts ---------------- */
+  var toastT = null;
+  function toast(msg, undo) { clearTimeout(toastT); S.toast = { msg: msg, undo: undo || null }; renderOverlay(); say(msg); toastT = setTimeout(function () { S.toast = null; renderOverlay(); }, 4500); }
+
+  /* ---------------- VIP sending ---------------- */
+  function sendVip(id, viaSwipe) {
+    var v = VIPS[id];
+    var text = v.drafts[S.tone[id] || "base"];
+    var t1, t2;
+    function commit() {
+      S.waiting = S.waiting.filter(function (w) { return w !== id; });
+      S.replied.unshift({ id: id, name: v.name, init: v.init, subj: v.subj, note: "✓ Replied just now" });
+      S.sent[id] = text;
+      S.stamping = null;
+      if (v.promise) S.promiseAsk = id;
+      render();
+      if (!S.waiting.length) say("Everyone's heard back.");
+    }
+    if (viaSwipe) {
+      S.stamping = id; render();
+      t1 = setTimeout(function () { var r = vp.querySelector('.srow[data-id="' + id + '"]'); if (r) r.classList.add("gone"); }, 900);
+      t2 = setTimeout(commit, 1260);
+    } else commit();
+    toast("Sent to " + first(v.name), function () {
+      clearTimeout(t1); clearTimeout(t2);
+      S.stamping = null;
+      S.replied = S.replied.filter(function (r) { return r.id !== id; });
+      delete S.sent[id];
+      if (S.promiseAsk === id) S.promiseAsk = null;
+      if (S.waiting.indexOf(id) < 0) S.waiting.unshift(id);
+      render(); say("Send undone. Draft kept.");
+    });
+  }
+
+  /* ---------------- Swipe ---------------- */
+  var CIRC = 106.8;
+  function bindSwipes() {
+    Array.prototype.forEach.call(vp.querySelectorAll(".srow"), function (rowEl) {
+      var cell = rowEl.querySelector(".row");
+      var lead = rowEl.querySelector(".under.lead"), trail = rowEl.querySelector(".under.trail");
+      var seal = rowEl.querySelector(".seal"), prog = rowEl.querySelector(".prog"), lab = rowEl.querySelector(".lab"), core = rowEl.querySelector(".core"), peek = rowEl.querySelector(".peek");
+      var chips = rowEl.querySelectorAll(".dial span");
+      var id = rowEl.dataset.id;
+      var sx = 0, sy = 0, active = false, dragging = false, armed = false, detent = -1;
+      function setX(x) {
+        cell.style.transform = "translateX(" + x + "px)";
+        lead.style.visibility = x > 0 ? "visible" : "hidden";
+        trail.style.visibility = x < 0 ? "visible" : "hidden";
+        if (x > 0) {
+          var T = rowEl.clientWidth * 0.6, f = Math.min(x / T, 1);
+          prog.style.strokeDashoffset = String(CIRC * (1 - f));
+          peek.style.width = Math.max(x - 70, 0) + "px";
+          var a = x >= T;
+          if (a !== armed) { armed = a; seal.classList.toggle("armed", a); core.textContent = a ? "➤" : "◆"; lab.textContent = a ? "Let go to read & send" : "Your draft"; }
+        } else {
+          var d = x <= -190 ? 2 : x <= -130 ? 1 : x <= -70 ? 0 : -1;
+          if (d !== detent) { detent = d; Array.prototype.forEach.call(chips, function (c, i) { c.classList.toggle("on", i === d); }); }
+        }
+      }
+      cell.addEventListener("pointerdown", function (e) { if (e.button > 0) return; active = true; dragging = false; sx = e.clientX; sy = e.clientY; });
+      cell.addEventListener("pointermove", function (e) {
+        if (!active) return;
+        var mx = e.clientX - sx, my = e.clientY - sy;
+        if (!dragging) {
+          if (Math.abs(mx) < 6 || Math.abs(mx) < Math.abs(my)) return;
+          dragging = true; rowEl.classList.add("dragging");
+          try { cell.setPointerCapture(e.pointerId); } catch (err) {}
+        }
+        var lim = 250;
+        setX(Math.abs(mx) > lim ? Math.sign(mx) * (lim + (Math.abs(mx) - lim) * 0.2) : mx);
+      });
+      function end() {
+        if (!active) return;
+        active = false; rowEl.classList.remove("dragging");
+        if (!dragging) return;
+        cell.dataset.dragged = "1";
+        var wasArmed = armed, d = detent;
+        setX(0); armed = false; detent = -1;
+        seal.classList.remove("armed"); core.textContent = "◆"; lab.textContent = "Your draft";
+        Array.prototype.forEach.call(chips, function (c) { c.classList.remove("on"); });
+        if (wasArmed) { S.sheet = { type: "review", id: id, fresh: true }; renderOverlay(); updatePanel("sheet-review"); }
+        else if (d >= 0) laterVip(id, ["in 1 hour", "Tonight, 6 PM", "Tomorrow, 8 AM"][d]);
+      }
+      cell.addEventListener("pointerup", end);
+      cell.addEventListener("pointercancel", end);
+    });
+  }
+  function laterVip(id, when) {
+    var r = vp.querySelector('.srow[data-id="' + id + '"]');
+    if (r) r.classList.add("gone");
+    var t = setTimeout(function () { S.waiting = S.waiting.filter(function (w) { return w !== id; }); S.later.push({ id: id, when: when }); render(); }, 360);
+    toast(first(VIPS[id].name) + " → " + when, function () { clearTimeout(t); S.later = S.later.filter(function (l) { return l.id !== id; }); if (S.waiting.indexOf(id) < 0) S.waiting.push(id); render(); });
+  }
+
+  function bindProgress() {
+    var sc = vp.querySelector(".scroll"), bar = document.getElementById("progBar");
+    if (!sc || !bar) return;
+    function upd() { var max = sc.scrollHeight - sc.clientHeight; bar.style.width = (max > 0 ? Math.min(100, sc.scrollTop / max * 100) : 100) + "%"; }
+    sc.addEventListener("scroll", upd, { passive: true }); upd();
+  }
+
+  /* ---------------- Actions ---------------- */
+  var A = {
+    go: function (d) { if (d.t && S.onboarded && d.t !== S.tab) { S.tab = d.t; S.stacks[d.t] = [{ s: d.t }]; } go(d.s, d.id ? { id: d.id } : {}); },
+    back: back,
+    replace: function (d) { replaceTop(d.s, d.id ? { id: d.id } : {}); },
+    tab: function (d) { tab(d.t); },
+    gmailOk: function () { S.acct.gmail = true; if (S.onboarded) { back(); toast("Gmail connected"); return; } stack().pop(); go("ob-icloud", {}, "fade"); },
+    icloudOk: function () {
+      var pw = document.getElementById("icpw");
+      if (pw && pw.value.replace(/\W/g, "").length < 4) { toast("Paste the app-specific password first"); pw.focus(); return; }
+      S.acct.icloud = true; go("ob-vips");
+    },
+    pick: function (d) { var i = +d.i; S.picks[i] = !S.picks[i]; render(); },
+    obGroup: function (d) { S.obGroups[d.k] = true; render(); toast(d.k === "news" ? "52 newsletters let into Reading" : "19 stores let into Purchases"); },
+    openSettingsSys: function () { toast("In the app, this opens iOS Settings"); },
+    finishOb: function () { if (!S.acct.gmail && !S.acct.icloud) S.acct.gmail = true; finishOb(); },
+    compose: function (d) {
+      if (d.id) { var v = VIPS[d.id]; S.sheet = { type: "compose", reply: true, id: d.id, to: v.name, subj: "Re: " + v.subj, body: v.drafts[S.tone[d.id] || "base"], from: v.acct, fresh: true }; }
+      else S.sheet = { type: "compose", to: d.to || "", subj: d.subj || "", body: d.body || "", from: "Gmail", fresh: true };
+      renderOverlay(); updatePanel("sheet-compose");
+    },
+    from: function (d) { readCompose(); S.sheet.from = d.f; renderOverlay(); },
+    sendCompose: function () {
+      readCompose();
+      var sh = S.sheet;
+      if (!sh.to.trim()) { toast("Add someone to send to"); var t = document.getElementById("cTo"); if (t) t.focus(); return; }
+      if (sh.reply && sh.id && S.waiting.indexOf(sh.id) > -1) { sendVipText(sh.id, sh.body); return; }
+      S.sheet = null; render(); toast("Sent from " + (sh.from || "Gmail"), function () { toast("Send undone. Message saved to Drafts."); });
+    },
+    closeSheet: function () { S.sheet = null; render(); var f = vp.querySelector("[data-focus]"); if (f) f.focus({ preventScroll: true }); },
+    tone: function (d) { S.tone[d.id] = (S.tone[d.id] === d.tone ? "base" : d.tone); render(); var t = document.getElementById("draftTxt"); if (t) t.classList.add("swap"); say("Draft rewritten, " + (S.tone[d.id] === "base" ? "original" : d.tone)); },
+    sendVip: function (d) { sendVip(d.id, false); },
+    sendFromSheet: function (d) { S.sheet = null; renderOverlay(); var onVip = cur().s === "vip"; sendVip(d.id, onVip); },
+    editFromSheet: function (d) { A.compose({ id: d.id }); },
+    addPromise: function (d) {
+      var v = VIPS[d.id];
+      S.tasks.unshift({ id: "pr-" + d.id, title: v.promise.title, due: v.promise.due, grp: v.promise.due === "Today" ? "today" : "week", src: "From your reply · ◆ VIP", from: v.name, subj: v.subj, quote: v.promise.quote, body: S.sent[d.id] });
+      S.promiseAsk = null; render(); toast("Added to Action");
+    },
+    noPromise: function () { S.promiseAsk = null; render(); },
+    why: function (d) { S.sheet = { type: "why", id: d.id, fresh: true }; renderOverlay(); updatePanel("sheet-why"); },
+    goSettingsVip: function () { S.sheet = null; S.tab = "today"; S.stacks.today = [{ s: "today" }, { s: "settings" }]; go("set-vips"); },
+    taskDone: function (d) {
+      var t = task(d.id);
+      if (t.done) return;
+      t.done = true;
+      var goBack = !!d.back;
+      if (goBack) back(); else render();
+      var r = vp.querySelector('.trow[data-id="' + d.id + '"]');
+      if (r) { r.classList.add("doneanim"); setTimeout(function () { r.classList.add("gone"); }, 350); }
+      var tm = setTimeout(function () { t.gone = true; render(); }, 720);
+      toast("Done: " + t.title, function () { clearTimeout(tm); t.done = false; t.gone = false; render(); });
+    },
+    snoozeTask: function (d) { var t = task(d.id); t.due = "Tomorrow"; t.grp = "week"; back(); toast(t.title + " → tomorrow"); },
+    readMode: function (d) { S.readMode = d.m; render("fade"); },
+    gist: function (d) { S.gistOpen[d.id] = !S.gistOpen[d.id]; render(); },
+    listen: function () { toast("Reading aloud. Continues to the next piece."); },
+    save: function () { toast("Saved for later"); },
+    mute: function (d) { S.muted[d.id] = !S.muted[d.id]; render(); toast(S.muted[d.id] ? "Muted for 2 weeks" : "Unmuted"); },
+    unsub: function (d) { S.unsub[d.id] = true; render(); toast("Unsubscribed. No web page needed.", function () { S.unsub[d.id] = false; render(); }); },
+    pFilter: function (d) { S.pFilter = d.f; render(); },
+    pq: function (d) { S.psearch = d.q; S.pchips = d.q.indexOf("Arbor") > -1 ? ["Merchant: Arbor Books", "2026"] : []; render(); say("Results updated"); },
+    rmChip: function (d) { S.pchips.splice(+d.i, 1); if (!S.pchips.length) { S.psearch = ""; } render(); },
+    gq: function (d) { S.query = d.q; render(); },
+    track: function (d) { S.tracking[d.id] = !S.tracking[d.id]; render(); toast(S.tracking[d.id] ? "Tracking on your Lock Screen" : "Stopped tracking"); },
+    biz: function (d) { S.business[d.id] = !S.business[d.id]; render(); },
+    screen: function (d) {
+      var c = S.screener.filter(function (x) { return x.id === d.id; })[0];
+      var el = vp.querySelector('.tile[data-id="' + d.id + '"]');
+      if (el) el.classList.add("gone");
+      var tm = setTimeout(function () { S.screener = S.screener.filter(function (x) { return x.id !== d.id; }); render(); }, 360);
+      toast(d.yes ? c.name + ": " + c.yes.toLowerCase() : c.name + " won't reach you again", function () { clearTimeout(tm); if (!S.screener.some(function (x) { return x.id === c.id; })) S.screener.push(c); render(); });
+    },
+    nudge: function (d) { S.nudges[d.id] = Math.max(5, Math.min(240, S.nudges[d.id] + (+d.d))); render(); },
+    edAm: function () { S.edition.am = !S.edition.am; render(); },
+    edPm: function () { S.edition.pm = !S.edition.pm; render(); },
+    img: function (d) { S.images[d.id] = !S.images[d.id]; render(); },
+    aiAway: function () { S.ai.away = !S.ai.away; render(); },
+    nVip: function () { S.notif.vip = !S.notif.vip; render(); },
+    nRet: function () { S.notif.ret = !S.notif.ret; render(); },
+    nEd: function () { S.notif.ed = !S.notif.ed; render(); },
+    acctOn: function (d) { S.acct[d.k] = true; render(); toast(d.k === "icloud" ? "iCloud Mail added" : "Account added"); },
+    toast: function (d) { toast(d.msg); },
+    undo: function () { var u = S.toast && S.toast.undo; clearTimeout(toastT); S.toast = null; renderOverlay(); if (u) u(); },
+    openBanner: function () {
+      var id = S.banner; S.banner = null; clearTimeout(bannerT);
+      S.tab = "vip"; S.stacks.vip = [{ s: "vip" }]; go("thread", { id: id });
+    }
+  };
+  function sendVipText(id, body) {
+    S.sheet = null;
+    VIPS[id].drafts.custom = body;
+    S.tone[id] = "custom";
+    sendVip(id, false);
+  }
+  function readCompose() {
+    if (!S.sheet || S.sheet.type !== "compose") return;
+    var to = document.getElementById("cTo"), su = document.getElementById("cSubj"), bo = document.getElementById("cBody");
+    if (to) S.sheet.to = to.value; if (su) S.sheet.subj = su.value; if (bo) S.sheet.body = bo.value;
+  }
+
+  /* ---------------- Events ---------------- */
+  phone.addEventListener("click", function (e) {
+    var el = e.target.closest("[data-a]");
+    if (!el || !phone.contains(el)) return;
+    if (el.dataset.dragged) { delete el.dataset.dragged; return; }
+    var fn = A[el.dataset.a];
+    if (fn) { e.preventDefault(); fn(el.dataset); }
+  });
+  phone.addEventListener("keydown", function (e) {
+    var el = e.target;
+    if ((e.key === "Enter" || e.key === " ") && el.getAttribute && el.getAttribute("role") === "button" && el.dataset.a) { e.preventDefault(); A[el.dataset.a](el.dataset); }
+    if (e.key === "Escape" && S.sheet) A.closeSheet();
+  });
+  phone.addEventListener("submit", function (e) {
+    var f = e.target.dataset.form;
+    if (!f) return;
+    e.preventDefault();
+    if (f === "psearch") { var v = document.getElementById("pq").value; S.psearch = v; S.pchips = /arbor/i.test(v) ? ["Merchant: Arbor Books"].concat(/year|2026/i.test(v) ? ["2026"] : []) : []; }
+    if (f === "search") S.query = document.getElementById("gq").value;
+    render(); say("Results updated");
+  });
+  phone.addEventListener("input", function (e) {
+    if (e.target.id === "gq") { S.query = e.target.value; var pos = e.target.selectionStart; render(); var n = document.getElementById("gq"); if (n) { n.focus(); n.setSelectionRange(pos, pos); } }
+    if (e.target.id === "cBody" || e.target.id === "cTo" || e.target.id === "cSubj") readCompose();
+  });
+
+  var bannerT = null;
+  document.getElementById("ctlVip").addEventListener("click", function () {
+    ensureOnboarded();
+    if (S.waiting.indexOf("dana2") < 0) S.waiting.unshift("dana2");
+    S.banner = "dana2";
+    render();
+    clearTimeout(bannerT);
+    bannerT = setTimeout(function () { S.banner = null; renderOverlay(); }, 7000);
+  });
+  document.getElementById("ctlTheme").addEventListener("click", function (e) {
+    var dark = phone.classList.toggle("ph-dark");
+    phone.classList.toggle("ph-light", !dark);
+    e.currentTarget.textContent = dark ? "Phone: light" : "Phone: dark";
+  });
+  document.getElementById("ctlReset").addEventListener("click", function () { S = fresh(); delete VIPS.dana.drafts.custom; delete VIPS.mom.drafts.custom; delete VIPS.dana2.drafts.custom; clearTimeout(bannerT); focusNext = false; render("fade"); });
+  document.getElementById("map").addEventListener("click", function (e) { var b = e.target.closest("button[data-k]"); if (b) jump(b.dataset.k); });
+
+  S = fresh();
+  buildMap();
+  render();
+})();
+</script>
+
+</html>

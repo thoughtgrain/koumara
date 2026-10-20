@@ -6,7 +6,7 @@ The name is the Greek word for the strawberry tree (*Arbutus unedo*), which show
 
 ## Where things stand
 
-Design is done enough to start building. There's no app code yet. The next step is a SwiftUI prototype with sample mail.
+Design is done enough to start building, and there's a clickable iPhone prototype to walk through. There's no app code yet. The next step is the Mac version of the prototype, then a SwiftUI build with sample mail.
 
 ## What's in here
 
@@ -15,6 +15,7 @@ Design is done enough to start building. There's no app code yet. The next step 
 | [`design/brief.html`](design/brief.html) | The design brief: the lane model, visual direction, an interactive Mac window, how sorting works, VIP replies, accessibility commitments, and the decisions so far. |
 | [`design/flows.html`](design/flows.html) | Storyboards for the five main flows (first run, VIP reply, fixing a misfiled message, newsletter reading, purchases) on iPhone and Mac, plus iPad differences and edge states. |
 | [`design/screens.html`](design/screens.html) | Detailed screens: newsletters as a magazine Edition on all three devices, every lane in light and dark, large text, and the specs I'll build from. |
+| [`design/prototype.html`](design/prototype.html) | A clickable iPhone prototype: onboarding, every lane, the Edition, purchases, search, compose and settings, all linked and working with sample mail. |
 
 The pages are plain HTML with no build step. Open them in a browser. They load fonts from Google Fonts, so they look best online, but they work offline with fallback fonts.
 
