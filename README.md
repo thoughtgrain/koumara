@@ -37,6 +37,7 @@ I sort mail into five lanes instead of keeping one inbox:
   - **Apple's on-device model** (the Foundation Models framework) sorts whatever the headers can't settle, on every device.
   - **oMLX on my Mac** writes VIP drafts and long summaries and builds search embeddings, through its OpenAI-compatible API.
 - **VIP replies:** Every VIP reply is drafted automatically, and Koumara never sends anything on its own. If a VIP has been waiting too long, I get a reminder with the draft attached.
+- **No illustrations:** The app has no illustrations. Delight comes from type, motion, haptics, and the lane colors and glyphs.
 
 ## Still open
 

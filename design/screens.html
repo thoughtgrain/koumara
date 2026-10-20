@@ -297,20 +297,20 @@ table.spec { border-collapse: collapse; width: 100%; min-width: 680px; font-size
 .toast2[hidden] { display: flex !important; opacity: 0; transform: translateY(8px); pointer-events: none; visibility: hidden; }
 .toast2 b { color: #FF9A8F; }
 .caught { display: grid; justify-items: center; gap: 6px; padding: 18px 16px 10px; text-align: center; }
-.caught b { font: 600 17px/1.2 var(--serif); }
 .caught span { font-size: 12px; color: var(--muted); max-width: 200px; }
-.sprig .leaf { fill: var(--news); opacity: .85; }
-.sprig .twig { stroke: var(--buy); stroke-width: 2; fill: none; stroke-linecap: round; }
+.caught .big { font: 600 26px/1.15 var(--serif); letter-spacing: -.01em; color: var(--ink); max-width: none; }
+.caught .stat { font: 500 11.5px/1.3 var(--ui); color: var(--muted); font-variant-numeric: tabular-nums; }
 .collapse { transition: max-height .35s ease, opacity .3s; max-height: 140px; }
 .collapse.gone { max-height: 0; opacity: 0; }
 .demo-keys { font-size: .84rem; color: var(--page-muted); max-width: 300px; }
 .demo-reset { all: unset; cursor: pointer; font: 600 .86rem/1 var(--body); color: var(--page-ink); border: 1px solid var(--rule); border-radius: 8px; padding: 8px 12px; justify-self: start; }
 .demo-reset:focus-visible { outline: 2px solid var(--vip); outline-offset: 2px; }
 @keyframes stampIn { 0% { transform: rotate(-12deg) scale(2.2); opacity: 0; } 60% { transform: rotate(-12deg) scale(.92); opacity: 1; } 100% { transform: rotate(-12deg) scale(1); } }
-@keyframes ripen { 0% { fill: #8FB27A; } 50% { fill: #E3A33B; } 100% { fill: #C2321F; } }
+@keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: no-preference) {
   .stamp.live { animation: stampIn .42s cubic-bezier(.3,1.4,.5,1) both; }
-  .berry.live { animation: ripen 1.2s ease-out both; }
+  .caught.live > * { animation: rise .45s ease-out both; }
+  .caught.live > :nth-child(2) { animation-delay: .12s; }
 }
 @media (prefers-reduced-motion: reduce) {
   .srow > .cell, .sheet2, .collapse, .scrim2, .toast2 { transition: none; }
@@ -656,7 +656,7 @@ table.spec { border-collapse: collapse; width: 100%; min-width: 680px; font-size
   <div class="col">
     <p class="eyebrow">VIP · Swipe to reply</p>
     <h2 id="s-swipe">Pull the letter out of the envelope</h2>
-    <p>Swiping a VIP should feel like sliding a letter out of an envelope. As I pull the row to the right, the draft comes out from underneath in my own words, and a seal fills up around the lane glyph. Past the line, the seal sets with a firm haptic tick. Letting go opens the draft so I can read it before it goes out, so nothing is sent from a gesture alone. Sending presses a wax-seal stamp onto the row before it moves to Replied. When the last VIP is answered, a strawberry-tree sprig ripens from green to red.</p>
+    <p>Swiping a VIP should feel like sliding a letter out of an envelope. As I pull the row to the right, the draft comes out from underneath in my own words, and a seal fills up around the lane glyph. Past the line, the seal sets with a firm haptic tick. Letting go opens the draft so I can read it before it goes out, so nothing is sent from a gesture alone. Sending presses a wax-seal stamp onto the row before it moves to Replied. When the last VIP is answered, the list closes with one quiet line of type.</p>
     <p>Pulling the other way is Later: a small dial of times (1 hour, Tonight, Tomorrow) that steps one detent per tick as the row moves further.</p>
   </div>
 
@@ -731,22 +731,21 @@ table.spec { border-collapse: collapse; width: 100%; min-width: 680px; font-size
       </figure>
 
       <figure class="th-light">
-        <div class="iph" role="img" aria-label="Everyone answered: a small strawberry tree sprig with green, amber and red berries, the text Everyone's heard back, and the replied list below.">
+        <div class="iph" role="img" aria-label="Everyone answered: the line Everyone's heard back in large serif type, a short stat line, and the replied list below.">
           <span class="island" aria-hidden="true"></span>
           <div class="sb"><span>9:46</span><span>●●● ▮</span></div>
           <div class="body">
             <div class="lt">VIP</div><div class="lt-sub">All answered</div>
             <div class="caught">
-              <svg class="sprig" width="140" height="70" viewBox="0 0 140 70" aria-hidden="true"><path class="twig" d="M8 60 C40 50 70 36 132 14"/><path class="twig" d="M70 38 C76 48 80 54 82 60"/><ellipse class="leaf" cx="34" cy="44" rx="14" ry="5" transform="rotate(-30 34 44)"/><ellipse class="leaf" cx="104" cy="16" rx="14" ry="5" transform="rotate(-10 104 16)"/><ellipse class="leaf" cx="60" cy="30" rx="12" ry="4.5" transform="rotate(-52 60 30)"/><circle cx="82" cy="62" r="6" fill="#8FB27A"/><circle cx="96" cy="38" r="7" fill="#E3A33B"/><circle class="berry" cx="120" cy="28" r="8" fill="#C2321F"/></svg>
-              <b>Everyone's heard back</b>
-              <span>Dana and Mom answered in 4 minutes on average today.</span>
+              <span class="big">Everyone's heard back.</span>
+              <span class="stat">2 replies · 4 min average today</span>
             </div>
             <div class="sect">Replied</div>
             <div class="cell"><span class="av" style="background:var(--sunk);color:var(--muted)">M</span><div class="main"><div class="t1"><b>Mom</b><span>now</span></div><span class="subj">Flight lands at 6:40</span><div class="meta"><span class="chip c-plain">✓ Replied just now</span></div></div></div>
             <div class="cell"><span class="av" style="background:var(--sunk);color:var(--muted)">DO</span><div class="main"><div class="t1"><b>Dana Okafor</b><span>4m</span></div><span class="subj">Contract redlines</span><div class="meta"><span class="chip c-plain">✓ Replied 4m ago</span></div></div></div>
           </div>
         </div>
-        <figcaption><b>5 · Ripe</b>When the last VIP is answered, the sprig's last berry ripens from green to red. It's the only celebration in the app, and it only appears once a day.</figcaption>
+        <figcaption><b>5 · All answered</b>No illustration, just type: one serif line and a stat that rise in, staggered. It only appears the first time each day the list empties.</figcaption>
       </figure>
 
       <figure class="th-light">
@@ -792,7 +791,7 @@ table.spec { border-collapse: collapse; width: 100%; min-width: 680px; font-size
           </div>
         </div>
         <button type="button" class="demo-reset" id="demoReset">Reset the demo</button>
-        <p class="demo-keys">Haptics are described, not felt, in a browser. Under Reduce Motion, the stamp and berry appear without animating.</p>
+        <p class="demo-keys">Haptics are described, not felt, in a browser. Under Reduce Motion, the stamp and closing line appear without animating.</p>
         <span id="demoLive" class="sr" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)"></span>
       </figure>
     </div>
@@ -920,14 +919,13 @@ table.spec { border-collapse: collapse; width: 100%; min-width: 680px; font-size
   function repliedHTML(p, note) {
     return '<div class="cell"><span class="av" style="background:var(--sunk);color:var(--muted)">' + esc(p.init) + '</span><div class="main"><div class="t1"><b>' + esc(p.name) + '</b><span>now</span></div><span class="subj">' + esc(p.subj) + '</span><div class="meta"><span class="chip c-plain">' + esc(note) + '</span></div></div></div>';
   }
-  var SPRIG = '<svg class="sprig" width="140" height="70" viewBox="0 0 140 70" aria-hidden="true"><path class="twig" d="M8 60 C40 50 70 36 132 14"/><path class="twig" d="M70 38 C76 48 80 54 82 60"/><ellipse class="leaf" cx="34" cy="44" rx="14" ry="5" transform="rotate(-30 34 44)"/><ellipse class="leaf" cx="104" cy="16" rx="14" ry="5" transform="rotate(-10 104 16)"/><ellipse class="leaf" cx="60" cy="30" rx="12" ry="4.5" transform="rotate(-52 60 30)"/><circle cx="82" cy="62" r="6" fill="#8FB27A"/><circle cx="96" cy="38" r="7" fill="#E3A33B"/><circle class="berry live" cx="120" cy="28" r="8" fill="#C2321F"/></svg>';
 
   function render() {
     var html = "";
     if (waiting.length) {
       html += '<div class="sect">Waiting</div>' + waiting.map(rowHTML).join("");
     } else {
-      html += '<div class="caught">' + SPRIG + '<b>Everyone’s heard back</b><span>Nice. That’s every VIP answered today.</span></div>';
+      html += '<div class="caught live"><span class="big">Everyone’s heard back.</span><span class="stat">' + replied.length + ' replies · just now</span></div>';
     }
     if (replied.length) html += '<div class="sect">Replied</div>' + replied.join("");
     list.innerHTML = html;
